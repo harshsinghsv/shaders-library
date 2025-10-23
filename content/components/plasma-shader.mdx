@@ -1,0 +1,56 @@
+import PlasmaShader from '@/components/website/PlasmaShader';
+
+export const metadata = {
+  title: 'Plasma Shader',
+  description:
+    'An electric plasma WebGL shader with purple-pink colors. Creates stunning mathematical wave patterns and energy effects.',
+};
+
+## Preview
+
+<div className="relative w-full h-96 rounded-lg overflow-hidden border border-gray-200 dark:border-gray-800 mb-8">
+  <PlasmaShader />
+</div>
+
+## Installation
+
+No additional dependencies required. This shader uses WebGL which is supported in all modern browsers.
+
+## Usage
+
+```tsx
+import PlasmaShader from '@/components/shaders/PlasmaShader';
+
+export default function MyComponent() {
+  return (
+    <div className="relative h-screen">
+      <PlasmaShader />
+      {/* Your content here */}
+    </div>
+  );
+}
+```
+
+## Features
+
+- **Mathematical Patterns**: Uses sine waves and mathematical functions for realistic plasma effects
+- **Dynamic Colors**: Purple-pink gradient that shifts and flows
+- **Glow Effects**: Built-in radial glow and energy visualization
+- **Smooth Animation**: Continuous flowing motion
+
+## Customization
+
+Customize the plasma effect by modifying:
+
+- **Wave Frequency**: Adjust the sine wave frequencies for different patterns
+- **Color Gradient**: Change the purple-pink gradient to any color scheme
+- **Glow Intensity**: Modify the radial glow strength
+- **Animation Speed**: Control the plasma flow speed
+
+## Technical Details
+
+The shader uses:
+- Multiple sine wave overlays
+- Radial distance calculations for glow effects
+- Time-based animation for continuous motion
+- Optimized fragment shader for performance

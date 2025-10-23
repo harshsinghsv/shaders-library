@@ -1,0 +1,56 @@
+import LiquidOrangeShader from '@/components/website/LiquidOrangeShader';
+
+export const metadata = {
+  title: 'Liquid Orange Shader',
+  description:
+    'A flowing liquid WebGL shader with warm orange tones. Perfect for creating dynamic and mesmerizing background effects.',
+};
+
+## Preview
+
+<div className="relative w-full h-96 rounded-lg overflow-hidden border border-gray-200 dark:border-gray-800 mb-8">
+  <LiquidOrangeShader />
+</div>
+
+## Installation
+
+No additional dependencies required. This shader uses WebGL which is supported in all modern browsers.
+
+## Usage
+
+```tsx
+import LiquidOrangeShader from '@/components/shaders/LiquidOrangeShader';
+
+export default function MyComponent() {
+  return (
+    <div className="relative h-screen">
+      <LiquidOrangeShader />
+      {/* Your content here */}
+    </div>
+  );
+}
+```
+
+## Features
+
+- **WebGL Powered**: Smooth 60fps animations using GPU acceleration
+- **Responsive**: Automatically adapts to container size
+- **Customizable**: Easy to modify colors and animation parameters
+- **Performance Optimized**: Efficient shader code for all devices
+
+## Customization
+
+You can customize the shader by modifying the fragment shader code:
+
+- **Colors**: Adjust the color palette in the shader
+- **Speed**: Change the time multiplier for animation speed
+- **Intensity**: Modify the liquid flow parameters
+- **Opacity**: Adjust the alpha values for transparency
+
+## Browser Support
+
+This shader works on all modern browsers that support WebGL:
+- Chrome 9+
+- Firefox 4+
+- Safari 5.1+
+- Edge 12+

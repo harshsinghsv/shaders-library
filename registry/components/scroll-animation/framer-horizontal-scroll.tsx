@@ -175,7 +175,7 @@ export default function index() {
       </section>
       <footer className='group '>
         <h1 className='text-[16vw] group-hover:translate-y-4 translate-y-20 leading-[100%] uppercase font-semibold text-center bg-gradient-to-r from-gray-400 to-gray-800 bg-clip-text text-transparent transition-all ease-linear'>
-          ui-layout
+          shaders-ui
         </h1>
         <section className='bg-black h-40 relative z-10 grid place-content-center text-2xl rounded-tr-full rounded-tl-full'>
           Thanks for Scrolling

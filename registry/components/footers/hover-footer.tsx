@@ -67,7 +67,7 @@ function index() {
         </div>
         <div className='lg:flex hidden'>
           <AnimatedText
-            text='UI-LAYOUT'
+            text='shaders-ui'
             className='2xl:text-[11rem] text-[12vw]'
           />
         </div>

@@ -1,0 +1,62 @@
+import WaveShader from '@/components/website/WaveShader';
+
+export const metadata = {
+  title: 'Ocean Waves Shader',
+  description:
+    'Animated ocean waves WebGL shader with realistic blue tones. Features layered wave patterns and foam effects.',
+};
+
+## Preview
+
+<div className="relative w-full h-96 rounded-lg overflow-hidden border border-gray-200 dark:border-gray-800 mb-8">
+  <WaveShader />
+</div>
+
+## Installation
+
+No additional dependencies required. This shader uses WebGL which is supported in all modern browsers.
+
+## Usage
+
+```tsx
+import WaveShader from '@/components/shaders/WaveShader';
+
+export default function MyComponent() {
+  return (
+    <div className="relative h-screen">
+      <WaveShader />
+      {/* Your content here */}
+    </div>
+  );
+}
+```
+
+## Features
+
+- **Layered Waves**: Multiple wave frequencies for realistic ocean movement
+- **Foam Effects**: White foam appears on wave peaks
+- **Depth Gradient**: Color transitions from deep blue to light blue
+- **Shimmer Effect**: Subtle light reflections on water surface
+
+## Customization
+
+Customize the ocean waves by adjusting:
+
+- **Wave Height**: Control the amplitude of wave movement
+- **Wave Speed**: Adjust individual wave layer speeds
+- **Color Depth**: Modify the blue color gradients
+- **Foam Intensity**: Control when and how foam appears
+
+## Wave Parameters
+
+The shader includes multiple wave layers:
+- **Primary Waves**: Large, slow-moving base waves
+- **Secondary Waves**: Medium frequency detail waves
+- **Detail Waves**: High frequency surface ripples
+- **Foam Layer**: Dynamic white caps on wave peaks
+
+## Ocean Color System
+
+- **Deep Blue**: `vec3(0.0, 0.1, 0.3)` for deep water
+- **Light Blue**: `vec3(0.2, 0.6, 0.9)` for shallow areas
+- **Foam White**: `vec3(0.9, 0.95, 1.0)` for wave peaks

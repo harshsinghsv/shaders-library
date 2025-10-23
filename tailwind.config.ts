@@ -30,6 +30,7 @@ const config: Config = {
     extend: {
       fontFamily: {
         mono: ['var(--font-geist-mono)'],
+        instrumental: ['Instrumental', 'serif'],
       },
       colors: {
         border: 'hsl(var(--border))',

@@ -3,38 +3,31 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import * as AspectRatio from '@radix-ui/react-aspect-ratio';
-import Image from 'next/image';
-import preview from '@/assets/preview';
-const appsDesign = [
+import LiquidOrangeShader from '@/components/website/LiquidOrangeShader';
+import PlasmaShader from '@/components/website/PlasmaShader';
+import WaveShader from '@/components/website/WaveShader';
+
+const shaderComponents = [
   {
-    id: 'motionNumber',
-    name: 'motion number',
-    url: '/components/motion-number',
-    imgSrc: preview.motionNumber,
+    id: 'liquid-orange',
+    name: 'Liquid Orange Shader',
+    url: '/components/liquid-orange-shader',
+    description: 'Flowing liquid with warm orange tones',
+    component: LiquidOrangeShader,
   },
   {
-    id: 'buttons',
-    url: '/components/buttons',
-    name: 'buttons',
-    imgSrc: preview.buttons,
+    id: 'plasma',
+    name: 'Plasma Shader',
+    url: '/components/plasma-shader',
+    description: 'Electric plasma with purple-pink colors',
+    component: PlasmaShader,
   },
   {
-    id: 'horizontal-scrolling',
-    url: '/components/horizontal-scroll',
-    name: 'scrolling',
-    imgSrc: preview.horizontascroll,
-  },
-  {
-    id: 'clip-path',
-    url: '/components/clip-path',
-    name: 'Clip-Path',
-    imgSrc: preview.clippath,
-  },
-  {
-    id: 'image-reveal',
-    url: '/components/product-cards',
-    name: 'Cards',
-    imgSrc: preview.card,
+    id: 'ocean-waves',
+    name: 'Ocean Waves Shader',
+    url: '/components/ocean-waves-shader',
+    description: 'Animated ocean waves with blue tones',
+    component: WaveShader,
   },
 ];
 
@@ -45,40 +38,38 @@ export default function Home() {
         <h1
           className={'sm:text-3xl text-2xl font-semibold tracking-tight pb-1'}
         >
-          Components
+          Shaders
         </h1>
 
         <p className='md:text-lg text-sm text-muted-foreground lg:w-[80%]'>
-          Beautifully designed components that you can copy and paste into your
-          apps. Accessible. Customizable. Open Source.
+          Beautiful WebGL shaders that you can copy and paste into your
+          apps. Interactive. Customizable. Open Source.
         </p>
         <>
-          <div className='grid md:grid-cols-3 grid-cols-2 gap-6 py-4'>
-            {appsDesign.map((component, index) => {
+          <div className='grid md:grid-cols-2 lg:grid-cols-3 grid-cols-1 gap-6 py-4'>
+            {shaderComponents.map((shader, index) => {
+              const ShaderComponent = shader.component;
               return (
-                <>
-                  <Link
-                    href={component?.url}
-                    className='border p-2    transition-all rounded-lg'
-                  >
-                    <>
-                      <AspectRatio.Root ratio={16 / 9}>
-                        <Image
-                          src={component.imgSrc}
-                          alt='hero-sec'
-                          width={100}
-                          height={100}
-                          className='w-full h-full   rounded-md'
-                        />
-                      </AspectRatio.Root>
-                    </>
-                    <div className='sm:py-2 py-1 sm:px-4 px-2'>
-                      <h1 className='2xl:text-xl xl:text-xl md:text-lg text-sm font-medium leading-[140%] capitalize'>
-                        {component.name}
-                      </h1>
+                <Link
+                  key={shader.id}
+                  href={shader?.url}
+                  className='group border p-2 transition-all rounded-lg hover:shadow-lg hover:scale-105'
+                >
+                  <AspectRatio.Root ratio={16 / 9}>
+                    <div className="relative w-full h-full rounded-md overflow-hidden bg-black">
+                      <ShaderComponent />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none" />
                     </div>
-                  </Link>
-                </>
+                  </AspectRatio.Root>
+                  <div className='sm:py-2 py-1 sm:px-4 px-2'>
+                    <h1 className='2xl:text-xl xl:text-xl md:text-lg text-sm font-medium leading-[140%]'>
+                      {shader.name}
+                    </h1>
+                    <p className='text-xs text-muted-foreground mt-1'>
+                      {shader.description}
+                    </p>
+                  </div>
+                </Link>
               );
             })}
           </div>

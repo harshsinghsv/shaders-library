@@ -1,122 +1,106 @@
 'use client';
-import { ChevronsRight, MoveRight } from 'lucide-react';
 import { Button } from '@/components/website/ui/button';
-import React, { useEffect, useMemo, useState } from 'react';
+import LiquidOrangeShader from './LiquidOrangeShader';
+import PlasmaShader from './PlasmaShader';
+import WaveShader from './WaveShader';
 
-function HeroSec() {
-  const [blocks, setBlocks] = useState([]);
+const shaderComponents = {
+  'liquid-orange': LiquidOrangeShader,
+  'plasma': PlasmaShader,
+  'ocean-waves': WaveShader,
+};
 
-  const activeDivs = useMemo(
-    () => ({
-      0: new Set([4, 1]),
-      2: new Set([3]),
-      4: new Set([2, 5, 8]),
-      5: new Set([4]),
-      10: new Set([3]),
-      12: new Set([7]),
-      15: new Set([6]),
-      14: new Set([5]),
-      13: new Set([4]),
-    }),
-    []
-  );
+interface HeroSecProps {
+  activeShader: string;
+}
 
-  useEffect(() => {
-    const updateBlocks = () => {
-      const { innerWidth, innerHeight } = window;
-      const blockSize = innerWidth * 0.06; // Using 6vw for the block size
-      const amountOfBlocks = Math.ceil(innerHeight / blockSize);
+function HeroSec({ activeShader }: HeroSecProps) {
+  const ShaderComponent = shaderComponents[activeShader as keyof typeof shaderComponents] || LiquidOrangeShader;
 
-      const newBlocks = Array.from({ length: 17 }, (_, columnIndex) => (
-        <div key={columnIndex} className='w-[6vw] h-full'>
-          {Array.from({ length: amountOfBlocks }, (_, rowIndex) => (
-            <div
-              key={rowIndex}
-              className={`h-[6vw] w-full border-[1px] dark:border-[rgba(255,255,255,0.015)] border-gray-50 ${
-                // @ts-ignore
-                activeDivs[columnIndex]?.has(rowIndex)
-                  ? 'dark:bg-[rgba(255,255,255,0.03)] bg-gray-50'
-                  : ''
-              }`}
-              style={{ height: `${blockSize}px` }}
-            ></div>
-          ))}
-        </div>
-      ));
-      // @ts-ignore
-      setBlocks(newBlocks);
-    };
-
-    updateBlocks();
-    window.addEventListener('resize', updateBlocks);
-
-    return () => window.removeEventListener('resize', updateBlocks);
-  }, [activeDivs]);
   return (
-    <>
-      <section className='min-h-screen py-24 overflow-hidden  relative  '>
-        <div className='absolute inset-0 top-0 left-0  h-screen w-full items-center px-5 py-24 dark:[background:radial-gradient(87.03%_87.03%_at_50.05%_12.97%,rgba(217,217,217,0)_40%,#010716_100%)] [background:radial-gradient(87.03%_87.03%_at_50.05%_12.97%,rgba(217,217,217,0)_40%,#ffffff_100%)]'></div>
-        <article className='grid gap-4 py-20 relative z-10 sm:px-0 px-4'>
-          <a
-            href={'/components/blur-vignette'}
-            className='inline-flex w-fit mx-auto items-center gap-1 rounded-full  bg-[#334cec] border-4  shadow-[#6175f8]  py-0.5 pl-0.5 pr-3 text-xs '
-          >
-            <div className='rounded-full bg-[#fcfdff] px-2 py-1 text-xs text-black '>
-              Update
-            </div>
-            <p className='text-white sm:text-base text-xs inline-block'>
-              ✨ Introducing
-              <span className='px-1 font-semibold'>Blur Vignette</span>
-            </p>
+    <section className="relative min-h-screen h-screen flex flex-col items-center justify-between px-6 pt-24 pb-20 overflow-hidden font-sans">
+      {/* Dynamic Shader Background */}
+      <div className="absolute inset-0 z-[-30]">
+        <ShaderComponent />
+      </div>
 
-            <svg
-              xmlns='http://www.w3.org/2000/svg'
-              viewBox='0 0 24 24'
-              fill='currentColor'
-              aria-hidden='true'
-              data-slot='icon'
-              className='h-3 w-3 text-white'
-            >
-              <path
-                fillRule='evenodd'
-                d='M12.97 3.97a.75.75 0 0 1 1.06 0l7.5 7.5a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 1 1-1.06-1.06l6.22-6.22H3a.75.75 0 0 1 0-1.5h16.19l-6.22-6.22a.75.75 0 0 1 0-1.06Z'
-                clipRule='evenodd'
-              ></path>
-            </svg>
-          </a>
-          <h1 className='  xl:text-7xl md:text-6xl sm:text-5xl text-3xl text-center font-semibold leading-[110%]'>
-            Design That Really <br />
-            Need In{' '}
-            <span className='bg-gradient-to-t sm:w-ful w-4/5 from-[#a2b6fa] to-[#334cec] bg-clip-text text-transparent'>
-              Your Website
-            </span>
-          </h1>
-          <p className='mx-auto lg:w-[500px] sm:w-[80%] text-center sm:text-lg text-sm'>
-            100+ Free beautifull interactive react/nextjs component based on
-            tailwindcss, framer-motion, gsap etc
-          </p>
-          <div className='flex gap-2 justify-center items-center'>
-            <a
-              href='https://www.ui-layout.com/'
-              className='flex items-center gap-2 w-fit  text-white bg-gradient-to-l from-[#6175f8]  to-[#334cec] border sm:px-4 px-2 rounded-sm py-2 '
-            >
-              Visit UILayout
-              <MoveRight />
-            </a>
-            <a href='/get-started' className='sm:inline-block hidden'>
-              <Button className=' rounded-full px-4'>
-                Get Started
-                <ChevronsRight />
-              </Button>
-            </a>
-          </div>
-        </article>
+      {/* Decorative shapes and stars */}
+      <img 
+        src="/landing-page-assets/star-small-new.svg" 
+        alt="" 
+        className="absolute top-[30%] right-[30%] w-12 h-12 md:w-16 md:h-16 z-[30] animate-float opacity-100" 
+        style={{ animationDelay: '0s', animationDuration: '8s' }}
+      />
+      
+      <img 
+        src="/landing-page-assets/star-large-new.svg" 
+        alt="" 
+        className="hidden" 
+        style={{ animationDelay: '2s', animationDuration: '10s' }}
+      />
 
-        <div className='flex h-screen overflow-hidden top-0 left-0  inset-0  -z-10 absolute'>
-          {blocks}
+      <img 
+        src="/landing-page-assets/MaskStar.svg" 
+        alt="" 
+        className="absolute top-[20%] left-[25%] w-12 h-12 md:w-16 md:h-16 z-[30] animate-float opacity-100" 
+        style={{ animationDelay: '2s', animationDuration: '10s' }}
+      />
+
+      {/* Content container */}
+      <div className="flex flex-col items-center justify-center flex-1 relative z-[30]">
+        {/* Announcement badge */}
+        <div className="mb-6 inline-flex items-center gap-2 px-6 py-3 rounded-full border border-border bg-[#20140E] backdrop-blur-sm">
+          <img src="/landing-page-assets/sparkle-filled.svg" alt="Savio" className="w-5 h-5" />
+          <span className="text-sm text-white">We are launching soon. Stay Tuned</span>
         </div>
-      </section>
-    </>
+
+        {/* Main heading */}
+        <div className="max-w-5xl mx-auto text-center">
+          <h1 className="text-4xl md:text-6xl text-foreground leading-tight mb-5">
+            Illuminate Your Website with
+            <br />
+            Dynamic <span className="italic font-instrumental text-foreground">Shaders</span>
+          </h1>
+          
+          <p className="text-base md:text-lg text-white max-w-2xl mx-auto mb-8">
+            Plug-and-play shader components that animate your Hero Section without you having to write extra code.
+            <br />
+            <span className="text-sm opacity-75">Click the shader previews below to change the background!</span>
+          </p>
+
+          {/* CTA Buttons */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <Button size="lg" className="shadow-[inset_0_-4px_6px_rgba(255,255,255,0.5)] rounded-full px-8 bg-primary hover:bg-primary/90 text-white" asChild>
+              <a href="/components">Browse Shaders</a>
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      {/* Star above dashboard */}
+      <img 
+        src="/landing-page-assets/star-large-new.svg" 
+        alt=""
+        className="relative -right-[35%] top-[10%] z-[25] mb-6 w-16 h-16 md:w-28 md:h-28 animate-float opacity-100"
+        style={{ animationDelay: '1s', animationDuration: '9s' }}
+      />
+
+
+
+      <style>{`
+        @keyframes float {
+          0%, 100% {
+            transform: translateY(0) rotate(0deg);
+          }
+          50% {
+            transform: translateY(-20px) rotate(5deg);
+          }
+        }
+        .animate-float {
+          animation: float 8s ease-in-out infinite;
+        }
+      `}</style>
+    </section>
   );
 }
 

@@ -82,7 +82,7 @@ function DocsSidebar() {
               );
             })}
           </ul>
-          <h1 className='text-lg font-semibold pb-1'>Components</h1>
+          <h1 className='text-lg font-semibold pb-1'>Shaders</h1>
           {SpecialComponents?.map((link: any) => {
             return (
               <>

@@ -47,7 +47,7 @@ export function throttle(fn: (...args: any[]) => any, wait: number) {
 }
 
 export const siteConfig = {
-  name: 'UI-Layout-starter-kit',
+  name: 'shaders-ui',
   url: 'https://uilayout-starter-repo.vercel.app/',
   ogImage: 'https://uilayout-starter-repo.vercel.app/og.jpg',
   description:
