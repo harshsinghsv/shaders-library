@@ -2,12 +2,12 @@
 import { Button } from '@/components/website/ui/button';
 import LiquidOrangeShader from './LiquidOrangeShader';
 import PlasmaShader from './PlasmaShader';
-import WaveShader from './WaveShader';
+import AuroraShader from './AuroraShader';
 
 const shaderComponents = {
   'liquid-orange': LiquidOrangeShader,
   'plasma': PlasmaShader,
-  'ocean-waves': WaveShader,
+  'aurora-borealis': AuroraShader,
 };
 
 interface HeroSecProps {

@@ -1,3 +1,4 @@
+'use client';
 import React, { useRef, useEffect, useState, useMemo } from 'react';
 import * as THREE from 'three';
 
@@ -400,6 +401,7 @@ const VolumetricAuroraHero: React.FC<AuroraHeroProps> = ({
   // Detect prefers-reduced-motion
   const reducedMotion = useMemo(() => {
     if (prefersReducedMotion !== undefined) return prefersReducedMotion;
+    if (typeof window === 'undefined') return false;
     return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   }, [prefersReducedMotion]);
 
