@@ -10,8 +10,8 @@
 //     new: true,
 //   },
 //   {
-//     href: '/components/ocean-waves-shader',
-//     name: 'Ocean Waves Shader',
+//     href: '/components/aurora-borealis-shader',
+//     name: 'Aurora Borealis Shader',
 //     new: true,
 //   },
 // ];
@@ -42,8 +42,8 @@ export const SpecialComponents: ComponentItem[] = [
     new: true,
   },
   {
-    href: '/components/ocean-waves-shader',
-    name: 'Ocean Waves Shader',
+    href: '/components/aurora-borealis-shader',
+    name: 'Aurora Borealis Shader',
     new: true,
   },
 ];

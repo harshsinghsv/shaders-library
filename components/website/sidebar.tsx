@@ -56,7 +56,7 @@ function DocsSidebar() {
           <ul className='pb-1'>
             {basePath?.map((link, index) => {
               return (
-                <>
+                <React.Fragment key={`fragment-${index}`}>
                   <li key={`id-${index}`}>
                     <Link
                       href={link.href}
@@ -78,14 +78,14 @@ function DocsSidebar() {
                       {link.name}
                     </Link>
                   </li>
-                </>
+                </React.Fragment>
               );
             })}
           </ul>
           <h1 className='text-lg font-semibold pb-1'>Shaders</h1>
           {SpecialComponents?.map((link: any) => {
             return (
-              <>
+              <React.Fragment key={`special-${link.href}`}>
                 <li
                   key={link.href}
                   className={`2xl:text-sm text-[0.81em]  flex items-center gap-1 dark:hover:text-white 2xl:py-1 py-0.5 pl-2 border-l transition-all ${
@@ -107,7 +107,7 @@ function DocsSidebar() {
                     </span>
                   )}
                 </li>
-              </>
+              </React.Fragment>
             );
           })}
           {Object.entries(groupedComponents).map(([group, items], index) => (

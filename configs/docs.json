@@ -29,14 +29,14 @@
       "new": true
     },
     {
-      "name": "Ocean Waves Shader",
+      "name": "Aurora Borealis Shader",
       "componentArray": [
         {
-          "componentName": "ocean-waves-shader",
-          "filesrc": "components/shaders/ocean-waves-shader.tsx",
-          "iframeSrc": "live-components/ocean-waves-shader",
-          "parentlink": "ocean-waves-shader",
-          "parentName": "Ocean Waves Shader"
+          "componentName": "aurora-borealis-shader",
+          "filesrc": "components/shaders/AuroraShader.tsx",
+          "iframeSrc": "live-components/aurora-borealis-shader",
+          "parentlink": "aurora-borealis-shader",
+          "parentName": "Aurora Borealis Shader"
         }
       ],
       "type": "shaders",

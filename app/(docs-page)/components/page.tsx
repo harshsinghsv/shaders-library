@@ -5,7 +5,7 @@ import Link from 'next/link';
 import * as AspectRatio from '@radix-ui/react-aspect-ratio';
 import LiquidOrangeShader from '@/components/website/LiquidOrangeShader';
 import PlasmaShader from '@/components/website/PlasmaShader';
-import WaveShader from '@/components/website/WaveShader';
+import AuroraShader from '@/components/website/AuroraShader';
 
 const shaderComponents = [
   {
@@ -23,11 +23,11 @@ const shaderComponents = [
     component: PlasmaShader,
   },
   {
-    id: 'ocean-waves',
-    name: 'Ocean Waves Shader',
-    url: '/components/ocean-waves-shader',
-    description: 'Animated ocean waves with blue tones',
-    component: WaveShader,
+    id: 'aurora-borealis',
+    name: 'Aurora Borealis Shader',
+    url: '/components/aurora-borealis-shader',
+    description: 'Volumetric aurora with realistic atmospheric effects',
+    component: AuroraShader,
   },
 ];
 
