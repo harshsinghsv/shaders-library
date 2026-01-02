@@ -47,6 +47,14 @@ export type TCurrComponentProps = {
   filesArray?: any;
 };
 
+interface CodeBlockProps {
+  codeblock: string;
+  filesrc: string;
+  comName: string;
+  children: React.ReactNode;
+  [key: string]: unknown;
+}
+
 export default async function DrawerCodePreview({
   hasReTrigger,
   name,
@@ -56,8 +64,8 @@ export default async function DrawerCodePreview({
 }: ComponentCodePreview) {
   // console.log(children);
 
-  const Codes = React.Children.toArray(children) as React.ReactElement[];
-  const parsedCodeblock = Codes[0]?.props;
+  const Codes = React.Children.toArray(children) as React.ReactElement<CodeBlockProps>[];
+  const parsedCodeblock = Codes[0]?.props as CodeBlockProps;
   // console.log(parsedCodeblock);
 
   const currComponent: TCurrComponentProps | null =
@@ -82,7 +90,7 @@ export default async function DrawerCodePreview({
   // const isDesktop = useMediaQuery('(min-width: 768px)');
   // if (isDesktop) {
   // console.log(parsedCodeblock.codeblock);
-  const getcode = JSON.parse(Codes[0]?.props.codeblock);
+  const getcode = JSON.parse((Codes[0]?.props as CodeBlockProps).codeblock);
   const result = ts.transpileModule(getcode, {
     compilerOptions: {
       module: ts.ModuleKind.ESNext,

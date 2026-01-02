@@ -108,7 +108,7 @@ const slideAnimation: MotionProps = {
 };
 
 export default function index() {
-  const mainRef = useRef<HTMLDivElement>(null);
+  const mainRef = useRef<HTMLDivElement>(null!);
   const carouselRef = useRef<HTMLDivElement>(null);
   const { position } = useElementViewportPosition(mainRef);
   //   const { ref, start, end } = useRefScrollProgress(mainRef)

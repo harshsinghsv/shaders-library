@@ -1,0 +1,48 @@
+{
+  "name": "@shaderz/liquid-orange-shader",
+  "version": "1.0.0",
+  "description": "A flowing liquid WebGL shader with warm orange tones",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "build": "tsup src/index.tsx --format cjs,esm --dts",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "shader",
+    "webgl",
+    "three",
+    "threejs",
+    "react",
+    "nextjs",
+    "liquid",
+    "animation"
+  ],
+  "author": "harsh and shubham",
+  "license": "MIT",
+  "peerDependencies": {
+    "react": "^18.0.0 || ^19.0.0",
+    "three": "^0.170.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.2",
+    "@types/three": "^0.172.0",
+    "react": "^19.0.0",
+    "three": "^0.172.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.7.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/harsh-and-shubham/shaderz"
+  },
+  "bugs": {
+    "url": "https://github.com/harsh-and-shubham/shaderz/issues"
+  },
+  "homepage": "https://shaderz.vercel.app"
+}

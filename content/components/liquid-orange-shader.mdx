@@ -14,22 +14,27 @@ export const metadata = {
 
 ## Installation
 
-No additional dependencies required. This shader uses WebGL which is supported in all modern browsers.
+Install the required dependencies:
+
+```bash
+npm install three @types/three
+```
+
+Or with yarn:
+
+```bash
+yarn add three @types/three
+```
+
+Or with pnpm:
+
+```bash
+pnpm add three @types/three
+```
 
 ## Usage
 
-```tsx
-import LiquidOrangeShader from '@/components/shaders/LiquidOrangeShader';
-
-export default function MyComponent() {
-  return (
-    <div className="relative h-screen">
-      <LiquidOrangeShader />
-      {/* Your content here */}
-    </div>
-  );
-}
-```
+<ComponentCodePreview name="liquid-orange-shader" isTab={false} />
 
 ## Features
 

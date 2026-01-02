@@ -2,7 +2,6 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import Logo from "/assets/shadersLogo.png"
 
 const transition = {
   type: "spring" as const,
@@ -122,21 +121,51 @@ export default function Header() {
 
   return (
     <header className="fixed left-1/2 top-4 z-50 w-[95%] max-w-7xl -translate-x-1/2 rounded-full border border-border/50 bg-black/20 backdrop-blur-lg">
-      <div className="mx-auto flex items-center justify-between gap-2 px-6 py-3">
-        <a href="/" className="hidden lg:block">
-          <div className="relative hidden gap-2 lg:flex">
-            <div className="relative mx-auto h-6 w-6 rounded-sm bg-white before:absolute before:-left-1 before:-top-1 before:h-full before:w-full before:rounded-sm before:bg-white/50 2xl:h-7 2xl:w-7 2xl:before:-left-1.5 2xl:before:-top-1.5"></div>
-            <img src={Logo} alt="" />
-          </div>
-        </a>
+      <div className="mx-auto flex items-center justify-between gap-4 px-6 py-3">
+        {/* Logo Section */}
+        <div className="flex items-center gap-2">
+          <Image
+            src="/shadersLogo.png"
+            alt="Logo"
+            width={40}
+            height={40}
+            className="rounded-sm"
+          />
+          <Image
+            src="/shadersBanner.png"
+            alt="Banner"
+            width={120}
+            height={40}
+            className="rounded-md"
+          />
+        </div>
 
+        {/* Social Links Section */}
         <div className="flex gap-2">
-          <a target="_blank" href="https://github.com" className="border flex-shrink-0 bg-primary text-primary-foreground w-10 h-10 grid place-content-center rounded-md hover:opacity-80 transition-opacity">
-            <Image src="/landing-page-assets/github-svgrepo-com.svg" alt="GitHub" width={20} height={20} />
+          <a
+            target="_blank"
+            href="https://github.com"
+            className="border flex-shrink-0 bg-primary text-primary-foreground w-10 h-10 grid place-content-center rounded-md hover:opacity-80 transition-opacity"
+          >
+            <Image
+              src="/landing-page-assets/github-svgrepo-com.svg"
+              alt="GitHub"
+              width={20}
+              height={20}
+            />
           </a>
 
-          <a target="_blank" href="https://x.com/naymur_dev" className="border flex-shrink-0 bg-primary text-primary-foreground w-10 h-10 grid place-content-center rounded-md hover:opacity-80 transition-opacity">
-            <Image src="/landing-page-assets/twitter-x.svg" alt="Twitter" width={16} height={16} />
+          <a
+            target="_blank"
+            href="https://x.com/harsh_and_shubham"
+            className="border flex-shrink-0 bg-primary text-primary-foreground w-10 h-10 grid place-content-center rounded-md hover:opacity-80 transition-opacity"
+          >
+            <Image
+              src="/landing-page-assets/twitter-x.svg"
+              alt="Twitter"
+              width={16}
+              height={16}
+            />
           </a>
         </div>
       </div>

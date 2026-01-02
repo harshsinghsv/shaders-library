@@ -37,11 +37,11 @@ export const metadata: Metadata = {
   ],
   authors: [
     {
-      name: 'naymur rahman',
-      url: 'https://naymur-rahman.com/',
+      name: 'harsh and shubham',
+      url: 'https://github.com',
     },
   ],
-  creator: 'naymur',
+  creator: 'harsh and shubham',
   openGraph: {
     type: 'website',
     locale: 'en_US',
@@ -63,7 +63,7 @@ export const metadata: Metadata = {
     title: siteConfig.name,
     description: siteConfig.description,
     images: [siteConfig.ogImage],
-    creator: '@naymur_dev',
+    creator: '@harsh_and_shubham',
   },
   icons: {
     icon: '/favicon.ico',

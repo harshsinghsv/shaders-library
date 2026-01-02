@@ -1,0 +1,61 @@
+import GlossyFilm from '@/components/website/GlossyFilm';
+
+export const metadata = {
+  title: 'Glossy Film',
+  description: 'A video-based glossy film effect with smooth iridescent animations.',
+};
+
+## Preview
+
+<div className="relative w-full h-96 rounded-lg overflow-hidden border border-gray-200 dark:border-gray-800 mb-8">
+  <GlossyFilm />
+</div>
+
+## Installation
+
+No additional dependencies required. This component uses HTML5 video which is supported in all modern browsers.
+
+## Usage
+
+```tsx
+import GlossyFilm from '@/components/shaders/GlossyFilm';
+
+export default function MyComponent() {
+  return (
+    <div className="relative h-screen">
+      <GlossyFilm />
+      {/* Your content here */}
+    </div>
+  );
+}
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `src` | `string` | `'/videos/glossy-film.mp4'` | Path to the video file |
+| `className` | `string` | `''` | Additional CSS classes |
+
+## Features
+
+- **Smooth Playback**: Auto-plays and loops seamlessly
+- **Video-Based**: Uses pre-rendered effects for consistent quality
+- **Responsive**: Scales to fill container using object-cover
+- **Performance**: No GPU shader computation needed
+
+## Customization
+
+You can provide your own video file:
+
+```tsx
+<GlossyFilm src="/your-custom-video.mp4" />
+```
+
+## Browser Support
+
+This component works on all modern browsers that support HTML5 video:
+- Chrome 4+
+- Firefox 3.5+
+- Safari 3.1+
+- Edge 12+

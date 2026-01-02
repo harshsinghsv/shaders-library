@@ -47,15 +47,15 @@ export function throttle(fn: (...args: any[]) => any, wait: number) {
 }
 
 export const siteConfig = {
-  name: 'shaders-ui',
-  url: 'https://uilayout-starter-repo.vercel.app/',
-  ogImage: 'https://uilayout-starter-repo.vercel.app/og.jpg',
+  name: 'Shaderz',
+  url: 'https://shaderz.vercel.app/',
+  ogImage: 'https://shaderz.vercel.app/og.jpg',
   description:
-    'An open-source starter repo for those who want to create their own component library.',
+    'An open-source collection of stunning WebGL shaders and components for modern web applications.',
   links: {
-    twitter: 'https://twitter.com/naymur_dev',
-    linkedin: 'https://www.linkedin.com/in/naymur-rahman',
-    github: 'https://github.com/naymurdev',
+    twitter: 'https://twitter.com/harsh_and_shubham',
+    linkedin: 'https://www.linkedin.com/in/harsh-and-shubham',
+    github: 'https://github.com',
   },
 };
 

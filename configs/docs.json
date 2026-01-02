@@ -29,14 +29,113 @@
       "new": true
     },
     {
-      "name": "Aurora Borealis Shader",
+      "name": "Ocean Waves Shader",
       "componentArray": [
         {
-          "componentName": "aurora-borealis-shader",
-          "filesrc": "components/shaders/AuroraShader.tsx",
-          "iframeSrc": "live-components/aurora-borealis-shader",
-          "parentlink": "aurora-borealis-shader",
-          "parentName": "Aurora Borealis Shader"
+          "componentName": "ocean-waves-shader",
+          "filesrc": "components/shaders/ocean-waves-shader.tsx",
+          "iframeSrc": "live-components/ocean-waves-shader",
+          "parentlink": "ocean-waves-shader",
+          "parentName": "Ocean Waves Shader"
+        }
+      ],
+      "type": "shaders",
+      "new": true
+    },
+    {
+      "name": "Neon Fluid Shader",
+      "componentArray": [
+        {
+          "componentName": "neon-fluid-shader",
+          "filesrc": "components/shaders/neon-fluid-shader.tsx",
+          "iframeSrc": "live-components/neon-fluid-shader",
+          "parentlink": "neon-fluid-shader",
+          "parentName": "Neon Fluid Shader"
+        }
+      ],
+      "type": "shaders",
+      "new": true
+    },
+    {
+      "name": "Gradient Waves Shader",
+      "componentArray": [
+        {
+          "componentName": "gradient-waves-shader",
+          "filesrc": "components/shaders/gradient-waves-shader.tsx",
+          "iframeSrc": "live-components/gradient-waves-shader",
+          "parentlink": "gradient-waves-shader",
+          "parentName": "Gradient Waves Shader"
+        }
+      ],
+      "type": "shaders",
+      "new": true
+    },
+    {
+      "name": "Cosmic Nebula Shader",
+      "componentArray": [
+        {
+          "componentName": "cosmic-nebula-shader",
+          "filesrc": "components/shaders/cosmic-nebula-shader.tsx",
+          "iframeSrc": "live-components/cosmic-nebula-shader",
+          "parentlink": "cosmic-nebula-shader",
+          "parentName": "Cosmic Nebula Shader"
+        }
+      ],
+      "type": "shaders",
+      "new": true
+    },
+    {
+      "name": "Glossy Ribbon Shader",
+      "componentArray": [
+        {
+          "componentName": "glossy-ribbon-shader",
+          "filesrc": "components/shaders/glossy-ribbon-shader.tsx",
+          "iframeSrc": "live-components/glossy-ribbon-shader",
+          "parentlink": "glossy-ribbon-shader",
+          "parentName": "Glossy Ribbon Shader"
+        }
+      ],
+      "type": "shaders",
+      "new": true
+    },
+    {
+      "name": "Silk Flow Shader",
+      "componentArray": [
+        {
+          "componentName": "silk-flow-shader",
+          "filesrc": "components/shaders/silk-flow-shader.tsx",
+          "iframeSrc": "live-components/silk-flow-shader",
+          "parentlink": "silk-flow-shader",
+          "parentName": "Silk Flow Shader"
+        }
+      ],
+      "type": "shaders",
+      "new": true
+    },
+    {
+      "name": "Glass Twist Shader",
+      "componentArray": [
+        {
+          "componentName": "glass-twist-shader",
+          "filesrc": "components/shaders/glass-twist-shader.tsx",
+          "iframeSrc": "live-components/glass-twist-shader",
+          "parentlink": "glass-twist-shader",
+          "parentName": "Glass Twist Shader"
+        }
+      ],
+      "type": "shaders",
+      "new": true
+    },
+    {
+      "name": "Glossy Film",
+      "componentArray": [
+        {
+          "componentName": "glossy-film",
+          "filesrc": "components/shaders/glossy-film.tsx",
+          "iframeSrc": "live-components/glossy-film",
+          "parentlink": "glossy-film",
+          "parentName": "Glossy Film",
+          "isVideo": true
         }
       ],
       "type": "shaders",

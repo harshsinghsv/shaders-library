@@ -12,11 +12,28 @@ interface CodePreviewProps {
   children: React.ReactNode;
 }
 
-export default function TabCodePreview({ children }: CodePreviewProps) {
-  const Codes = React.Children.toArray(children) as React.ReactElement[];
+interface CodeProps {
+  codeblock: string;
+  componentname: string;
+  filename?: string;
+  lang?: string;
+  children?: React.ReactNode;
+  [key: string]: unknown;
+}
 
-  const parsedCodes = Codes.map((code: React.ReactElement) => {
-    const props = code.props;
+interface ParsedCodeProps {
+  codeblock: any;
+  componentname: string;
+  filename?: string;
+  lang?: string;
+  children?: React.ReactNode;
+}
+
+export default function TabCodePreview({ children }: CodePreviewProps) {
+  const Codes = React.Children.toArray(children) as React.ReactElement<CodeProps>[];
+
+  const parsedCodes = Codes.map((code: React.ReactElement<CodeProps>) => {
+    const props = code.props as CodeProps;
 
     // Check if the codeblock exists and parse the value if necessary
     return {
@@ -25,13 +42,13 @@ export default function TabCodePreview({ children }: CodePreviewProps) {
         ...props,
         codeblock: JSON.parse(props.codeblock),
         // Apply JSON.parse here
-      },
+      } as ParsedCodeProps,
     };
   });
   // console.log('parseCodes', parsedCodes[0].props);
 
   // Helper function to format parseCodes.children into the correct format
-  const formatParseCodes = (children: any, compname: string) => {
+  const formatParseCodes = (children: any, compname: string): { props: ParsedCodeProps }[] => {
     if (!children) return [];
 
     // Check if it's an array or a single object
@@ -47,7 +64,7 @@ export default function TabCodePreview({ children }: CodePreviewProps) {
         filename: child.props.codeblock.meta, // Use meta as filename
         componentname: compname,
         lang: child.props.codeblock.lang,
-      },
+      } as ParsedCodeProps,
       _owner: child._owner,
       _store: child._store,
     }));
@@ -56,9 +73,9 @@ export default function TabCodePreview({ children }: CodePreviewProps) {
   // Add the parseCodes.children into the Codes array
   const formattedCodes = formatParseCodes(
     parsedCodes[0]?.props.children,
-    Codes[0]?.props.componentname
+    (Codes[0]?.props as CodeProps).componentname
   );
-  const updatedCodes = [...parsedCodes, ...formattedCodes];
+  const updatedCodes: { props: ParsedCodeProps }[] = [...parsedCodes, ...formattedCodes];
   // console.log('parseCodes', updatedCodes[0].props);
   // const parsedArray = updatedCodes.map((codeItem) => {
   //   return {

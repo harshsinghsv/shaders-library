@@ -66,6 +66,18 @@ export default async function ComponentCodePreview({
 
   // console.log(fileContent);
 
+  // If isTab is false, only show code without tabs
+  if (!isTab) {
+    return (
+      <div className='not-prose relative z-0 w-full'>
+        <div className='border-2 rounded-lg overflow-hidden'>
+          <PreCoded codeblock={fileContent} />
+          {children !== undefined && <div className='p-4 pt-2'>{children}</div>}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className='not-prose relative z-0 flex items-center justify-between pb-3'>
       <Tabs

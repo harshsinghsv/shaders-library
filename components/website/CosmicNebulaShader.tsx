@@ -1,7 +1,7 @@
 'use client';
 import React, { useRef, useEffect } from 'react';
 
-const OceanWavesShader: React.FC = () => {
+const CosmicNebulaShader: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const animationRef = useRef<number | null>(null);
@@ -36,57 +36,65 @@ const OceanWavesShader: React.FC = () => {
       uniform vec2 resolution;
       uniform float time;
 
-      // Hash function for pseudo-random values
-      float hash(vec2 p) {
-        p = fract(p * vec2(123.34, 456.21));
-        p += dot(p, p + 45.32);
-        return fract(p.x * p.y);
+      // Hash for pseudo-random values
+      float hash(vec3 p) {
+        p = fract(p * 0.3183099 + 0.1);
+        p *= 17.0;
+        return fract(p.x * p.y * p.z * (p.x + p.y + p.z));
       }
 
-      // 2D noise function
-      float noise(vec2 p) {
-        vec2 i = floor(p);
-        vec2 f = fract(p);
+      // 3D noise
+      float noise(vec3 x) {
+        vec3 p = floor(x);
+        vec3 f = fract(x);
         f = f * f * (3.0 - 2.0 * f);
         
-        float a = hash(i);
-        float b = hash(i + vec2(1.0, 0.0));
-        float c = hash(i + vec2(0.0, 1.0));
-        float d = hash(i + vec2(1.0, 1.0));
-        
-        return mix(mix(a, b, f.x), mix(c, d, f.x), f.y);
+        return mix(
+          mix(mix(hash(p), hash(p + vec3(1,0,0)), f.x),
+              mix(hash(p + vec3(0,1,0)), hash(p + vec3(1,1,0)), f.x), f.y),
+          mix(mix(hash(p + vec3(0,0,1)), hash(p + vec3(1,0,1)), f.x),
+              mix(hash(p + vec3(0,1,1)), hash(p + vec3(1,1,1)), f.x), f.y),
+          f.z);
       }
 
-      // Fractal Brownian Motion
-      float fbm(vec2 p) {
+      // Fractal Brownian Motion for nebula clouds
+      float fbm(vec3 p) {
         float value = 0.0;
         float amplitude = 0.5;
         float frequency = 1.0;
         
         for(int i = 0; i < 6; i++) {
           value += amplitude * noise(p * frequency);
-          frequency *= 2.0;
-          amplitude *= 0.5;
+          frequency *= 2.1;
+          amplitude *= 0.45;
         }
         return value;
       }
 
-      // Ocean wave function
-      float wave(vec2 p, float time) {
-        float w = 0.0;
+      // Domain warping for nebula distortion
+      vec3 domainWarp(vec3 p, float time) {
+        vec3 q = vec3(
+          fbm(p + vec3(0.0, 0.0, time * 0.1)),
+          fbm(p + vec3(5.2, 1.3, time * 0.15)),
+          fbm(p + vec3(1.7, 9.2, time * 0.08))
+        );
         
-        // Large rolling waves
-        w += sin(p.x * 0.5 + time * 0.3) * 0.3;
-        w += sin(p.x * 0.3 - p.y * 0.2 + time * 0.2) * 0.2;
+        return p + q * 0.5;
+      }
+
+      // Stars
+      float stars(vec2 p, float count) {
+        vec2 pos = floor(p * count);
+        float star = hash(vec3(pos, 1.0));
         
-        // Medium waves
-        w += sin(p.x * 1.0 + p.y * 0.5 + time * 0.5) * 0.15;
-        w += sin(p.x * 1.5 - p.y * 0.8 + time * 0.4) * 0.1;
-        
-        // Small ripples
-        w += fbm(p * 2.0 + vec2(time * 0.1, time * 0.05)) * 0.1;
-        
-        return w;
+        if(star > 0.98) {
+          vec2 center = (pos + 0.5) / count;
+          float dist = length(p - center);
+          float brightness = hash(vec3(pos, 2.0));
+          float twinkle = sin(time * 2.0 + brightness * 10.0) * 0.5 + 0.5;
+          return (1.0 - smoothstep(0.0, 0.002, dist)) * brightness * twinkle;
+        }
+        return 0.0;
       }
 
       void main() {
@@ -94,39 +102,67 @@ const OceanWavesShader: React.FC = () => {
         vec2 p = (uv - 0.5) * 2.0;
         p.x *= resolution.x / resolution.y;
         
-        // Create wave motion
-        float waves = wave(p * 2.0, time);
+        float t = time * 0.15;
         
-        // Add foam patterns
-        float foam = fbm(p * 4.0 + vec2(time * 0.2, waves * 2.0));
-        foam = smoothstep(0.5, 0.7, foam);
+        // 3D position for nebula
+        vec3 pos = vec3(p * 1.5, t);
         
-        // Ocean colors
-        vec3 deepWater = vec3(0.0, 0.2, 0.4);      // Deep blue
-        vec3 shallowWater = vec3(0.0, 0.4, 0.6);   // Lighter blue
-        vec3 foamColor = vec3(0.7, 0.9, 1.0);      // White-blue foam
+        // Domain warp for swirling nebula
+        vec3 warped = domainWarp(pos, t);
         
-        // Mix colors based on wave height
-        float waveHeight = waves * 0.5 + 0.5;
-        vec3 color = mix(deepWater, shallowWater, waveHeight);
+        // Layered nebula clouds
+        float nebula1 = fbm(warped * 2.0);
+        float nebula2 = fbm(warped * 3.0 + vec3(2.0, 1.0, 0.0));
+        float nebula3 = fbm(warped * 4.0 - vec3(1.0, 2.0, 0.0));
         
-        // Add foam highlights
-        color = mix(color, foamColor, foam * 0.4);
+        // Combine nebula layers
+        float nebulaDensity = nebula1 * 0.6 + nebula2 * 0.3 + nebula3 * 0.1;
+        nebulaDensity = pow(nebulaDensity, 1.5);
         
-        // Add depth gradient
-        float depth = smoothstep(0.0, 1.0, 1.0 - uv.y);
-        color = mix(color, deepWater, depth * 0.3);
+        // Cosmic color palette
+        vec3 deepPurple = vec3(0.15, 0.05, 0.3);
+        vec3 magenta = vec3(0.8, 0.1, 0.6);
+        vec3 pink = vec3(1.0, 0.3, 0.7);
+        vec3 cyan = vec3(0.2, 0.7, 1.0);
+        vec3 violet = vec3(0.5, 0.2, 0.9);
         
-        // Add shimmer effect
-        float shimmer = fbm(p * 8.0 + vec2(time * 0.5, time * 0.3));
-        shimmer = pow(shimmer, 3.0) * 0.2;
-        color += vec3(shimmer);
+        // Color mixing based on density and position
+        vec3 nebulaColor = mix(deepPurple, magenta, nebulaDensity);
+        nebulaColor = mix(nebulaColor, pink, nebula2 * 0.7);
+        nebulaColor = mix(nebulaColor, violet, nebula3 * 0.5);
         
-        // Vignette effect
-        float vignette = 1.0 - length(uv - 0.5) * 0.5;
-        color *= vignette;
+        // Add cyan highlights in dense areas
+        float highlights = smoothstep(0.6, 0.9, nebulaDensity);
+        nebulaColor = mix(nebulaColor, cyan, highlights * 0.4);
         
-        gl_FragColor = vec4(color, 1.0);
+        // Glow effect
+        float glow = pow(nebulaDensity, 0.8) * 1.5;
+        nebulaColor *= glow;
+        
+        // Add stars
+        float starField = stars(uv, 200.0);
+        starField += stars(uv * 1.5, 300.0) * 0.7;
+        starField += stars(uv * 2.0, 400.0) * 0.5;
+        
+        vec3 starColor = vec3(1.0, 0.95, 0.9) * starField;
+        
+        // Combine nebula and stars
+        vec3 finalColor = nebulaColor + starColor;
+        
+        // Add subtle color shift animation
+        float colorShift = sin(t * 0.5 + length(p)) * 0.5 + 0.5;
+        finalColor += vec3(0.1, 0.0, 0.15) * colorShift * nebulaDensity * 0.3;
+        
+        // Center bright spot
+        float centerGlow = 1.0 - length(p * 0.5);
+        centerGlow = pow(centerGlow, 3.0) * 0.15;
+        finalColor += vec3(0.6, 0.2, 0.8) * centerGlow;
+        
+        // Vignette
+        float vignette = 1.0 - length(uv - 0.5) * 0.7;
+        finalColor *= vignette;
+        
+        gl_FragColor = vec4(finalColor, 1.0);
       }
     `;
 
@@ -226,4 +262,4 @@ const OceanWavesShader: React.FC = () => {
   );
 };
 
-export default OceanWavesShader;
+export default CosmicNebulaShader;

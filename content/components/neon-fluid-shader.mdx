@@ -1,0 +1,44 @@
+import NeonFluidShader from '@/components/website/NeonFluidShader';
+
+export const metadata = {
+  title: 'Neon Fluid Shader',
+  description: 'Flowing fire with realistic flame motion - orange, yellow, and red flames on black',
+};
+
+## Preview
+
+<div className="relative w-full h-96 rounded-lg overflow-hidden border border-gray-200 dark:border-gray-800 mb-8">
+  <NeonFluidShader />
+</div>
+
+## Installation
+
+Install the required dependencies:
+
+```bash
+npm install three @types/three
+```
+
+Or with yarn:
+
+```bash
+yarn add three @types/three
+```
+
+Or with pnpm:
+
+```bash
+pnpm add three @types/three
+```
+
+## Usage
+
+<ComponentCodePreview name="neon-fluid-shader" isTab={false} />
+
+## Features
+
+- **Realistic Fire**: Flowing flames with natural upward motion
+- **Dynamic Colors**: Gradient from dark red to orange to yellow
+- **Turbulent Motion**: Noise-based flame turbulence
+- **Glowing Tips**: Bright white-yellow flame tips
+- **Performance Optimized**: Efficient WebGL implementation

@@ -1,7 +1,7 @@
 'use client';
 import React, { useRef, useEffect } from 'react';
 
-const OceanWavesShader: React.FC = () => {
+const GlassTwistShader: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const animationRef = useRef<number | null>(null);
@@ -36,97 +36,37 @@ const OceanWavesShader: React.FC = () => {
       uniform vec2 resolution;
       uniform float time;
 
-      // Hash function for pseudo-random values
-      float hash(vec2 p) {
-        p = fract(p * vec2(123.34, 456.21));
-        p += dot(p, p + 45.32);
-        return fract(p.x * p.y);
-      }
-
-      // 2D noise function
-      float noise(vec2 p) {
-        vec2 i = floor(p);
-        vec2 f = fract(p);
-        f = f * f * (3.0 - 2.0 * f);
+      void main(){
+        vec2 uv=gl_FragCoord.xy/resolution.xy;
+        vec2 p=(uv-0.5)*2.0;
+        p.x*=resolution.x/resolution.y;
+        vec3 bg=mix(vec3(0.85,0.88,0.92),vec3(0.92,0.94,0.96),uv.y);
+        vec3 col=bg;
         
-        float a = hash(i);
-        float b = hash(i + vec2(1.0, 0.0));
-        float c = hash(i + vec2(0.0, 1.0));
-        float d = hash(i + vec2(1.0, 1.0));
-        
-        return mix(mix(a, b, f.x), mix(c, d, f.x), f.y);
-      }
-
-      // Fractal Brownian Motion
-      float fbm(vec2 p) {
-        float value = 0.0;
-        float amplitude = 0.5;
-        float frequency = 1.0;
-        
-        for(int i = 0; i < 6; i++) {
-          value += amplitude * noise(p * frequency);
-          frequency *= 2.0;
-          amplitude *= 0.5;
+        for(float i=0.0;i<4.0;i++){
+          float offset=(i-1.5)*0.35;
+          float twist=sin(p.x*1.5+time*0.5+i*0.5)*0.5;
+          float ribbonY=twist+offset;
+          float dist=abs(p.y-ribbonY);
+          float ribbon=smoothstep(0.2,0.08,dist);
+          float depth=1.0-smoothstep(0.0,0.15,dist);
+          
+          vec3 glass=vec3(0.0,0.75,0.85);
+          vec3 light=vec3(0.5,0.95,1.0);
+          vec3 c=mix(glass*0.4,light,pow(depth,1.5));
+          
+          float fresnel=pow(1.0-depth,2.0);
+          c=mix(c,vec3(0.9,0.98,1.0),fresnel*0.7);
+          
+          float caustic=sin(p.x*15.0+time+i)*sin(p.y*15.0-time)*0.5+0.5;
+          caustic=pow(caustic,4.0)*ribbon*0.3;
+          c+=glass*caustic;
+          
+          float alpha=ribbon*0.7;
+          col=mix(col,c,alpha);
         }
-        return value;
-      }
-
-      // Ocean wave function
-      float wave(vec2 p, float time) {
-        float w = 0.0;
         
-        // Large rolling waves
-        w += sin(p.x * 0.5 + time * 0.3) * 0.3;
-        w += sin(p.x * 0.3 - p.y * 0.2 + time * 0.2) * 0.2;
-        
-        // Medium waves
-        w += sin(p.x * 1.0 + p.y * 0.5 + time * 0.5) * 0.15;
-        w += sin(p.x * 1.5 - p.y * 0.8 + time * 0.4) * 0.1;
-        
-        // Small ripples
-        w += fbm(p * 2.0 + vec2(time * 0.1, time * 0.05)) * 0.1;
-        
-        return w;
-      }
-
-      void main() {
-        vec2 uv = gl_FragCoord.xy / resolution.xy;
-        vec2 p = (uv - 0.5) * 2.0;
-        p.x *= resolution.x / resolution.y;
-        
-        // Create wave motion
-        float waves = wave(p * 2.0, time);
-        
-        // Add foam patterns
-        float foam = fbm(p * 4.0 + vec2(time * 0.2, waves * 2.0));
-        foam = smoothstep(0.5, 0.7, foam);
-        
-        // Ocean colors
-        vec3 deepWater = vec3(0.0, 0.2, 0.4);      // Deep blue
-        vec3 shallowWater = vec3(0.0, 0.4, 0.6);   // Lighter blue
-        vec3 foamColor = vec3(0.7, 0.9, 1.0);      // White-blue foam
-        
-        // Mix colors based on wave height
-        float waveHeight = waves * 0.5 + 0.5;
-        vec3 color = mix(deepWater, shallowWater, waveHeight);
-        
-        // Add foam highlights
-        color = mix(color, foamColor, foam * 0.4);
-        
-        // Add depth gradient
-        float depth = smoothstep(0.0, 1.0, 1.0 - uv.y);
-        color = mix(color, deepWater, depth * 0.3);
-        
-        // Add shimmer effect
-        float shimmer = fbm(p * 8.0 + vec2(time * 0.5, time * 0.3));
-        shimmer = pow(shimmer, 3.0) * 0.2;
-        color += vec3(shimmer);
-        
-        // Vignette effect
-        float vignette = 1.0 - length(uv - 0.5) * 0.5;
-        color *= vignette;
-        
-        gl_FragColor = vec4(color, 1.0);
+        gl_FragColor=vec4(col,1.0);
       }
     `;
 
@@ -185,7 +125,7 @@ const OceanWavesShader: React.FC = () => {
     const render = () => {
       if (!gl || !canvas) return;
 
-      gl.clearColor(0, 0, 0, 1);
+      gl.clearColor(0.85, 0.88, 0.92, 1);
       gl.clear(gl.COLOR_BUFFER_BIT);
 
       gl.useProgram(program);
@@ -217,7 +157,7 @@ const OceanWavesShader: React.FC = () => {
   }, []);
 
   return (
-    <div ref={containerRef} className="absolute inset-0 w-full h-full bg-black overflow-hidden">
+    <div ref={containerRef} className="absolute inset-0 w-full h-full bg-gray-200 overflow-hidden">
       <canvas
         ref={canvasRef}
         className="absolute top-0 left-0 w-full h-full"
@@ -226,4 +166,4 @@ const OceanWavesShader: React.FC = () => {
   );
 };
 
-export default OceanWavesShader;
+export default GlassTwistShader;

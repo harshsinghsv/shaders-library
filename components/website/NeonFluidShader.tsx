@@ -1,7 +1,7 @@
 'use client';
 import React, { useRef, useEffect } from 'react';
 
-const OceanWavesShader: React.FC = () => {
+const NeonFluidShader: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const animationRef = useRef<number | null>(null);
@@ -36,14 +36,14 @@ const OceanWavesShader: React.FC = () => {
       uniform vec2 resolution;
       uniform float time;
 
-      // Hash function for pseudo-random values
+      // Hash for noise
       float hash(vec2 p) {
         p = fract(p * vec2(123.34, 456.21));
         p += dot(p, p + 45.32);
         return fract(p.x * p.y);
       }
 
-      // 2D noise function
+      // Smooth noise
       float noise(vec2 p) {
         vec2 i = floor(p);
         vec2 f = fract(p);
@@ -71,22 +71,18 @@ const OceanWavesShader: React.FC = () => {
         return value;
       }
 
-      // Ocean wave function
-      float wave(vec2 p, float time) {
-        float w = 0.0;
+      // Turbulent fbm for flames
+      float turbulence(vec2 p) {
+        float value = 0.0;
+        float amplitude = 1.0;
+        float frequency = 1.0;
         
-        // Large rolling waves
-        w += sin(p.x * 0.5 + time * 0.3) * 0.3;
-        w += sin(p.x * 0.3 - p.y * 0.2 + time * 0.2) * 0.2;
-        
-        // Medium waves
-        w += sin(p.x * 1.0 + p.y * 0.5 + time * 0.5) * 0.15;
-        w += sin(p.x * 1.5 - p.y * 0.8 + time * 0.4) * 0.1;
-        
-        // Small ripples
-        w += fbm(p * 2.0 + vec2(time * 0.1, time * 0.05)) * 0.1;
-        
-        return w;
+        for(int i = 0; i < 5; i++) {
+          value += amplitude * abs(noise(p * frequency) * 2.0 - 1.0);
+          frequency *= 2.0;
+          amplitude *= 0.5;
+        }
+        return value;
       }
 
       void main() {
@@ -94,39 +90,73 @@ const OceanWavesShader: React.FC = () => {
         vec2 p = (uv - 0.5) * 2.0;
         p.x *= resolution.x / resolution.y;
         
-        // Create wave motion
-        float waves = wave(p * 2.0, time);
+        float t = time * 0.3;
         
-        // Add foam patterns
-        float foam = fbm(p * 4.0 + vec2(time * 0.2, waves * 2.0));
-        foam = smoothstep(0.5, 0.7, foam);
+        // Create upward flowing motion
+        vec2 flowDir = vec2(0.0, -1.0);
+        vec2 flowPos = p + flowDir * t;
         
-        // Ocean colors
-        vec3 deepWater = vec3(0.0, 0.2, 0.4);      // Deep blue
-        vec3 shallowWater = vec3(0.0, 0.4, 0.6);   // Lighter blue
-        vec3 foamColor = vec3(0.7, 0.9, 1.0);      // White-blue foam
+        // Add turbulent distortion
+        float turbulent = turbulence(flowPos * 1.5 + vec2(t * 0.2, 0.0));
+        float displacement = fbm(flowPos * 2.0 + vec2(t * 0.3, -t * 0.5)) * 2.0 - 1.0;
         
-        // Mix colors based on wave height
-        float waveHeight = waves * 0.5 + 0.5;
-        vec3 color = mix(deepWater, shallowWater, waveHeight);
+        vec2 distorted = p;
+        distorted.x += displacement * 0.4;
+        distorted.y += turbulent * 0.3;
         
-        // Add foam highlights
-        color = mix(color, foamColor, foam * 0.4);
+        // Flame shape - stronger at bottom, thinner at top
+        float flameShape = 1.0 - abs(distorted.x) * (1.0 + distorted.y * 0.8);
+        flameShape = smoothstep(0.0, 0.8, flameShape);
         
-        // Add depth gradient
-        float depth = smoothstep(0.0, 1.0, 1.0 - uv.y);
-        color = mix(color, deepWater, depth * 0.3);
+        // Multiple flame layers
+        float flame1 = fbm(distorted * 2.0 + vec2(t * 0.4, -t * 0.8));
+        float flame2 = fbm(distorted * 3.0 + vec2(-t * 0.3, -t * 0.6));
+        float flame3 = fbm(distorted * 4.0 + vec2(t * 0.5, -t * 1.0));
         
-        // Add shimmer effect
-        float shimmer = fbm(p * 8.0 + vec2(time * 0.5, time * 0.3));
-        shimmer = pow(shimmer, 3.0) * 0.2;
-        color += vec3(shimmer);
+        // Combine flames with different intensities
+        float flames = flame1 * 0.5 + flame2 * 0.3 + flame3 * 0.2;
+        flames = pow(flames, 1.5);
         
-        // Vignette effect
-        float vignette = 1.0 - length(uv - 0.5) * 0.5;
-        color *= vignette;
+        // Add turbulent wisps
+        float wisps = turbulence(distorted * 3.0 + vec2(t * 0.2, -t * 0.7));
+        wisps = pow(wisps, 2.0) * 0.3;
         
-        gl_FragColor = vec4(color, 1.0);
+        // Combine all elements
+        float intensity = flames + wisps;
+        intensity *= flameShape;
+        
+        // Fire color gradient - from dark red to orange to yellow to white
+        vec3 color1 = vec3(0.1, 0.0, 0.0);    // Dark red/black
+        vec3 color2 = vec3(0.8, 0.1, 0.0);    // Deep red
+        vec3 color3 = vec3(1.0, 0.3, 0.0);    // Red-orange
+        vec3 color4 = vec3(1.0, 0.6, 0.0);    // Orange
+        vec3 color5 = vec3(1.0, 0.9, 0.2);    // Yellow
+        vec3 color6 = vec3(1.0, 1.0, 0.8);    // White-yellow
+        
+        // Color mapping based on intensity
+        vec3 fireColor = color1;
+        fireColor = mix(fireColor, color2, smoothstep(0.0, 0.2, intensity));
+        fireColor = mix(fireColor, color3, smoothstep(0.2, 0.4, intensity));
+        fireColor = mix(fireColor, color4, smoothstep(0.4, 0.6, intensity));
+        fireColor = mix(fireColor, color5, smoothstep(0.6, 0.8, intensity));
+        fireColor = mix(fireColor, color6, smoothstep(0.8, 1.0, intensity));
+        
+        // Add hot spots
+        float hotSpots = pow(flame3, 3.0) * flameShape;
+        fireColor += vec3(1.0, 1.0, 0.5) * hotSpots * 0.5;
+        
+        // Enhance edges with bright orange
+        float edge = smoothstep(0.3, 0.5, intensity) * (1.0 - smoothstep(0.7, 0.9, intensity));
+        fireColor += vec3(1.0, 0.5, 0.0) * edge * 0.3;
+        
+        // Darken based on position (darker at edges)
+        float vignette = 1.0 - length(vec2(distorted.x, distorted.y * 0.5)) * 0.3;
+        fireColor *= vignette;
+        
+        // Boost overall brightness
+        fireColor *= 1.2;
+        
+        gl_FragColor = vec4(fireColor, 1.0);
       }
     `;
 
@@ -226,4 +256,4 @@ const OceanWavesShader: React.FC = () => {
   );
 };
 
-export default OceanWavesShader;
+export default NeonFluidShader;

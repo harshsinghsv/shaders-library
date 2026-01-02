@@ -2,12 +2,30 @@
 import { Button } from '@/components/website/ui/button';
 import LiquidOrangeShader from './LiquidOrangeShader';
 import PlasmaShader from './PlasmaShader';
-import AuroraShader from './AuroraShader';
+import OceanWavesShader from './OceanWavesShader';
+import NeonFluidShader from './NeonFluidShader';
+import GradientWavesShader from './GradientWavesShader';
+import CosmicNebulaShader from './CosmicNebulaShader';
+import GlossyRibbonShader from './GlossyRibbonShader';
+import SilkFlowShader from './SilkFlowShader';
+import GlassTwistShader from './GlassTwistShader';
+import VideoBackground from './VideoBackground';
 
 const shaderComponents = {
   'liquid-orange': LiquidOrangeShader,
   'plasma': PlasmaShader,
-  'aurora-borealis': AuroraShader,
+  'ocean-waves': OceanWavesShader,
+  'neon-fluid': NeonFluidShader,
+  'gradient-waves': GradientWavesShader,
+  'cosmic-nebula': CosmicNebulaShader,
+  'glossy-ribbon': GlossyRibbonShader,
+  'silk-flow': SilkFlowShader,
+  'glass-twist': GlassTwistShader,
+};
+
+// Videos are identified by having a 'video-' prefix
+const videoSources: Record<string, string> = {
+  'video-glossy-film': '/videos/glossy-film.mp4',
 };
 
 interface HeroSecProps {
@@ -15,13 +33,19 @@ interface HeroSecProps {
 }
 
 function HeroSec({ activeShader }: HeroSecProps) {
+  const isVideo = activeShader.startsWith('video-');
   const ShaderComponent = shaderComponents[activeShader as keyof typeof shaderComponents] || LiquidOrangeShader;
+  const videoSrc = videoSources[activeShader];
 
   return (
     <section className="relative min-h-screen h-screen flex flex-col items-center justify-between px-6 pt-24 pb-20 overflow-hidden font-sans">
-      {/* Dynamic Shader Background */}
+      {/* Dynamic Background - Shader or Video */}
       <div className="absolute inset-0 z-[-30]">
-        <ShaderComponent />
+        {isVideo && videoSrc ? (
+          <VideoBackground src={videoSrc} />
+        ) : (
+          <ShaderComponent />
+        )}
       </div>
 
       {/* Decorative shapes and stars */}

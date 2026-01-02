@@ -2,11 +2,28 @@
 import { useState } from 'react';
 import Header from '@/components/website/header';
 import HeroSec from '@/components/website/hero-sec';
-import ShaderGallery from '@/components/website/ShaderGallery';
+import ShaderGallery, { VideoBackground } from '@/components/website/ShaderGallery';
 import { Shader } from '@/components/website/ShaderSelector';
 import LiquidOrangeShader from '@/components/website/LiquidOrangeShader';
 import PlasmaShader from '@/components/website/PlasmaShader';
-import AuroraShader from '@/components/website/AuroraShader';
+import OceanWavesShader from '@/components/website/OceanWavesShader';
+import NeonFluidShader from '@/components/website/NeonFluidShader';
+import GradientWavesShader from '@/components/website/GradientWavesShader';
+import CosmicNebulaShader from '@/components/website/CosmicNebulaShader';
+import GlossyRibbonShader from '@/components/website/GlossyRibbonShader';
+import SilkFlowShader from '@/components/website/SilkFlowShader';
+import GlassTwistShader from '@/components/website/GlassTwistShader';
+
+// Video backgrounds
+const videos: VideoBackground[] = [
+  {
+    id: 'video-glossy-film',
+    name: 'Glossy Film',
+    description: 'Smooth glossy film with reflective surface',
+    src: '/videos/glossy-film.mp4',
+    colors: ['#1a1a2e', '#16213e', '#0f3460', '#e94560'],
+  },
+];
 
 const shaders: Shader[] = [
   {
@@ -186,193 +203,263 @@ const shaders: Shader[] = [
     `
   },
   {
-    id: 'aurora-borealis',
-    name: 'Aurora Borealis',
-    description: 'Volumetric aurora with realistic atmospheric effects',
-    component: AuroraShader,
+    id: 'ocean-waves',
+    name: 'Ocean Waves',
+    description: 'Animated ocean with realistic wave motion and foam',
+    component: OceanWavesShader,
     thumbnail: '',
-    colors: ['#00FFB3', '#00A3FF', '#7B61FF', '#FF6EC7', '#9FFF6A'],
+    colors: ['#002B5C', '#0055A5', '#4A90E2', '#87CEEB'],
     fragmentShader: `
       precision highp float;
       uniform vec2 resolution;
       uniform float time;
 
       // Hash function for pseudo-random values
-      float hash(vec3 p) {
-        p = fract(p * 0.3183099 + 0.1);
-        p *= 17.0;
-        return fract(p.x * p.y * p.z * (p.x + p.y + p.z));
+      float hash(vec2 p) {
+        p = fract(p * vec2(123.34, 456.21));
+        p += dot(p, p + 45.32);
+        return fract(p.x * p.y);
       }
 
-      // 3D Simplex-like noise (optimized version)
-      float noise(vec3 x) {
-        vec3 p = floor(x);
-        vec3 f = fract(x);
+      // 2D noise function
+      float noise(vec2 p) {
+        vec2 i = floor(p);
+        vec2 f = fract(p);
         f = f * f * (3.0 - 2.0 * f);
         
-        float n = p.x + p.y * 157.0 + 113.0 * p.z;
-        return mix(
-          mix(mix(hash(p + vec3(0.0, 0.0, 0.0)), hash(p + vec3(1.0, 0.0, 0.0)), f.x),
-              mix(hash(p + vec3(0.0, 1.0, 0.0)), hash(p + vec3(1.0, 1.0, 0.0)), f.x), f.y),
-          mix(mix(hash(p + vec3(0.0, 0.0, 1.0)), hash(p + vec3(1.0, 0.0, 1.0)), f.x),
-              mix(hash(p + vec3(0.0, 1.0, 1.0)), hash(p + vec3(1.0, 1.0, 1.0)), f.x), f.y),
-          f.z);
+        float a = hash(i);
+        float b = hash(i + vec2(1.0, 0.0));
+        float c = hash(i + vec2(0.0, 1.0));
+        float d = hash(i + vec2(1.0, 1.0));
+        
+        return mix(mix(a, b, f.x), mix(c, d, f.x), f.y);
       }
 
-      // Fractal Brownian Motion - layered noise for detail
-      float fbm(vec3 p, int octaves) {
+      // Fractal Brownian Motion
+      float fbm(vec2 p) {
         float value = 0.0;
         float amplitude = 0.5;
-        float frequency = 1.0;
         
-        for(int i = 0; i < 6; i++) {
-          if(i >= octaves) break;
-          value += amplitude * noise(p * frequency);
-          frequency *= 2.1;
-          amplitude *= 0.48;
+        for(int i = 0; i < 5; i++) {
+          value += amplitude * noise(p);
+          p *= 2.0;
+          amplitude *= 0.5;
         }
         return value;
       }
 
-      // Curl noise for swirling ribbon motion
-      vec3 curlNoise(vec3 p) {
-        float eps = 0.1;
-        float n1, n2;
-        vec3 curl;
-        
-        n1 = noise(p + vec3(0.0, eps, 0.0));
-        n2 = noise(p - vec3(0.0, eps, 0.0));
-        curl.x = (n1 - n2) / (2.0 * eps);
-        
-        n1 = noise(p + vec3(eps, 0.0, 0.0));
-        n2 = noise(p - vec3(eps, 0.0, 0.0));
-        curl.y = (n1 - n2) / (2.0 * eps);
-        
-        n1 = noise(p + vec3(0.0, 0.0, eps));
-        n2 = noise(p - vec3(0.0, 0.0, eps));
-        curl.z = (n1 - n2) / (2.0 * eps);
-        
-        return curl;
-      }
-
-      // Aurora density function
-      float auroraDensity(vec3 pos, float time) {
-        vec3 curl = curlNoise(pos * 0.5 + vec3(0.0, time * 0.1, 0.0)) * 0.4;
-        vec3 samplePos = pos + curl;
-        
-        float turbulence = fbm(samplePos * 1.5 + vec3(time * 0.15, time * 0.08, 0.0), 4);
-        
-        float bands = sin(samplePos.y * 3.0 + turbulence * 2.0 + time * 0.3) * 0.5 + 0.5;
-        bands *= sin(samplePos.x * 1.5 + turbulence * 1.5) * 0.5 + 0.5;
-        
-        float bands2 = sin(samplePos.y * 4.5 + turbulence * 1.5 - time * 0.2) * 0.5 + 0.5;
-        bands = max(bands, bands2 * 0.6);
-        
-        float density = bands * turbulence;
-        
-        float heightFalloff = smoothstep(0.0, 0.3, pos.y) * smoothstep(1.0, 0.6, pos.y);
-        density *= heightFalloff;
-        
-        float detail = noise(samplePos * 8.0 + vec3(time * 0.3, 0.0, 0.0)) * 0.3;
-        density += detail * density;
-        
-        return clamp(density, 0.0, 1.0);
-      }
-
-      // Volumetric raymarching
-      vec4 volumetricAurora(vec3 rayOrigin, vec3 rayDir, float time) {
-        int maxSteps = 24;
-        float stepSize = 0.08;
-        
-        vec3 accumulatedColor = vec3(0.0);
-        float accumulatedAlpha = 0.0;
-        
-        vec3 currentPos = rayOrigin;
-        
-        for(int i = 0; i < 24; i++) {
-          if(i >= maxSteps) break;
-          
-          if(accumulatedAlpha > 0.95) break;
-          
-          float density = auroraDensity(currentPos, time);
-          
-          if(density > 0.01) {
-            float height = (currentPos.y + 0.5) / 1.5;
-            float colorPhase = currentPos.x * 0.3 + currentPos.z * 0.2 + time * 0.1;
-            
-            // Aurora colors
-            vec3 color1 = vec3(0.0, 1.0, 0.7);  // Green
-            vec3 color2 = vec3(0.0, 0.6, 1.0);  // Blue
-            vec3 color3 = vec3(0.5, 0.4, 1.0);  // Purple
-            vec3 color4 = vec3(1.0, 0.4, 0.8);  // Pink
-            vec3 color5 = vec3(0.6, 1.0, 0.4);  // Light green
-            
-            vec3 baseColor = mix(color1, color2, fract(colorPhase));
-            baseColor = mix(baseColor, color3, fract(colorPhase + 0.33));
-            baseColor = mix(baseColor, color4, fract(colorPhase + 0.66));
-            
-            float heightShift = smoothstep(0.0, 1.0, height);
-            vec3 heightTint = mix(vec3(0.2, 1.0, 0.5), vec3(0.8, 0.3, 1.0), heightShift);
-            
-            vec3 color = baseColor * heightTint;
-            
-            float attenuation = exp(-length(currentPos - rayOrigin) * 0.8);
-            float brightness = density * attenuation * stepSize * 1.2;
-            
-            vec3 sampledColor = color * brightness;
-            accumulatedColor += sampledColor * (1.0 - accumulatedAlpha);
-            accumulatedAlpha += brightness * (1.0 - accumulatedAlpha);
-          }
-          
-          currentPos += rayDir * stepSize;
-        }
-        
-        return vec4(accumulatedColor, accumulatedAlpha);
-      }
-
       void main() {
         vec2 uv = gl_FragCoord.xy / resolution.xy;
-        vec2 ndc = (uv - 0.5) * 2.0;
-        ndc.x *= resolution.x / resolution.y;
+        vec2 p = (uv - 0.5) * 2.0;
+        p.x *= resolution.x / resolution.y;
         
-        vec3 rayOrigin = vec3(0.0, 0.3, -1.5);
-        vec3 rayDir = normalize(vec3(ndc.x, ndc.y - 0.2, 1.0));
+        // Wave motion
+        float wave = sin(p.x * 0.5 + time * 0.3) * 0.3;
+        wave += sin(p.x * 1.5 - p.y * 0.8 + time * 0.4) * 0.15;
+        wave += fbm(p * 2.0 + vec2(time * 0.1, time * 0.05)) * 0.1;
         
-        vec4 auroraColor = volumetricAurora(rayOrigin, rayDir, time);
+        // Foam
+        float foam = fbm(p * 4.0 + vec2(time * 0.2, wave * 2.0));
+        foam = smoothstep(0.5, 0.7, foam);
         
-        float skyGradient = smoothstep(0.0, 0.8, uv.y);
-        vec3 backgroundColor = mix(
-          vec3(0.0, 0.0, 0.01),
-          vec3(0.0, 0.0, 0.0),
-          skyGradient
-        );
+        // Colors
+        vec3 deepWater = vec3(0.0, 0.2, 0.4);
+        vec3 shallowWater = vec3(0.0, 0.4, 0.6);
+        vec3 foamColor = vec3(0.7, 0.9, 1.0);
         
-        vec3 finalColor = mix(backgroundColor, auroraColor.rgb, auroraColor.a);
+        float waveHeight = wave * 0.5 + 0.5;
+        vec3 color = mix(deepWater, shallowWater, waveHeight);
+        color = mix(color, foamColor, foam * 0.4);
         
-        // Atmospheric fog
-        float horizonFade = smoothstep(0.5, 0.0, uv.y);
-        vec3 fogColor = vec3(0.05, 0.1, 0.2);
-        float fogAmount = horizonFade * 0.4;
-        finalColor = mix(finalColor, fogColor, fogAmount);
+        float depth = smoothstep(0.0, 1.0, 1.0 - uv.y);
+        color = mix(color, deepWater, depth * 0.3);
         
-        // Tone mapping
-        float a = 2.51;
-        float b = 0.03;
-        float c = 2.43;
-        float d = 0.59;
-        float e = 0.14;
-        finalColor = clamp((finalColor * (a * finalColor + b)) / (finalColor * (c * finalColor + d) + e), 0.0, 1.0);
-        
-        // Gamma correction
-        finalColor = pow(finalColor, vec3(1.0 / 2.2));
-        
-        // Film grain
-        float grain = (hash(vec3(uv * 999.0, time)) - 0.5) * 0.02;
-        finalColor += grain;
-        
-        gl_FragColor = vec4(finalColor, 1.0);
+        gl_FragColor = vec4(color, 1.0);
       }
     `
+  },
+  {
+    id: 'neon-fluid',
+    name: 'Neon Fluid',
+    description: 'Flowing fire with realistic flame motion',
+    component: NeonFluidShader,
+    thumbnail: '',
+    colors: ['#100000', '#CC1100', '#FF6600', '#FFCC00'],
+    fragmentShader: `precision highp float;
+      uniform vec2 resolution;
+      uniform float time;
+      float hash(vec2 p){return fract(sin(dot(p,vec2(12.9,78.2)))*43758.5);}
+      float noise(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.0-2.0*f);return mix(mix(hash(i),hash(i+vec2(1,0)),f.x),mix(hash(i+vec2(0,1)),hash(i+vec2(1,1)),f.x),f.y);}
+      float fbm(vec2 p){float v=0.0,a=0.5;for(int i=0;i<4;i++){v+=a*noise(p);p*=2.0;a*=0.5;}return v;}
+      void main(){
+        vec2 uv=gl_FragCoord.xy/resolution.xy;
+        vec2 p=uv*3.0;p.y-=time*0.8;
+        float n=fbm(p)*fbm(p+vec2(time*0.5,0));
+        float fire=n*pow(1.0-uv.y,2.0);
+        vec3 col=vec3(0.1,0.0,0.0);
+        col=mix(col,vec3(0.8,0.0,0.0),smoothstep(0.2,0.5,fire));
+        col=mix(col,vec3(1.0,0.3,0.0),smoothstep(0.4,0.7,fire));
+        col=mix(col,vec3(1.0,0.7,0.2),smoothstep(0.6,0.9,fire));
+        col+=vec3(1.0,0.9,0.7)*pow(fire,3.0);
+        gl_FragColor=vec4(col,1.0);
+      }`
+  },
+  {
+    id: 'gradient-waves',
+    name: 'Gradient Waves',
+    description: 'Sleek minimalist waves with smooth gradients',
+    component: GradientWavesShader,
+    thumbnail: '',
+    colors: ['#1A2A50', '#2E1A60', '#50207', '#284A80'],
+    fragmentShader: `precision highp float;
+      uniform vec2 resolution;
+      uniform float time;
+      void main(){
+        vec2 uv=gl_FragCoord.xy/resolution.xy;
+        vec2 p=(uv-0.5)*2.0;p.x*=resolution.x/resolution.y;
+        vec3 col=vec3(0.0);
+        for(float i=0.0;i<5.0;i++){
+          float offset=(i-2.0)*0.3;
+          float wave=sin(p.x*2.0+time*0.8+i*0.8)*0.25+offset;
+          float d=smoothstep(0.12,0.0,abs(p.y-wave));
+          float hue=i/5.0;
+          vec3 c=mix(vec3(0.3,0.4,1.0),vec3(0.6,0.3,1.0),hue);
+          c=mix(c,vec3(0.5,0.1,0.7),smoothstep(0.4,0.8,hue));
+          float glow=exp(-abs(p.y-wave)*8.0)*0.3;
+          col+=c*(d+glow);
+        }
+        gl_FragColor=vec4(col,1.0);
+      }`
+  },
+  {
+    id: 'cosmic-nebula',
+    name: 'Cosmic Nebula',
+    description: 'Swirling space nebula with twinkling stars',
+    component: CosmicNebulaShader,
+    thumbnail: '',
+    colors: ['#260A3E', '#CC1A99', '#FF4DB8', '#337ACC', '#8033E5'],
+    fragmentShader: `precision highp float;
+      uniform vec2 resolution;
+      uniform float time;
+      float hash(vec3 p) { p=fract(p*0.31+0.1); p*=17.0; return fract(p.x*p.y*p.z*(p.x+p.y+p.z)); }
+      float noise(vec3 x) {
+        vec3 p=floor(x), f=fract(x); f=f*f*(3.0-2.0*f);
+        return mix(mix(mix(hash(p),hash(p+vec3(1,0,0)),f.x),mix(hash(p+vec3(0,1,0)),hash(p+vec3(1,1,0)),f.x),f.y),
+                   mix(mix(hash(p+vec3(0,0,1)),hash(p+vec3(1,0,1)),f.x),mix(hash(p+vec3(0,1,1)),hash(p+vec3(1,1,1)),f.x),f.y),f.z);
+      }
+      float fbm(vec3 p) { float v=0.0,a=0.5; for(int i=0;i<5;i++) { v+=a*noise(p); p*=2.1; a*=0.45; } return v; }
+      void main() {
+        vec2 uv = gl_FragCoord.xy / resolution.xy;
+        vec2 p = (uv - 0.5) * 2.0; p.x *= resolution.x / resolution.y;
+        float t = time * 0.15;
+        vec3 pos = vec3(p*1.5, t);
+        float n = fbm(pos*2.0);
+        vec3 c = mix(vec3(0.15,0.05,0.3), vec3(0.8,0.1,0.6), n);
+        c = mix(c, vec3(1.0,0.3,0.7), fbm(pos*3.0)*0.7);
+        float s = step(0.98, hash(vec3(floor(uv*200.0), 1.0)));
+        gl_FragColor = vec4(c * pow(n, 0.8) * 1.5 + vec3(s), 1.0);
+      }`
+  },
+  {
+    id: 'glossy-ribbon',
+    name: 'Glossy Ribbon',
+    description: '3D twisted ribbons with glossy magenta and purple',
+    component: GlossyRibbonShader,
+    thumbnail: '',
+    colors: ['#CC1A99', '#9933CC', '#6633FF', '#3366CC'],
+    fragmentShader: `precision highp float;
+      uniform vec2 resolution;
+      uniform float time;
+      void main(){
+        vec2 uv=gl_FragCoord.xy/resolution.xy;
+        vec2 p=(uv-0.5)*2.0;p.x*=resolution.x/resolution.y;
+        vec3 col=vec3(0.0);
+        for(float i=0.0;i<3.0;i++){
+          float offset=(i-1.0)*0.4;
+          float twist=sin(p.x*1.8+time*0.6+i)*0.6;
+          float ribbonY=twist+offset;
+          float dist=abs(p.y-ribbonY);
+          float ribbon=smoothstep(0.25,0.05,dist);
+          float depth=sin(p.x*2.5+time+i)*0.5+0.5;
+          vec3 c1=vec3(1.0,0.1,0.7);
+          vec3 c2=vec3(0.7,0.2,1.0);
+          vec3 c3=vec3(0.4,0.3,0.9);
+          vec3 c=mix(c1,c2,depth);
+          c=mix(c,c3,smoothstep(0.3,0.7,sin(p.x*3.0)*0.5+0.5));
+          float spec=pow(1.0-smoothstep(0.0,0.2,dist),3.0)*0.6;
+          float edge=smoothstep(0.2,0.25,dist)*smoothstep(0.3,0.25,dist);
+          col+=(c*ribbon+vec3(spec)+c*edge*0.4)*(1.0-i*0.15);
+        }
+        gl_FragColor=vec4(col,1.0);
+      }`
+  },
+  {
+    id: 'silk-flow',
+    name: 'Silk Flow',
+    description: 'Vertical flowing silk ribbons in blue and magenta',
+    component: SilkFlowShader,
+    thumbnail: '',
+    colors: ['#0066CC', '#00CCCC', '#CC1A99', '#FF4DB8'],
+    fragmentShader: `precision highp float;
+      uniform vec2 resolution;
+      uniform float time;
+      float silkRibbon(vec2 p,float offset) {
+        float x=p.x+sin(p.y*2.0+time*1.5+offset)*0.15;
+        return smoothstep(0.02,0.0,abs(x));
+      }
+      void main() {
+        vec2 uv=gl_FragCoord.xy/resolution.xy;
+        vec2 p=(uv-0.5)*2.0; p.x*=resolution.x/resolution.y;
+        float flow=sin(p.y*3.0-time*2.0)*0.5+0.5;
+        vec3 col=vec3(0.0);
+        for(float i=0.0;i<7.0;i++) {
+          float off=i*1.2;
+          float x=(i-3.0)*0.35;
+          float r=silkRibbon(p-vec2(x,0),off);
+          float h=fract(flow+i*0.15);
+          vec3 c=mix(vec3(0,0.4,0.8),vec3(0,0.8,0.8),h);
+          c=mix(c,vec3(0.8,0.1,0.6),smoothstep(0.4,0.8,h));
+          float sheen=pow(1.0-abs(p.x-x)*3.0,2.0)*0.3;
+          col+=c*r+vec3(sheen)*r;
+        }
+        gl_FragColor=vec4(col,1.0);
+      }`
+  },
+  {
+    id: 'glass-twist',
+    name: 'Glass Twist',
+    description: 'Transparent cyan glass ribbons with refraction',
+    component: GlassTwistShader,
+    thumbnail: '',
+    colors: ['#00CCCC', '#33DDDD', '#66EEFF', '#FFFFFF'],
+    fragmentShader: `precision highp float;
+      uniform vec2 resolution;
+      uniform float time;
+      void main(){
+        vec2 uv=gl_FragCoord.xy/resolution.xy;
+        vec2 p=(uv-0.5)*2.0;p.x*=resolution.x/resolution.y;
+        vec3 bg=mix(vec3(0.85,0.88,0.92),vec3(0.92,0.94,0.96),uv.y);
+        vec3 col=bg;
+        for(float i=0.0;i<4.0;i++){
+          float offset=(i-1.5)*0.35;
+          float twist=sin(p.x*1.5+time*0.5+i*0.5)*0.5;
+          float ribbonY=twist+offset;
+          float dist=abs(p.y-ribbonY);
+          float ribbon=smoothstep(0.2,0.08,dist);
+          float depth=1.0-smoothstep(0.0,0.15,dist);
+          vec3 glass=vec3(0.0,0.75,0.85);
+          vec3 light=vec3(0.5,0.95,1.0);
+          vec3 c=mix(glass*0.4,light,pow(depth,1.5));
+          float fresnel=pow(1.0-depth,2.0);
+          c=mix(c,vec3(0.9,0.98,1.0),fresnel*0.7);
+          float caustic=sin(p.x*15.0+time+i)*sin(p.y*15.0-time)*0.5+0.5;
+          caustic=pow(caustic,4.0)*ribbon*0.3;
+          c+=glass*caustic;
+          float alpha=ribbon*0.7;
+          col=mix(col,c,alpha);
+        }
+        gl_FragColor=vec4(col,1.0);
+      }`
   }
 ];
 
@@ -385,9 +472,10 @@ export default function Home() {
       <main className='relative'>
         <HeroSec activeShader={activeShader} />
 
-        {/* Shader Gallery Section */}
+        {/* Background Gallery Section */}
         <ShaderGallery 
           shaders={shaders}
+          videos={videos}
           activeShader={activeShader}
           onShaderChange={setActiveShader}
         />
@@ -416,7 +504,7 @@ export default function Home() {
             </a>{' '}
             . The source code is available on{' '}
             <a
-              href='https://github.com/naymurdev/uilayout'
+              href='https://github.com/harsh-and-shubham/shaderz'
               target='_blank'
               rel='noreferrer'
               className='font-medium text-white underline underline-offset-4 hover:text-gray-300 transition-colors'

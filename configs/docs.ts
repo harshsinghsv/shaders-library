@@ -42,8 +42,38 @@ export const SpecialComponents: ComponentItem[] = [
     new: true,
   },
   {
-    href: '/components/aurora-borealis-shader',
-    name: 'Aurora Borealis Shader',
+    href: '/components/ocean-waves-shader',
+    name: 'Ocean Waves Shader',
+    new: true,
+  },
+  {
+    href: '/components/neon-fluid-shader',
+    name: 'Neon Fluid Shader',
+    new: true,
+  },
+  {
+    href: '/components/gradient-waves-shader',
+    name: 'Gradient Waves Shader',
+    new: true,
+  },
+  {
+    href: '/components/cosmic-nebula-shader',
+    name: 'Cosmic Nebula Shader',
+    new: true,
+  },
+  {
+    href: '/components/glossy-ribbon-shader',
+    name: 'Glossy Ribbon Shader',
+    new: true,
+  },
+  {
+    href: '/components/silk-flow-shader',
+    name: 'Silk Flow Shader',
+    new: true,
+  },
+  {
+    href: '/components/glass-twist-shader',
+    name: 'Glass Twist Shader',
     new: true,
   },
 ];

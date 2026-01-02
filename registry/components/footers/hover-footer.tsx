@@ -26,7 +26,7 @@ function index() {
 
           <div className='sm:block flex sm:mt-0 mt-4  gap-2 sm:w-auto w-full sm:space-y-2 relative z-[1]'>
             <a
-              href='https://www.linkedin.com/in/naymur-rahman/'
+              href='https://www.linkedin.com/in/harsh-and-shubham/'
               target='_blank'
               className='bg-gray-50 sm:w-auto w-full   grid place-content-center 2xl:h-40 h-32 2xl:p-10 p-5 rounded-lg'
             >
@@ -45,7 +45,7 @@ function index() {
               </svg>
             </a>
             <a
-              href='https://x.com/naymur_dev'
+              href='https://x.com/harsh_and_shubham'
               target='_blank'
               className='bg-gray-50 sm:w-auto w-full  grid place-content-center  2xl:h-40 h-32 2xl:p-10 p-5 rounded-lg'
             >

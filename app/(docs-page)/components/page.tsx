@@ -5,7 +5,14 @@ import Link from 'next/link';
 import * as AspectRatio from '@radix-ui/react-aspect-ratio';
 import LiquidOrangeShader from '@/components/website/LiquidOrangeShader';
 import PlasmaShader from '@/components/website/PlasmaShader';
-import AuroraShader from '@/components/website/AuroraShader';
+import OceanWavesShader from '@/components/website/OceanWavesShader';
+import NeonFluidShader from '@/components/website/NeonFluidShader';
+import GradientWavesShader from '@/components/website/GradientWavesShader';
+import CosmicNebulaShader from '@/components/website/CosmicNebulaShader';
+import GlossyRibbonShader from '@/components/website/GlossyRibbonShader';
+import SilkFlowShader from '@/components/website/SilkFlowShader';
+import GlassTwistShader from '@/components/website/GlassTwistShader';
+import GlossyFilm from '@/components/website/GlossyFilm';
 
 const shaderComponents = [
   {
@@ -23,11 +30,61 @@ const shaderComponents = [
     component: PlasmaShader,
   },
   {
-    id: 'aurora-borealis',
-    name: 'Aurora Borealis Shader',
-    url: '/components/aurora-borealis-shader',
-    description: 'Volumetric aurora with realistic atmospheric effects',
-    component: AuroraShader,
+    id: 'ocean-waves',
+    name: 'Ocean Waves Shader',
+    url: '/components/ocean-waves-shader',
+    description: 'Animated ocean with realistic wave motion and foam',
+    component: OceanWavesShader,
+  },
+  {
+    id: 'neon-fluid',
+    name: 'Neon Fluid Shader',
+    url: '/components/neon-fluid-shader',
+    description: 'Flowing fire with realistic flame motion',
+    component: NeonFluidShader,
+  },
+  {
+    id: 'gradient-waves',
+    name: 'Gradient Waves Shader',
+    url: '/components/gradient-waves-shader',
+    description: 'Sleek minimalist waves with smooth gradients',
+    component: GradientWavesShader,
+  },
+  {
+    id: 'cosmic-nebula',
+    name: 'Cosmic Nebula Shader',
+    url: '/components/cosmic-nebula-shader',
+    description: 'Swirling space nebula with twinkling stars',
+    component: CosmicNebulaShader,
+  },
+  {
+    id: 'glossy-ribbon',
+    name: 'Glossy Ribbon Shader',
+    url: '/components/glossy-ribbon-shader',
+    description: '3D twisted ribbons with glossy magenta and purple',
+    component: GlossyRibbonShader,
+  },
+  {
+    id: 'silk-flow',
+    name: 'Silk Flow Shader',
+    url: '/components/silk-flow-shader',
+    description: 'Vertical flowing silk ribbons in blue and magenta',
+    component: SilkFlowShader,
+  },
+  {
+    id: 'glass-twist',
+    name: 'Glass Twist Shader',
+    url: '/components/glass-twist-shader',
+    description: 'Transparent cyan glass ribbons with refraction',
+    component: GlassTwistShader,
+  },
+  {
+    id: 'glossy-film',
+    name: 'Glossy Film',
+    url: '/components/glossy-film',
+    description: 'Video-based glossy film effect with iridescent animations',
+    component: GlossyFilm,
+    isVideo: true,
   },
 ];
 

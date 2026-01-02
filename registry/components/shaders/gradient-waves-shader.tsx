@@ -1,7 +1,7 @@
 'use client';
 import React, { useRef, useEffect } from 'react';
 
-const OceanWavesShader: React.FC = () => {
+const GradientWavesShader: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const animationRef = useRef<number | null>(null);
@@ -36,57 +36,70 @@ const OceanWavesShader: React.FC = () => {
       uniform vec2 resolution;
       uniform float time;
 
-      // Hash function for pseudo-random values
-      float hash(vec2 p) {
-        p = fract(p * vec2(123.34, 456.21));
-        p += dot(p, p + 45.32);
-        return fract(p.x * p.y);
+      // Improved hash
+      float hash(float n) {
+        return fract(sin(n) * 43758.5453123);
       }
 
-      // 2D noise function
+      // 2D rotation matrix
+      mat2 rot(float a) {
+        float c = cos(a), s = sin(a);
+        return mat2(c, -s, s, c);
+      }
+
+      // Smooth value noise
       float noise(vec2 p) {
         vec2 i = floor(p);
         vec2 f = fract(p);
         f = f * f * (3.0 - 2.0 * f);
         
-        float a = hash(i);
-        float b = hash(i + vec2(1.0, 0.0));
-        float c = hash(i + vec2(0.0, 1.0));
-        float d = hash(i + vec2(1.0, 1.0));
+        float a = hash(i.x + i.y * 57.0);
+        float b = hash(i.x + 1.0 + i.y * 57.0);
+        float c = hash(i.x + (i.y + 1.0) * 57.0);
+        float d = hash(i.x + 1.0 + (i.y + 1.0) * 57.0);
         
         return mix(mix(a, b, f.x), mix(c, d, f.x), f.y);
       }
 
-      // Fractal Brownian Motion
+      // Layered fbm
       float fbm(vec2 p) {
-        float value = 0.0;
-        float amplitude = 0.5;
-        float frequency = 1.0;
+        float v = 0.0;
+        float a = 0.5;
+        vec2 shift = vec2(100.0);
         
-        for(int i = 0; i < 6; i++) {
-          value += amplitude * noise(p * frequency);
-          frequency *= 2.0;
-          amplitude *= 0.5;
+        for(int i = 0; i < 5; i++) {
+          v += a * noise(p);
+          p = rot(0.5) * p * 2.0 + shift;
+          a *= 0.5;
         }
-        return value;
+        return v;
       }
 
-      // Ocean wave function
-      float wave(vec2 p, float time) {
-        float w = 0.0;
+      // Ribbon-like wave pattern
+      float ribbonWave(vec2 p, float time, float index) {
+        float freq = 2.0 + index * 0.5;
+        float phase = time * (0.3 + index * 0.1);
         
-        // Large rolling waves
-        w += sin(p.x * 0.5 + time * 0.3) * 0.3;
-        w += sin(p.x * 0.3 - p.y * 0.2 + time * 0.2) * 0.2;
+        // Sinusoidal waves with offset
+        float wave = sin(p.x * freq + phase) * 0.5 + 0.5;
+        wave *= sin(p.x * freq * 1.5 - phase * 0.8) * 0.5 + 0.5;
         
-        // Medium waves
-        w += sin(p.x * 1.0 + p.y * 0.5 + time * 0.5) * 0.15;
-        w += sin(p.x * 1.5 - p.y * 0.8 + time * 0.4) * 0.1;
+        // Add vertical component
+        float yWave = sin(p.y * (freq * 0.5) + phase * 0.5) * 0.3;
         
-        // Small ripples
-        w += fbm(p * 2.0 + vec2(time * 0.1, time * 0.05)) * 0.1;
+        return wave + yWave;
+      }
+
+      // Distance to ribbon
+      float ribbonDist(vec2 p, float time, float index) {
+        float offset = index * 0.3 - 0.6;
+        float wave = ribbonWave(p, time, index);
         
-        return w;
+        float centerY = sin(p.x * (1.5 + index * 0.3) + time * (0.4 + index * 0.1)) * 0.4 + offset;
+        float width = 0.15 + sin(time * 0.5 + index) * 0.05;
+        
+        float dist = abs(p.y - centerY - wave * 0.2);
+        return smoothstep(width, 0.0, dist);
       }
 
       void main() {
@@ -94,37 +107,72 @@ const OceanWavesShader: React.FC = () => {
         vec2 p = (uv - 0.5) * 2.0;
         p.x *= resolution.x / resolution.y;
         
-        // Create wave motion
-        float waves = wave(p * 2.0, time);
+        float t = time * 0.4;
         
-        // Add foam patterns
-        float foam = fbm(p * 4.0 + vec2(time * 0.2, waves * 2.0));
-        foam = smoothstep(0.5, 0.7, foam);
+        // Add subtle flow distortion
+        vec2 flow = vec2(
+          fbm(p * 1.5 + t * 0.2) - 0.5,
+          fbm(p * 1.5 - t * 0.15) - 0.5
+        ) * 0.3;
         
-        // Ocean colors
-        vec3 deepWater = vec3(0.0, 0.2, 0.4);      // Deep blue
-        vec3 shallowWater = vec3(0.0, 0.4, 0.6);   // Lighter blue
-        vec3 foamColor = vec3(0.7, 0.9, 1.0);      // White-blue foam
+        vec2 distorted = p + flow;
         
-        // Mix colors based on wave height
-        float waveHeight = waves * 0.5 + 0.5;
-        vec3 color = mix(deepWater, shallowWater, waveHeight);
+        // Multiple ribbon waves with depth
+        float ribbons = 0.0;
+        vec3 color = vec3(0.0);
         
-        // Add foam highlights
-        color = mix(color, foamColor, foam * 0.4);
+        for(int i = 0; i < 5; i++) {
+          float fi = float(i);
+          float ribbon = ribbonDist(distorted, t, fi);
+          
+          // Depth-based coloring
+          float depth = fi / 5.0;
+          
+          // Gradient colors - deep blue to violet to pink
+          vec3 c1 = vec3(0.1, 0.15, 0.4);  // Deep blue
+          vec3 c2 = vec3(0.3, 0.2, 0.6);   // Violet
+          vec3 c3 = vec3(0.5, 0.25, 0.7);  // Purple
+          vec3 c4 = vec3(0.7, 0.3, 0.8);   // Light purple
+          
+          vec3 ribbonColor = mix(c1, c2, depth);
+          ribbonColor = mix(ribbonColor, c3, smoothstep(0.3, 0.7, depth));
+          ribbonColor = mix(ribbonColor, c4, smoothstep(0.7, 1.0, depth));
+          
+          // Add gradient variation based on position
+          float gradientShift = sin(distorted.x * 2.0 + t + fi) * 0.5 + 0.5;
+          ribbonColor = mix(ribbonColor, ribbonColor * 1.3, gradientShift * 0.4);
+          
+          // Brightness based on wave position
+          float brightness = ribbonWave(distorted, t, fi);
+          ribbonColor *= 0.7 + brightness * 0.3;
+          
+          // Accumulate with depth sorting
+          color = mix(color, ribbonColor, ribbon * (0.9 - depth * 0.2));
+          ribbons += ribbon;
+        }
         
-        // Add depth gradient
-        float depth = smoothstep(0.0, 1.0, 1.0 - uv.y);
-        color = mix(color, deepWater, depth * 0.3);
+        // Edge highlighting
+        for(int i = 0; i < 5; i++) {
+          float fi = float(i);
+          float ribbon = ribbonDist(distorted, t, fi);
+          float edge = ribbon * (1.0 - ribbon) * 4.0;
+          
+          // Bright edge glow
+          vec3 edgeColor = vec3(0.4, 0.5, 1.0);
+          color += edgeColor * edge * 0.3;
+        }
         
-        // Add shimmer effect
-        float shimmer = fbm(p * 8.0 + vec2(time * 0.5, time * 0.3));
-        shimmer = pow(shimmer, 3.0) * 0.2;
-        color += vec3(shimmer);
+        // Subtle shimmer overlay
+        float shimmer = fbm(distorted * 8.0 + vec2(t * 2.0, t));
+        shimmer = pow(shimmer, 4.0);
+        color += vec3(0.6, 0.7, 1.0) * shimmer * ribbons * 0.15;
         
-        // Vignette effect
+        // Vignette for depth
         float vignette = 1.0 - length(uv - 0.5) * 0.5;
         color *= vignette;
+        
+        // Brightness adjustment for minimalism
+        color *= 0.85;
         
         gl_FragColor = vec4(color, 1.0);
       }
@@ -226,4 +274,4 @@ const OceanWavesShader: React.FC = () => {
   );
 };
 
-export default OceanWavesShader;
+export default GradientWavesShader;
