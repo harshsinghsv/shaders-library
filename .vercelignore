@@ -1,0 +1,2 @@
+# Ignore packages folder during Vercel deployment
+packages/

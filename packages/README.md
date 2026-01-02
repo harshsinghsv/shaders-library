@@ -1,54 +1,75 @@
-# Shaderz Packages
+# Shaderz Package
 
-This directory contains all individual shader packages that can be installed separately.
+Interactive CLI to add beautiful WebGL shaders to your React/Next.js project.
 
-## Available Packages
+## Installation
 
-- `@shaderz/liquid-orange-shader` - Flowing liquid shader with warm orange tones
-- `@shaderz/ocean-waves-shader` - Ocean waves shader (coming soon)
-- `@shaderz/neon-fluid-shader` - Neon fluid shader (coming soon)
-- `@shaderz/gradient-waves-shader` - Gradient waves shader (coming soon)
-- `@shaderz/cosmic-nebula-shader` - Cosmic nebula shader (coming soon)
-- `@shaderz/glossy-ribbon-shader` - Glossy ribbon shader (coming soon)
-- `@shaderz/silk-flow-shader` - Silk flow shader (coming soon)
-- `@shaderz/glass-twist-shader` - Glass twist shader (coming soon)
-- `@shaderz/plasma-shader` - Plasma shader (coming soon)
+```bash
+npm install shaderz
+```
+
+Or use with npx (no installation required):
+
+```bash
+npx shaderz add
+```
+
+## Usage
+
+Run the interactive CLI to select and install shaders:
+
+```bash
+npx shaderz add
+```
+
+This will:
+1. Show a checkbox list of all available shaders
+2. Let you select multiple shaders with Space
+3. Install selected shaders to `components/shaders/`
+4. Copy video files to `public/videos/` (for video shaders)
+5. Show usage examples
+
+## Available Shaders
+
+**WebGL Shaders:**
+- ✅ Liquid Orange - Flowing liquid shader with warm orange tones
+- ✅ Ocean Waves - Dynamic ocean waves shader
+- ✅ Neon Fluid - Vibrant neon fluid shader
+- ✅ Gradient Waves - Smooth gradient waves shader
+- ✅ Cosmic Nebula - Space-themed nebula shader
+- ✅ Glossy Ribbon - Glossy ribbon flow shader
+- ✅ Silk Flow - Smooth silk flow shader
+- ✅ Glass Twist - Glass twist effect shader
+- ✅ Plasma - Classic plasma shader
+
+**Video Background:**
+- ✅ Glossy Film - MP4 video background
 
 ## Publishing
 
-Each package can be published independently:
-
 ```bash
-cd packages/liquid-orange-shader
-npm publish --access public
-```
-
-## Building
-
-To build a package:
-
-```bash
-cd packages/liquid-orange-shader
-npm install
-npm run build
+cd packages/shaderz
+pnpm install
+pnpm run build
+npm publish
 ```
 
 ## Development
 
-1. Install dependencies in the package:
+1. Install dependencies:
 ```bash
-cd packages/[shader-name]
+cd packages/shaderz
 pnpm install
 ```
 
-2. Build the package:
+2. Build:
 ```bash
 pnpm run build
 ```
 
-3. Test locally by linking:
+3. Test locally:
 ```bash
 npm link
 # Then in your test project
-npm link @shaderz/[shader-name]
+npx shaderz add
 ```

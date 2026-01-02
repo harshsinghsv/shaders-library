@@ -100,7 +100,7 @@ export default function Home() {
 
         <p className='md:text-lg text-sm text-muted-foreground lg:w-[80%]'>
           Beautiful WebGL shaders that you can copy and paste into your
-          apps. Interactive. Customizable. Open Source.
+          apps. Interactive. Customizable. Open Sourced.
         </p>
         <>
           <div className='grid md:grid-cols-2 lg:grid-cols-3 grid-cols-1 gap-6 py-4'>
