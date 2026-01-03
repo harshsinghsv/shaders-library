@@ -221,3 +221,5 @@ tbody {
   initial-value: 0deg;
   syntax: '<angle>';
 }
+
+/* Force redeploy for mobile fix */
