@@ -42,7 +42,7 @@ function HeroSec({ activeShader }: HeroSecProps) {
   return (
     <section className="relative min-h-screen flex flex-col items-center justify-between px-6 pt-32 pb-20 overflow-hidden font-sans">
       {/* Dynamic Background - Shader or Video */}
-      <div className="absolute inset-0 z-[-30]">
+      <div className="absolute inset-0 z-[-30] bg-black">
         {isVideo && videoSrc ? (
           <VideoBackground key={videoSrc} src={videoSrc} />
         ) : (
