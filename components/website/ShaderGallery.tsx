@@ -30,7 +30,7 @@ function ShaderGallery({ shaders, videos = [], activeShader, onShaderChange }: S
             Click any shader or video below to see it in action on the hero section above.
           </p>
         </div>
-        
+
         {/* Shaders Section */}
         <div className='mb-12'>
           <h3 className='text-xl font-semibold text-white mb-6 flex items-center gap-2'>
@@ -42,24 +42,28 @@ function ShaderGallery({ shaders, videos = [], activeShader, onShaderChange }: S
               <button
                 key={shader.id}
                 onClick={() => onShaderChange(shader.id)}
-                className={`group cursor-pointer transition-all duration-300 ${
-                  activeShader === shader.id
+                className={`group cursor-pointer transition-all duration-300 ${activeShader === shader.id
                     ? 'ring-2 ring-white/50 scale-105'
                     : 'hover:scale-105 hover:ring-2 hover:ring-white/30'
-                }`}
+                  }`}
               >
-                <div className='relative h-64 rounded-2xl overflow-hidden border border-white/10 bg-black'>
+                <div
+                  className='relative h-64 rounded-2xl overflow-hidden border border-white/10'
+                  style={{
+                    background: `linear-gradient(135deg, ${shader.colors[0]}, ${shader.colors[1]})`
+                  }}
+                >
                   {/* Live Shader Preview */}
                   <div className="absolute inset-0">
-                    <ShaderPreview 
+                    <ShaderPreview
                       fragmentShader={shader.fragmentShader}
                       className="opacity-80 group-hover:opacity-95 transition-opacity duration-300"
                     />
                   </div>
-                  
+
                   {/* Overlay for better text readability */}
                   <div className='absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent' />
-                  
+
                   {/* Active indicator */}
                   {activeShader === shader.id && (
                     <div className="absolute top-4 right-4 flex items-center gap-2">
@@ -69,7 +73,7 @@ function ShaderGallery({ shaders, videos = [], activeShader, onShaderChange }: S
                       </span>
                     </div>
                   )}
-                  
+
                   <div className='absolute bottom-4 left-4 right-4'>
                     <h3 className='text-white font-bold text-xl mb-2 drop-shadow-lg'>{shader.name}</h3>
                     <p className='text-gray-200 text-sm mb-3 drop-shadow-md'>{shader.description}</p>
@@ -104,24 +108,23 @@ function ShaderGallery({ shaders, videos = [], activeShader, onShaderChange }: S
                 <button
                   key={video.id}
                   onClick={() => onShaderChange(video.id)}
-                  className={`group cursor-pointer transition-all duration-300 ${
-                    activeShader === video.id
+                  className={`group cursor-pointer transition-all duration-300 ${activeShader === video.id
                       ? 'ring-2 ring-white/50 scale-105'
                       : 'hover:scale-105 hover:ring-2 hover:ring-white/30'
-                  }`}
+                    }`}
                 >
                   <div className='relative h-64 rounded-2xl overflow-hidden border border-white/10 bg-black'>
                     {/* Video Preview */}
                     <div className="absolute inset-0">
-                      <VideoPreview 
+                      <VideoPreview
                         src={video.src}
                         className="opacity-80 group-hover:opacity-95 transition-opacity duration-300"
                       />
                     </div>
-                    
+
                     {/* Overlay for better text readability */}
                     <div className='absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent' />
-                    
+
                     {/* Video badge */}
                     <div className="absolute top-4 left-4">
                       <span className="text-white text-xs font-medium bg-blue-600/80 px-2 py-1 rounded-full backdrop-blur-sm flex items-center gap-1">
@@ -131,7 +134,7 @@ function ShaderGallery({ shaders, videos = [], activeShader, onShaderChange }: S
                         Video
                       </span>
                     </div>
-                    
+
                     {/* Active indicator */}
                     {activeShader === video.id && (
                       <div className="absolute top-4 right-4 flex items-center gap-2">
@@ -141,7 +144,7 @@ function ShaderGallery({ shaders, videos = [], activeShader, onShaderChange }: S
                         </span>
                       </div>
                     )}
-                    
+
                     <div className='absolute bottom-4 left-4 right-4'>
                       <h3 className='text-white font-bold text-xl mb-2 drop-shadow-lg'>{video.name}</h3>
                       <p className='text-gray-200 text-sm mb-3 drop-shadow-md'>{video.description}</p>
