@@ -2,12 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-@font-face {
-  font-family: Inter;
-  src: url(/landing-page-assets/fonts/Inter-Regular.ttf) format("truetype");
-  font-weight: 500;
-  font-style: normal;
-}
+
+
+
 
 @font-face {
   font-family: Instrumental;
@@ -25,6 +22,7 @@ body {
 :root.dark {
   --scrollbar-color: rgba(255, 255, 255, 0.3);
 }
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -122,10 +120,12 @@ body {
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
   }
 }
+
 @layer utilities {
   .blur-vignette {
     position: absolute;
@@ -165,18 +165,18 @@ body {
       0 100%;
     -webkit-mask-repeat: no-repeat;
   }
+
   .animated-text {
-    background: radial-gradient(
-      circle at var(--text-mouse-x) var(--text-mouse-y),
-      var(--gradient-text-center) 0%,
-      var(--gradient-text-edge) 40%
-    );
+    background: radial-gradient(circle at var(--text-mouse-x) var(--text-mouse-y),
+        var(--gradient-text-center) 0%,
+        var(--gradient-text-edge) 40%);
     background-clip: text;
     -webkit-background-clip: text;
     color: transparent;
     -webkit-text-fill-color: transparent;
   }
 }
+
 html {
   -webkit-tap-highlight-color: transparent;
   scrollbar-gutter: stable;
@@ -184,6 +184,7 @@ html {
   scrollbar-width: thin;
   scroll-behavior: smooth;
 }
+
 code,
 kbd,
 pre,
@@ -201,12 +202,14 @@ samp {
   font-variation-settings: normal;
   font-size: 1em;
 }
+
 /* pre > * {
 } */
 /* fix radix dropdown-menu layout shift */
 html body[data-scroll-locked] {
   margin-right: 0 !important;
 }
+
 tbody {
   width: 100%;
 }
