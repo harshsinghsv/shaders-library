@@ -13,19 +13,64 @@ export const metadata = {
 
 ## Installation
 
+**Option 1: Using CLI (Recommended)**
+
+Install this video shader using the CLI:
+
+```bash
+npx shaderz add
+```
+
+Select "Glossy Film (Video)" from the list. This will:
+- Add the component to `/components/shaderz/VideoBackground.tsx`
+- Download the `glossy-film.mp4` video to `/public/videos/glossy-film.mp4`
+
+**Option 2: Manual Installation**
+
+1. Copy the component code from the Usage section below
+2. Download the video file from the [shaderz repository](https://github.com/yourusername/shaderz) and place it in `/public/videos/glossy-film.mp4`
+
+## Required Dependencies
+
 No additional dependencies required. This component uses HTML5 video which is supported in all modern browsers.
 
 ## Usage
 
+**Basic Usage:**
+
 ```tsx
-import GlossyFilm from '@/components/shaders/GlossyFilm';
+import VideoBackground from '@/components/shaderz/VideoBackground';
 
 export default function MyComponent() {
   return (
     <div className="relative h-screen">
-      <GlossyFilm />
+      <VideoBackground src="/videos/glossy-film.mp4" />
       {/* Your content here */}
     </div>
+  );
+}
+```
+
+**Hero Section Background Example:**
+
+```tsx app/page.tsx
+import VideoBackground from '@/components/shaderz/VideoBackground';
+
+export default function Home() {
+  return (
+    <section className="relative min-h-screen">
+      {/* Video background */}
+      <div className="absolute inset-0 -z-10">
+        <VideoBackground src="/videos/glossy-film.mp4" />
+      </div>
+      
+      {/* Your hero content */}
+      <div className="relative z-10 flex items-center justify-center min-h-screen">
+        <h1 className="text-6xl font-bold text-white">
+          Welcome to Your Site
+        </h1>
+      </div>
+    </section>
   );
 }
 ```
@@ -40,17 +85,26 @@ export default function MyComponent() {
 ## Features
 
 - **Smooth Playback**: Auto-plays and loops seamlessly
-- **Video-Based**: Uses pre-rendered effects for consistent quality
+- **Video-Based**: Uses pre-rendered effects for consistent quality across all devices
 - **Responsive**: Scales to fill container using object-cover
-- **Performance**: No GPU shader computation needed
+- **Performance**: No GPU shader computation needed - perfect for lower-end devices
+- **No Dependencies**: Pure HTML5 video, works everywhere
 
 ## Customization
 
 You can provide your own video file:
 
 ```tsx
-<GlossyFilm src="/your-custom-video.mp4" />
+<VideoBackground src="/your-custom-video.mp4" />
 ```
+
+## Video Requirements
+
+For best results, your custom video should:
+- Be in MP4 format (H.264 codec recommended)
+- Have a 16:9 or similar aspect ratio
+- Be optimized for web (compressed but high quality)
+- Loop seamlessly (start and end frames should match)
 
 ## Browser Support
 
@@ -59,3 +113,4 @@ This component works on all modern browsers that support HTML5 video:
 - Firefox 3.5+
 - Safari 3.1+
 - Edge 12+
+- Mobile browsers (iOS Safari, Chrome Mobile)

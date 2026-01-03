@@ -70,7 +70,7 @@ export default async function ComponentCodePreview({
   if (!isTab) {
     return (
       <div className='not-prose relative z-0 w-full'>
-        <div className='border-2 rounded-lg overflow-hidden'>
+        <div className='border border-neutral-800 rounded-lg overflow-hidden bg-neutral-900'>
           <PreCoded codeblock={fileContent} />
           {children !== undefined && <div className='p-4 pt-2'>{children}</div>}
         </div>
@@ -82,24 +82,24 @@ export default async function ComponentCodePreview({
     <div className='not-prose relative z-0 flex items-center justify-between pb-3'>
       <Tabs
         defaultValue={`${name}preview`}
-        className='relative mt-1 w-full border-2 rounded-lg'
+        className='relative mt-1 w-full border border-neutral-800 rounded-lg bg-neutral-900'
       >
-        <TabsList className='absolute left-0 pl-1 top-0 z-10 flex h-12 w-full justify-start rounded-b-none rounded-t-lg border-b-2 border-t-0 border-x-0  bg-border/40 backdrop-blur-lg dark:bg-gray-900'>
+        <TabsList className='absolute left-0 pl-1 top-0 z-10 flex h-12 w-full justify-start rounded-b-none rounded-t-lg border-b border-neutral-800 bg-black/50 backdrop-blur-lg'>
           <TabsTrigger
             value={`${name}preview`}
-            className='flex gap-2 items-center data-[state=active]:bg-white data-[state=active]:border-b-2 '
+            className='flex gap-2 items-center data-[state=active]:bg-neutral-800 data-[state=active]:text-white text-neutral-400'
           >
             <Eye className='w-5 h-5' /> Preview
           </TabsTrigger>
           <TabsTrigger
             value={`${name}code`}
-            className='flex gap-2 items-center data-[state=active]:bg-white data-[state=active]:border-b-2'
+            className='flex gap-2 items-center data-[state=active]:bg-neutral-800 data-[state=active]:text-white text-neutral-400'
           >
             <Code className='w-5 h-5' /> Code
           </TabsTrigger>
         </TabsList>
         <TabsContent
-          className='mt-0  px-0 pb-0 pt-12 ring-offset-background '
+          className='mt-0 px-0 pb-0 pt-12 ring-offset-background'
           value={`${name}preview`}
         >
           <ComponentPreview
@@ -111,7 +111,7 @@ export default async function ComponentCodePreview({
             isFitheight={isFitheight}
           />
         </TabsContent>
-        <TabsContent className='mt-11  ' value={`${name}code`}>
+        <TabsContent className='mt-11' value={`${name}code`}>
           {!isTab && <PreCoded codeblock={fileContent} />}
           {children !== undefined && <div className='p-4 pt-2'>{children}</div>}
         </TabsContent>

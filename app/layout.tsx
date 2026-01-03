@@ -3,7 +3,6 @@ import type { Metadata } from 'next';
 import { Poppins } from 'next/font/google';
 import Script from 'next/script';
 import { ThemeProvider } from '@/components/website/theme-provider';
-import { GeistMono } from 'geist/font/mono';
 import Progressbar from '@/lib/progressbar';
 import { siteConfig } from '@/lib/utils';
 
@@ -63,7 +62,7 @@ export const metadata: Metadata = {
     title: siteConfig.name,
     description: siteConfig.description,
     images: [siteConfig.ogImage],
-    creator: '@harsh_and_shubham',
+    creator: '@shaderzinc',
   },
   icons: {
     icon: '/favicon.ico',

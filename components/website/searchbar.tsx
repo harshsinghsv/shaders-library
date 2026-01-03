@@ -88,7 +88,7 @@ export function SearchDialog({ classname }: { classname?: string }) {
                     Follow for more updates
                   </span>
                   <a
-                    href='https://x.com/harsh_and_shubham'
+                    href='https://x.com/shaderzinc'
                     target='_blank'
                     className='flex w-full items-center gap-2 rounded-md bg-blue-500/20 p-3'
                   >
@@ -102,7 +102,7 @@ export function SearchDialog({ classname }: { classname?: string }) {
                     >
                       <path d='M94.5068 0H112.907L72.7076 46.172L120 109H82.9692L53.9674 70.8942L20.7818 109H2.3693L45.3666 59.6147L0 0H37.9685L64.1848 34.8292L94.5068 0ZM88.0484 97.9318H98.2448L32.4288 10.4872H21.4882L88.0484 97.9318Z' />
                     </svg>{' '}
-                    @harsh_and_shubham
+                    @shaderzinc
                   </a>
                   <span className='block p-2 text-xs font-semibold'>
                     Getting Started

@@ -64,14 +64,14 @@ export async function PreCoded({
       <Tabs defaultValue={'typescript'}>
         <TabsList
           className={cn(
-            'absolute  right-20 top-6 z-[1] h-9 p-0.5 border dark:border-background ',
+            'absolute right-20 top-6 z-[1] h-9 p-0.5 border border-neutral-700 bg-neutral-900',
             tabclassname
           )}
         >
-          <TabsTrigger value={'typescript'} className='h-8 text-foreground'>
+          <TabsTrigger value={'typescript'} className='h-8 text-neutral-400 data-[state=active]:bg-neutral-700 data-[state=active]:text-white'>
             Ts
           </TabsTrigger>
-          <TabsTrigger value={'javascript'} className=' h-8  text-foreground'>
+          <TabsTrigger value={'javascript'} className='h-8 text-neutral-400 data-[state=active]:bg-neutral-700 data-[state=active]:text-white'>
             Js{' '}
           </TabsTrigger>
         </TabsList>
@@ -81,7 +81,7 @@ export async function PreCoded({
               code={tshighlighted.code}
               classname={cn('top-6 right-10  ', copyclass)}
             />
-            <div className=' p-2 max-h-[500px] overflow-x-hidden  rounded-md text-sm  bg-codebg border'>
+            <div className='p-2 max-h-[500px] overflow-x-hidden rounded-md text-sm bg-neutral-900 border border-neutral-800'>
               <Pre
                 code={tshighlighted}
                 handlers={[callout, wordWrap]}
@@ -96,7 +96,7 @@ export async function PreCoded({
               code={jshighlighted.code}
               classname={cn('top-6 right-10  ', copyclass)}
             />
-            <div className='p-2 max-h-[500px] overflow-x-hidden  rounded-md text-sm bg-codebg border'>
+            <div className='p-2 max-h-[500px] overflow-x-hidden rounded-md text-sm bg-neutral-900 border border-neutral-800'>
               <Pre
                 code={jshighlighted}
                 handlers={[callout, wordWrap]}

@@ -14,7 +14,7 @@ export function ComponentPagination({ doc }: any) {
       {pager?.previous?.id && (
         <Link
           href={pager.previous.id}
-          className='group relative inline-flex no-underline h-12 items-center justify-center overflow-hidden rounded-md dark:bg-primary-foreground bg-gray-100   border px-3 font-medium dark:text-white text-black transition-all duration-200 hover:translate-x-[3px] translate-x-[0px] hover:translate-y-[-3px] translate-y-[0px] hover:[box-shadow:5px_5px_rgb(28_39_56)] dark:hover:[box-shadow:-5px_5px_rgb(229_231_235)]'
+          className='group relative inline-flex no-underline h-12 items-center justify-center overflow-hidden rounded-md bg-neutral-900 border border-neutral-700 px-3 font-medium text-white transition-all duration-200 hover:translate-x-[3px] translate-x-[0px] hover:translate-y-[-3px] translate-y-[0px] hover:[box-shadow:-5px_5px_rgb(234,88,12)]'
         >
           <ChevronsLeft className='mr-1 h-4 w-4' />
           {pager.previous.name}
@@ -23,7 +23,7 @@ export function ComponentPagination({ doc }: any) {
       {pager?.next?.id && (
         <Link
           href={pager.next.id}
-          className='group relative inline-flex h-12 no-underline items-center justify-center overflow-hidden rounded-md dark:bg-primary-foreground bg-gray-100   border px-3 font-medium dark:text-white text-black transition-all duration-200 hover:translate-x-[-3px] translate-x-[0px] hover:translate-y-[-3px] translate-y-[0px] hover:[box-shadow:5px_5px_rgb(28_39_56)] dark:hover:[box-shadow:5px_5px_rgb(229_231_235)] '
+          className='group relative inline-flex h-12 no-underline items-center justify-center overflow-hidden rounded-md bg-neutral-900 border border-neutral-700 px-3 font-medium text-white transition-all duration-200 hover:translate-x-[-3px] translate-x-[0px] hover:translate-y-[-3px] translate-y-[0px] hover:[box-shadow:5px_5px_rgb(234,88,12)]'
         >
           {pager.next.name}
           <ChevronsRight className='ml-1 h-4 w-4' />

@@ -50,7 +50,7 @@ function DocsSidebar() {
   }, [getRecentPages]);
 
   return (
-    <aside className='h-full border-r'>
+    <aside className='h-full border-r border-neutral-800 bg-black'>
       <div className='sticky top-0 h-screen w-full rounded-md pt-[3.2em]'>
         <ScrollArea className='h-full py-4'>
           <ul className='pb-1'>
@@ -61,18 +61,18 @@ function DocsSidebar() {
                     <Link
                       href={link.href}
                       onClick={() => addVisitedPage(link.href, link.name)}
-                      className={`flex gap-2 group font-medium items-center py-1  transition-all ${
+                      className={`flex gap-2 group font-medium items-center py-1 transition-all ${
                         link.href === pathname
-                          ? 'active-nav'
-                          : 'text-slate-600 hover:text-slate-900  dark:text-slate-400 dark:hover:text-white'
+                          ? 'text-white'
+                          : 'text-neutral-400 hover:text-white'
                       }`}
                     >
                       {React.cloneElement(link?.icon, {
                         className: `${
                           link.href === pathname
-                            ? 'dark:text-base-dark dark:bg-white bg-base-dark text-white'
-                            : 'dark:bg-gray-800 dark:text-white group-hover:bg-base-dark group-hover:text-white  dark:group-hover:bg-white dark:group-hover:text-base-dark'
-                        } h-7 w-7 border transition-all rounded-md p-1`,
+                            ? 'bg-orange-500 text-white'
+                            : 'bg-neutral-800 text-neutral-400 group-hover:bg-orange-500 group-hover:text-white'
+                        } h-7 w-7 border border-neutral-700 transition-all rounded-md p-1`,
                       })}
 
                       {link.name}
@@ -82,16 +82,16 @@ function DocsSidebar() {
               );
             })}
           </ul>
-          <h1 className='text-lg font-semibold pb-1'>Shaders</h1>
+          <h1 className='text-lg font-semibold pb-1 text-white'>Shaders</h1>
           {SpecialComponents?.map((link: any) => {
             return (
               <React.Fragment key={`special-${link.href}`}>
                 <li
                   key={link.href}
-                  className={`2xl:text-sm text-[0.81em]  flex items-center gap-1 dark:hover:text-white 2xl:py-1 py-0.5 pl-2 border-l transition-all ${
+                  className={`2xl:text-sm text-[0.81em] flex items-center gap-1 2xl:py-1 py-0.5 pl-2 border-l transition-all ${
                     link.href === pathname
-                      ? 'dark:border-white border-black text-black dark:text-white font-semibold'
-                      : 'dark:text-slate-400 2xl:font-normal font-medium hover:border-black/60 dark:hover:border-white/50 text-slate-500 hover:text-slate-900'
+                      ? 'border-orange-500 text-white font-semibold'
+                      : 'border-neutral-800 text-neutral-400 hover:text-white hover:border-neutral-600'
                   }`}
                   // data-active={link.id === pathname}
                 >
@@ -102,7 +102,7 @@ function DocsSidebar() {
                     {link.name}
                   </Link>
                   {link?.new && (
-                    <span className='2xl:text-xs text-[0.74em] bg-blue-500 text-white px-1 rounded'>
+                    <span className='2xl:text-xs text-[0.74em] bg-orange-500 text-white px-1.5 py-0.5 rounded-full'>
                       New
                     </span>
                   )}
@@ -146,19 +146,19 @@ export const ItemsWithName = ({
   }, [pathname, items]);
   return (
     <div ref={groupRef} key={group}>
-      <button className='text-[1rem] relative flex w-full items-center justify-between pr-4 cursor-pointer dark:font-normal dark:text-gray-100 font-normal capitalize my-1'>
+      <button className='text-[1rem] relative flex w-full items-center justify-between pr-4 cursor-pointer text-neutral-300 font-medium capitalize my-1'>
         {group}
       </button>
-      <ul className='relative '>
+      <ul className='relative'>
         {items.map((link: any, index: number) => (
           <li
             key={link.href}
             // @ts-ignore
             ref={(el) => (itemRefs.current[index] = el)}
-            className={`2xl:text-sm text-[0.81em]  flex items-center gap-1 dark:hover:text-white 2xl:py-1 py-0.5 pl-2 border-l transition-all ${
+            className={`2xl:text-sm text-[0.81em] flex items-center gap-1 2xl:py-1 py-0.5 pl-2 border-l transition-all ${
               link.href === pathname
-                ? 'dark:border-white border-black text-black dark:text-white font-semibold'
-                : 'dark:text-slate-400 2xl:font-normal font-medium hover:border-black/60 dark:hover:border-white/50 text-slate-500 hover:text-slate-900'
+                ? 'border-orange-500 text-white font-semibold'
+                : 'border-neutral-800 text-neutral-400 hover:text-white hover:border-neutral-600'
             }`}
           >
             <Link
@@ -168,7 +168,7 @@ export const ItemsWithName = ({
               {link.name}
             </Link>
             {link?.new && (
-              <span className='2xl:text-xs text-[0.74em] bg-blue-500 text-white px-1 rounded'>
+              <span className='2xl:text-xs text-[0.74em] bg-orange-500 text-white px-1.5 py-0.5 rounded-full'>
                 New
               </span>
             )}

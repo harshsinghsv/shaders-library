@@ -53,8 +53,8 @@ export const siteConfig = {
   description:
     'An open-source collection of stunning WebGL shaders and components for modern web applications.',
   links: {
-    twitter: 'https://twitter.com/harsh_and_shubham',
-    linkedin: 'https://www.linkedin.com/in/harsh-and-shubham',
+    twitter: 'https://twitter.com/shaderzinc',
+    linkedin: 'https://www.linkedin.com/in/shaderzinc',
     github: 'https://github.com',
   },
 };

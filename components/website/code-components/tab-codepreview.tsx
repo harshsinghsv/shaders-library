@@ -111,12 +111,12 @@ export default function TabCodePreview({ children }: CodePreviewProps) {
         defaultValue={`${updatedCodes[0].props.componentname}-${updatedCodes[0].props.filename}`}
         className='w-full relative mt-1 mb-4'
       >
-        <TabsList className='mb-0  bg-muted px-0.5'>
+        <TabsList className='mb-0 bg-neutral-900 border border-neutral-800 px-0.5'>
           {updatedCodes.map((componentName) => (
             <TabsTrigger
               key={`${componentName.props.componentname}-${componentName.props.filename}`}
               value={`${componentName.props.componentname}-${componentName.props.filename}`}
-              className='flex gap-2 items-center data-[state=active]:bg-white m-0 not-prose'
+              className='flex gap-2 items-center data-[state=active]:bg-neutral-700 data-[state=active]:text-white text-neutral-400 m-0 not-prose'
             >
               {componentName.props.filename}
             </TabsTrigger>

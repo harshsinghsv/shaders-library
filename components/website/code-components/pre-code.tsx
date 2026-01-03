@@ -44,7 +44,7 @@ export async function PreCode({
     return (
       <div className={cn('relative z-[2]', cssclass)}>
         {tshighlighted.meta && (
-          <div className='text-left text-sm px-2 py-1 mt-3 border-dotted rounded-md bg-primary-foreground w-fit'>
+          <div className='text-left text-sm px-2 py-1 mt-3 border border-neutral-700 border-dotted rounded-md bg-neutral-900 text-neutral-300 w-fit'>
             {tshighlighted.meta}
           </div>
         )}
@@ -61,7 +61,7 @@ export async function PreCode({
               <CopyButton code={tshighlighted.code} classname='top-3.5' />
             </>
           )}
-          <div className='not-prose p-4 max-h-[550px] overflow-x-hidden   rounded-md text-sm  bg-codebg   border'>
+          <div className='not-prose p-4 max-h-[550px] overflow-x-hidden rounded-md text-sm bg-neutral-900 border border-neutral-800'>
             <Pre
               code={tshighlighted}
               handlers={[callout, wordWrap, mark]}
@@ -108,25 +108,25 @@ export async function PreCode({
   return (
     <div className='relative z-[2]'>
       {!metahide && tshighlighted.meta && (
-        <div className='text-left text-sm px-2 py-1 mt-3 border-dotted rounded-md bg-primary-foreground w-fit'>
+        <div className='text-left text-sm px-2 py-1 mt-3 border border-neutral-700 border-dotted rounded-md bg-neutral-900 text-neutral-300 w-fit'>
           {tshighlighted.meta}
         </div>
       )}
 
       <>
         <Tabs defaultValue={'typescript'} className='relative'>
-          <TabsList className='absolute  right-14 top-2 z-[1] h-9 p-0.5 border dark:border-background '>
-            <TabsTrigger value={'typescript'} className='h-8'>
+          <TabsList className='absolute right-14 top-2 z-[1] h-9 p-0.5 border border-neutral-700 bg-neutral-900'>
+            <TabsTrigger value={'typescript'} className='h-8 data-[state=active]:bg-neutral-700 data-[state=active]:text-white text-neutral-400'>
               Ts
             </TabsTrigger>
-            <TabsTrigger value={'javascript'} className=' h-8'>
+            <TabsTrigger value={'javascript'} className='h-8 data-[state=active]:bg-neutral-700 data-[state=active]:text-white text-neutral-400'>
               Js{' '}
             </TabsTrigger>
           </TabsList>
           <TabsContent value={'typescript'} className=''>
             <div className='relative'>
               <CopyButton code={tshighlighted.code} classname='right-2' />
-              <div className='not-prose p-4 max-h-[550px]  overflow-x-hidden  rounded-md text-sm   bg-codebg border'>
+              <div className='not-prose p-4 max-h-[550px] overflow-x-hidden rounded-md text-sm bg-neutral-900 border border-neutral-800'>
                 <Pre
                   code={tshighlighted}
                   handlers={[callout, wordWrap, mark]}
@@ -138,7 +138,7 @@ export async function PreCode({
           <TabsContent value={'javascript'} className=''>
             <div className='relative'>
               <CopyButton code={jshighlighted.code} classname='right-2' />
-              <div className='not-prose p-4 max-h-[550px] overflow-x-hidden  rounded-md text-sm  bg-codebg border'>
+              <div className='not-prose p-4 max-h-[550px] overflow-x-hidden rounded-md text-sm bg-neutral-900 border border-neutral-800'>
                 <Pre
                   code={jshighlighted}
                   handlers={[callout, wordWrap, mark]}

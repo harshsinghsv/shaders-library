@@ -74,9 +74,9 @@ export default function ComponentPreview({
     <>
       <div className='absolute right-1 top-0 z-[10] flex h-12 items-center gap-2'>
         {responsive && (
-          <div className='flex items-center gap-2 rounded-lg border bg-background p-1'>
+          <div className='flex items-center gap-2 rounded-lg border border-neutral-700 bg-neutral-900 p-1'>
             <button
-              className={`rounded-md p-1 ${mode === 'desktop' ? 'bg-primary text-primary-foreground' : ''}`}
+              className={`rounded-md p-1 text-neutral-400 ${mode === 'desktop' ? 'bg-orange-500 text-white' : 'hover:text-white'}`}
               onClick={() => {
                 setMode('desktop');
                 setWidth('100%');
@@ -90,7 +90,7 @@ export default function ComponentPreview({
 
                 setWidth('50%');
               }}
-              className={`rounded-md p-1 ${mode === 'tablet' ? 'bg-primary text-primary-foreground' : ''}`}
+              className={`rounded-md p-1 text-neutral-400 ${mode === 'tablet' ? 'bg-orange-500 text-white' : 'hover:text-white'}`}
             >
               <Tablet className='h-5 w-5' />
             </button>
@@ -100,7 +100,7 @@ export default function ComponentPreview({
 
                 setWidth('32%');
               }}
-              className={`rounded-md p-1 ${mode === 'mobile' ? 'bg-primary text-primary-foreground' : ''}`}
+              className={`rounded-md p-1 text-neutral-400 ${mode === 'mobile' ? 'bg-orange-500 text-white' : 'hover:text-white'}`}
             >
               <Smartphone className='h-4 w-4' />
             </button>
@@ -108,7 +108,7 @@ export default function ComponentPreview({
         )}
         {!isNotCopy && (
           <button
-            className='relative grid cursor-pointer place-content-center rounded-lg border bg-background p-2 px-2.5'
+            className='relative grid cursor-pointer place-content-center rounded-lg border border-neutral-700 bg-neutral-900 p-2 px-2.5 text-neutral-400 hover:text-white transition-colors'
             onClick={onCopy}
           >
             <div
@@ -127,7 +127,7 @@ export default function ComponentPreview({
         )}
         {hasReTrigger && (
           <button
-            className='relative grid group cursor-pointer place-content-center rounded-lg border bg-background p-2 px-2'
+            className='relative grid group cursor-pointer place-content-center rounded-lg border border-neutral-700 bg-neutral-900 p-2 px-2 text-neutral-400 hover:text-white transition-colors'
             onClick={handleReTrigger}
           >
             <RotateCw className='h-5 w-5 group-hover:rotate-180 transition-transform' />
@@ -141,7 +141,7 @@ export default function ComponentPreview({
             <>
               <div
                 className={cn(
-                  `${isFitheight ? 'h-[600px] ' : 'h-[600px] '}  w-full rounded-lg   dark:bg-[#080b11] bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:20px_20px]   overflow-hidden     pt-16  p-0`,
+                  `${isFitheight ? 'h-[600px] ' : 'h-[600px] '}  w-full rounded-lg bg-black bg-[linear-gradient(to_right,#ffffff08_1px,transparent_1px),linear-gradient(to_bottom,#ffffff08_1px,transparent_1px)] bg-[size:20px_20px] overflow-hidden pt-16 p-0`,
                   className
                 )}
               >
@@ -162,7 +162,7 @@ export default function ComponentPreview({
           ) : (
             <div
               className={cn(
-                `${isFitheight ? 'h-fit py-4' : 'h-[600px] '}  w-full rounded-lg   dark:bg-[#080b11] bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:20px_20px]   overflow-hidden     pt-16  p-0`,
+                `${isFitheight ? 'h-fit py-4' : 'h-[600px] '}  w-full rounded-lg bg-black bg-[linear-gradient(to_right,#ffffff08_1px,transparent_1px),linear-gradient(to_bottom,#ffffff08_1px,transparent_1px)] bg-[size:20px_20px] overflow-hidden pt-16 p-0`,
                 className
               )}
             >
@@ -186,7 +186,7 @@ export default function ComponentPreview({
       ) : (
         <>
           <div
-            className={`${isFitheight ? 'h-fit' : 'xl:h-[600px] h-fit overflow-auto'} w-full rounded-lg dark:bg-[#080b11] bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:20px_20px] overflow-hidden pt-8 p-8`}
+            className={`${isFitheight ? 'h-fit' : 'xl:h-[600px] h-fit overflow-auto'} w-full rounded-lg bg-black bg-[linear-gradient(to_right,#ffffff08_1px,transparent_1px),linear-gradient(to_bottom,#ffffff08_1px,transparent_1px)] bg-[size:20px_20px] overflow-hidden pt-8 p-8`}
           >
             <div
               className='h-full  mx-auto p-5 not-prose'

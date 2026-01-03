@@ -13,27 +13,57 @@ export const metadata = {
 
 ## Installation
 
-Install the required dependencies:
+**Option 1: Using CLI (Recommended)**
+
+Install this shader directly using the CLI:
 
 ```bash
-npm install three @types/three
+npx shaderz add
 ```
 
-Or with yarn:
+Select "Gradient Waves" from the list. The component will be added to `/components/shaderz/GradientWavesShader.tsx`.
+
+**Option 2: Manual Installation**
+
+Copy the component code from the Usage section below.
+
+## Required Dependencies
 
 ```bash
-yarn add three @types/three
-```
-
-Or with pnpm:
-
-```bash
-pnpm add three @types/three
+npm install three @types/three framer-motion
 ```
 
 ## Usage
 
+**Basic Usage:**
+
+**Basic Usage:**
+
 <ComponentCodePreview name="gradient-waves-shader" isTab={false} />
+
+**Hero Section Background Example:**
+
+```tsx app/page.tsx
+import GradientWavesShader from '@/components/shaderz/GradientWavesShader';
+
+export default function Home() {
+  return (
+    <section className="relative min-h-screen">
+      {/* Shader background */}
+      <div className="absolute inset-0 -z-10">
+        <GradientWavesShader />
+      </div>
+      
+      {/* Your hero content */}
+      <div className="relative z-10 flex items-center justify-center min-h-screen">
+        <h1 className="text-6xl font-bold text-white">
+          Welcome to Your Site
+        </h1>
+      </div>
+    </section>
+  );
+}
+```
 
 ## Features
 

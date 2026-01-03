@@ -61,14 +61,14 @@ export default function TableOfContents({ toc }: TableOfContentsProps) {
   return (
     <>
       {tocItems?.length !== 0 && (
-        <aside className='hidden lg:block bg-primary-foreground w-[170px] shrink-0 border-x'>
+        <aside className='hidden lg:block bg-black w-[170px] shrink-0 border-l border-neutral-800'>
           <div className='sticky top-16 p-2'>
             <div>
-              <span className='text-sm px-1 text-primary font-semibold pb-1 inline-block'>
+              <span className='text-sm px-1 text-orange-500 font-semibold pb-1 inline-block'>
                 On This Page
               </span>
-              <hr />
-              <ul className=' list-none m-0 ml-0  text-[0.8em] space-y-0.5 pt-2 pl-0'>
+              <hr className='border-neutral-800' />
+              <ul className='list-none m-0 ml-0 text-[0.8em] space-y-0.5 pt-2 pl-0'>
                 {tocItems?.map((item) => {
                   // console.log(item);
 
@@ -77,17 +77,17 @@ export default function TableOfContents({ toc }: TableOfContentsProps) {
                       <li key={item.url}>
                         <a
                           href={item.url}
-                          className={`${activeId === item.url.slice(1) ? ' font-semibold  text-primary py-1' : ''} no-underline rounded-sm px-1 hover:text-primary text-muted-foreground `}
+                          className={`${activeId === item.url.slice(1) ? 'font-semibold text-orange-500 py-1' : ''} no-underline rounded-sm px-1 hover:text-orange-400 text-neutral-400`}
                         >
                           {item.title}
                         </a>
                         {item.items && item.items.length > 0 && (
-                          <ul className='list-none  pl-4 space-y-0.5 pt-0.5'>
+                          <ul className='list-none pl-4 space-y-0.5 pt-0.5'>
                             {item.items.map((subItem) => (
                               <li key={subItem.url}>
                                 <a
                                   href={subItem.url}
-                                  className={`${activeId === subItem.url.slice(1) ? ' font-semibold text-primary' : ' '} no-underline  hover:text-primary text-muted-foreground`}
+                                  className={`${activeId === subItem.url.slice(1) ? 'font-semibold text-orange-500' : ''} no-underline hover:text-orange-400 text-neutral-400`}
                                 >
                                   {subItem.title}
                                 </a>

@@ -26,7 +26,7 @@ export function CopyButton({
     <>
       <div
         className={cn(
-          'absolute right-2 top-2 cursor-pointer dark:bg-gray-950 backdrop-blur-2xl bg-white rounded-md border',
+          'absolute right-2 top-2 cursor-pointer bg-neutral-800 hover:bg-neutral-700 backdrop-blur-2xl rounded-md border border-neutral-700 transition-colors',
           classname
         )}
         onClick={onCopy}
@@ -36,14 +36,14 @@ export function CopyButton({
             hasCheckIcon ? 'scale-0 opacity-0' : 'scale-100 opacity-100'
           }`}
         >
-          <Copy className='h-4 w-4 text-foreground/80' />
+          <Copy className='h-4 w-4 text-neutral-400' />
         </div>
         <div
           className={`absolute inset-0 transform transition-all duration-300 w-8 h-8 grid place-content-center  ${
             hasCheckIcon ? 'scale-100 opacity-100' : 'scale-0 opacity-0'
           }`}
         >
-          <CheckCheck className='h-4 w-4 text-foreground/80' />
+          <CheckCheck className='h-4 w-4 text-green-400' />
         </div>
       </div>
     </>

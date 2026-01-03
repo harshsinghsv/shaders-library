@@ -133,44 +133,44 @@ export default async function DrawerCodePreview({
       <div
         className={`${
           isCard ? 'p-10 h-[550px]' : '2xl:p-20 py-16 px-2 h-fit'
-        } my-2 w-full border-2  rounded-lg overflow-hidden  dark:bg-[#080b11] bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:20px_20px] relative grid place-content-center`}
+        } my-2 w-full border border-neutral-800 rounded-lg overflow-hidden bg-black bg-[linear-gradient(to_right,#ffffff08_1px,transparent_1px),linear-gradient(to_bottom,#ffffff08_1px,transparent_1px)] bg-[size:20px_20px] relative grid place-content-center`}
       >
         <div className='not-prose'>
           <ComponentBlocks componentfile={parsedCodeblock.filesrc} />
         </div>
 
-        <div className='absolute top-2 right-2 flex justify-center items-center gap-2  '>
+        <div className='absolute top-2 right-2 flex justify-center items-center gap-2'>
           <CopyButton
             code={parsedCodeblock.codeblock}
-            classname=' relative top-0 left-0'
+            classname='relative top-0 left-0'
           />
           <ResponsiveDrawer
-            classname=' max-w-screen-lg p-2 '
+            classname='max-w-screen-lg p-2'
             triggerContent={
-              <button className='  bg-foreground rounded-lg p-2 h-8 w-8 grid place-content-center '>
-                <Maximize2 className='dark:text-black text-white h-5 w-5' />
+              <button className='bg-neutral-800 hover:bg-neutral-700 border border-neutral-700 rounded-lg p-2 h-8 w-8 grid place-content-center transition-colors'>
+                <Maximize2 className='text-neutral-400 h-5 w-5' />
               </button>
             }
           >
-            <DrawerContent classname='2xl:max-h-[62vh] max-h-[80vh] overflow-auto '>
+            <DrawerContent classname='2xl:max-h-[62vh] max-h-[80vh] overflow-auto bg-neutral-900'>
               <Tabs
                 className='relative'
                 defaultValue={`${parsedCodeblock.comName}-typescript`}
               >
                 <TabsList
                   className={cn(
-                    'absolute  right-20 top-6 z-[1] h-9 p-0.5 border dark:border-background '
+                    'absolute right-20 top-6 z-[1] h-9 p-0.5 border border-neutral-700 bg-neutral-900'
                   )}
                 >
                   <TabsTrigger
                     value={`${parsedCodeblock.comName}-typescript`}
-                    className='h-8 d'
+                    className='h-8 text-neutral-400 data-[state=active]:bg-neutral-700 data-[state=active]:text-white'
                   >
                     Ts
                   </TabsTrigger>
                   <TabsTrigger
                     value={`${parsedCodeblock.comName}-javascript`}
-                    className=' h-8 '
+                    className='h-8 text-neutral-400 data-[state=active]:bg-neutral-700 data-[state=active]:text-white'
                   >
                     Js{' '}
                   </TabsTrigger>
@@ -181,24 +181,24 @@ export default async function DrawerCodePreview({
                 >
                   <CopyButton
                     code={tshighlighted.code}
-                    classname={cn('top-6 right-10  ')}
+                    classname={cn('top-6 right-10')}
                   />
                   <Pre
                     code={tshighlighted}
                     handlers={[callout, wordWrap]}
-                    className={cn(' m-0  bg-codebg max-h-[450px] ')}
+                    className={cn('m-0 bg-neutral-900 max-h-[450px]')}
                   />
                   {parsedCodeblock.children}
                 </TabsContent>
                 <TabsContent value={`${parsedCodeblock.comName}-javascript`}>
                   <CopyButton
                     code={jshighlighted.code}
-                    classname={cn('top-6 right-10  ')}
+                    classname={cn('top-6 right-10')}
                   />
                   <Pre
                     code={jshighlighted}
                     handlers={[callout, wordWrap]}
-                    className={cn(' m-0  bg-codebg max-h-[450px] ')}
+                    className={cn('m-0 bg-neutral-900 max-h-[450px]')}
                   />
                   {parsedCodeblock.children}
                 </TabsContent>

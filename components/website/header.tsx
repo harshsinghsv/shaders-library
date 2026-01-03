@@ -120,22 +120,22 @@ export default function Header() {
   const [active, setActive] = useState<string | null>(null);
 
   return (
-    <header className="fixed left-1/2 top-4 z-50 w-[95%] max-w-7xl -translate-x-1/2 rounded-full border border-border/50 bg-black/20 backdrop-blur-lg">
+    <header className="fixed left-1/2 top-4 z-50 w-[95%] max-w-7xl -translate-x-1/2 rounded-full border border-neutral-800/50 bg-black/30 backdrop-blur-xl shadow-lg shadow-black/10">
       <div className="mx-auto flex items-center justify-between gap-4 px-6 py-3">
         {/* Logo Section */}
         <div className="flex items-center gap-2">
           <Image
             src="/shadersLogo.png"
             alt="Logo"
-            width={40}
-            height={40}
-            className="rounded-sm"
+            width={30}
+            height={30}
+            className="rounded-sm border-rounded-md"
           />
           <Image
             src="/shadersBanner.png"
             alt="Banner"
-            width={120}
-            height={40}
+            width={80}
+            height={30}
             className="rounded-md"
           />
         </div>
@@ -145,7 +145,7 @@ export default function Header() {
           <a
             target="_blank"
             href="https://github.com"
-            className="border flex-shrink-0 bg-primary text-primary-foreground w-10 h-10 grid place-content-center rounded-md hover:opacity-80 transition-opacity"
+            className="border border-neutral-700 flex-shrink-0 bg-orange-500 text-white w-10 h-10 grid place-content-center rounded-lg hover:bg-orange-600 transition-colors"
           >
             <Image
               src="/landing-page-assets/github-svgrepo-com.svg"
@@ -157,8 +157,8 @@ export default function Header() {
 
           <a
             target="_blank"
-            href="https://x.com/harsh_and_shubham"
-            className="border flex-shrink-0 bg-primary text-primary-foreground w-10 h-10 grid place-content-center rounded-md hover:opacity-80 transition-opacity"
+            href="https://x.com/shaderzinc"
+            className="border border-neutral-700 flex-shrink-0 bg-orange-500 text-white w-10 h-10 grid place-content-center rounded-lg hover:bg-orange-600 transition-colors"
           >
             <Image
               src="/landing-page-assets/twitter-x.svg"

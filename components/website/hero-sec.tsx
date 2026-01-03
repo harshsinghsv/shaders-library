@@ -1,5 +1,4 @@
-'use client';
-import { Button } from '@/components/website/ui/button';
+'use client';import Link from "next/link";import { Button } from '@/components/website/ui/button';
 import LiquidOrangeShader from './LiquidOrangeShader';
 import PlasmaShader from './PlasmaShader';
 import OceanWavesShader from './OceanWavesShader';
@@ -95,7 +94,7 @@ function HeroSec({ activeShader }: HeroSecProps) {
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Button size="lg" className="shadow-[inset_0_-4px_6px_rgba(255,255,255,0.5)] rounded-full px-8 bg-primary hover:bg-primary/90 text-white" asChild>
-              <a href="/components">Browse Shaders</a>
+              <Link href="/components">Browse Shaders</Link>
             </Button>
           </div>
         </div>

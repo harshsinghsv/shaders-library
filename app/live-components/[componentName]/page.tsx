@@ -11,12 +11,12 @@ export async function generateStaticParams() {
   return paths;
 }
 
-export default function SectionPage({
+export default async function SectionPage({
   params,
 }: {
-  params: { componentName: string };
+  params: Promise<{ componentName: string }>;
 }) {
-  const { componentName } = params;
+  const { componentName } = await params;
   console.log(componentName);
 
   // Find the component data based on componentName

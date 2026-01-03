@@ -23,9 +23,9 @@ export default async function IframeTabCodePreview(props: unknown) {
       {tabs.length > 1 ? (
         <>
           <Tabs defaultValue={tabs[0]?.meta}>
-            <TabsList>
+            <TabsList className='bg-neutral-900 border border-neutral-800'>
               {tabs.map((tab) => (
-                <TabsTrigger key={tab.meta} value={tab.meta} className=' h-8'>
+                <TabsTrigger key={tab.meta} value={tab.meta} className='h-8 text-neutral-400 data-[state=active]:bg-neutral-700 data-[state=active]:text-white'>
                   {tab.meta}
                 </TabsTrigger>
               ))}
