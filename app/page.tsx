@@ -34,7 +34,7 @@ const shaders: Shader[] = [
     thumbnail: '',
     colors: ['#CC4500', '#FF6347', '#FF8C00', '#FFD700'],
     fragmentShader: `
-      precision highp float;
+      precision mediump float;
       uniform vec2 resolution;
       uniform float time;
 
@@ -159,7 +159,7 @@ const shaders: Shader[] = [
     thumbnail: '',
     colors: ['#6B46C1', '#9333EA', '#C084FC', '#F3E8FF'],
     fragmentShader: `
-      precision highp float;
+      precision mediump float;
       uniform vec2 resolution;
       uniform float time;
 
@@ -210,7 +210,7 @@ const shaders: Shader[] = [
     thumbnail: '',
     colors: ['#002B5C', '#0055A5', '#4A90E2', '#87CEEB'],
     fragmentShader: `
-      precision highp float;
+      precision mediump float;
       uniform vec2 resolution;
       uniform float time;
 
@@ -312,7 +312,7 @@ const shaders: Shader[] = [
     thumbnail: '',
     colors: ['#1A2A50', '#2E1A60', '#50207', '#284A80'],
     fragmentShader: `
-      precision highp float;
+      precision mediump float;
       uniform vec2 resolution;
       uniform float time;
 

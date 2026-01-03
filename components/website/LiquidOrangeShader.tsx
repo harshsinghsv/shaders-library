@@ -37,7 +37,7 @@ function LiquidOrangeShader() {
     `;
 
     const fragmentShaderSource = `
-      precision highp float;
+      precision mediump float;
       uniform vec2 resolution;
       uniform float time;
 
