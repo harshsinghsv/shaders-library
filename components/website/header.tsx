@@ -145,26 +145,28 @@ export default function Header() {
           <a
             target="_blank"
             href="https://github.com"
-            className="border border-neutral-700 flex-shrink-0 bg-orange-500 text-white w-10 h-10 grid place-content-center rounded-lg hover:bg-orange-600 transition-colors"
+            className="flex-shrink-0 w-10 h-10 grid place-content-center rounded-lg hover:bg-white/10 transition-colors"
           >
             <Image
               src="/landing-page-assets/github-svgrepo-com.svg"
               alt="GitHub"
               width={20}
               height={20}
+              className="invert"
             />
           </a>
 
           <a
             target="_blank"
             href="https://x.com/shaderzinc"
-            className="border border-neutral-700 flex-shrink-0 bg-orange-500 text-white w-10 h-10 grid place-content-center rounded-lg hover:bg-orange-600 transition-colors"
+            className="flex-shrink-0 w-10 h-10 grid place-content-center rounded-lg hover:bg-white/10 transition-colors"
           >
             <Image
               src="/landing-page-assets/twitter-x.svg"
               alt="Twitter"
               width={16}
               height={16}
+              className="invert"
             />
           </a>
         </div>
