@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface ShaderPreviewProps {
   fragmentShader: string;
@@ -8,31 +8,63 @@ interface ShaderPreviewProps {
 
 function ShaderPreview({ fragmentShader, className = "" }: ShaderPreviewProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const glRef = useRef<WebGLRenderingContext | null>(null);
   const programRef = useRef<WebGLProgram | null>(null);
   const animationRef = useRef<number | null>(null);
+  const [isVisible, setIsVisible] = useState(false);
 
+  // Intersection Observer to handle visibility
   useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          setIsVisible(entry.isIntersecting);
+        });
+      },
+      { threshold: 0.1, rootMargin: '100px' } // Load slightly before view, unload when out
+    );
+
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
+  // WebGL Logic - Only runs when isVisible is true
+  useEffect(() => {
+    if (!isVisible) return; // Clean up or don't start if not visible
+
     const canvas = canvasRef.current;
     if (!canvas) return;
-    
-    const gl = canvas.getContext('webgl');
+
+    // Try to get context
+    const gl = canvas.getContext('webgl', {
+      preserveDrawingBuffer: false,
+      failIfMajorPerformanceCaveat: true,
+      powerPreference: "low-power" // Optimize for mobile battery/perf
+    });
     glRef.current = gl;
 
     if (!gl) {
-      console.error('WebGL not supported');
+      console.warn('WebGL not supported or context limit reached');
       return;
     }
 
     const resizeCanvas = () => {
       const rect = canvas.getBoundingClientRect();
-      canvas.width = rect.width * window.devicePixelRatio;
-      canvas.height = rect.height * window.devicePixelRatio;
+      // Use lower resolution for previews to save performance on mobile
+      const dpr = Math.min(window.devicePixelRatio, 1.5);
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
       gl.viewport(0, 0, canvas.width, canvas.height);
     };
 
     resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
+    // window.addEventListener('resize', resizeCanvas); // Verify if needed, ResizeObserver might be better but skipping for simplicity
 
     const vertexShaderSource = `
       attribute vec2 position;
@@ -44,12 +76,12 @@ function ShaderPreview({ fragmentShader, className = "" }: ShaderPreviewProps) {
     const createShader = (gl: WebGLRenderingContext, type: number, source: string) => {
       const shader = gl.createShader(type);
       if (!shader) return null;
-      
+
       gl.shaderSource(shader, source);
       gl.compileShader(shader);
-      
+
       if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-        console.error('Shader compile error:', gl.getShaderInfoLog(shader));
+        // console.error('Shader compile error:', gl.getShaderInfoLog(shader));
         gl.deleteShader(shader);
         return null;
       }
@@ -63,13 +95,13 @@ function ShaderPreview({ fragmentShader, className = "" }: ShaderPreviewProps) {
 
     const program = gl.createProgram();
     if (!program) return;
-    
+
     gl.attachShader(program, vertexShader);
     gl.attachShader(program, fragmentShaderObj);
     gl.linkProgram(program);
 
     if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-      console.error('Program link error:', gl.getProgramInfoLog(program));
+      // console.error('Program link error:', gl.getProgramInfoLog(program));
       return;
     }
 
@@ -79,9 +111,9 @@ function ShaderPreview({ fragmentShader, className = "" }: ShaderPreviewProps) {
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
     const positions = new Float32Array([
       -1, -1,
-       1, -1,
-      -1,  1,
-       1,  1
+      1, -1,
+      -1, 1,
+      1, 1
     ]);
     gl.bufferData(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW);
 
@@ -92,8 +124,11 @@ function ShaderPreview({ fragmentShader, className = "" }: ShaderPreviewProps) {
     gl.enable(gl.BLEND);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
-    const render = (time: number) => {
-      time *= 0.001;
+    let startTime = performance.now();
+    const render = (now: number) => {
+      if (!gl) return;
+
+      const time = (now - startTime) * 0.001;
 
       gl.clearColor(0, 0, 0, 0);
       gl.clear(gl.COLOR_BUFFER_BIT);
@@ -113,19 +148,28 @@ function ShaderPreview({ fragmentShader, className = "" }: ShaderPreviewProps) {
 
     animationRef.current = requestAnimationFrame(render);
 
+    // cleanup function
     return () => {
-      window.removeEventListener('resize', resizeCanvas);
+      //   window.removeEventListener('resize', resizeCanvas);
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
       }
+
+      // Aggressively lose context to free up resources
+      const ext = gl.getExtension('WEBGL_lose_context');
+      if (ext) ext.loseContext();
     };
-  }, [fragmentShader]);
+  }, [fragmentShader, isVisible]); // Re-run when visibility changes
 
   return (
-    <canvas
-      ref={canvasRef}
-      className={`w-full h-full ${className}`}
-    />
+    <div ref={containerRef} className={`w-full h-full ${className}`}>
+      {isVisible && (
+        <canvas
+          ref={canvasRef}
+          className="w-full h-full"
+        />
+      )}
+    </div>
   );
 }
 

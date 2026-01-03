@@ -53,16 +53,13 @@ function ShaderGallery({ shaders, videos = [], activeShader, onShaderChange }: S
                     background: `linear-gradient(135deg, ${shader.colors[0]}, ${shader.colors[1]})`
                   }}
                 >
-                  {/* Live Shader Preview */}
-                  {/* Live Shader Preview - Disabled to prevent Mobile WebGL Context Crash (Too many active contexts) */}
-                  {/* 
+                  {/* Live Shader Preview - Lazy Loaded to prevent crash */}
                   <div className="absolute inset-0">
-                    <ShaderPreview 
+                    <ShaderPreview
                       fragmentShader={shader.fragmentShader}
                       className="opacity-80 group-hover:opacity-95 transition-opacity duration-300"
                     />
                   </div>
-                  */}
 
                   {/* Overlay for better text readability */}
                   <div className='absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent' />
