@@ -43,8 +43,8 @@ function ShaderGallery({ shaders, videos = [], activeShader, onShaderChange }: S
                 key={shader.id}
                 onClick={() => onShaderChange(shader.id)}
                 className={`group cursor-pointer transition-all duration-300 ${activeShader === shader.id
-                    ? 'ring-2 ring-white/50 scale-105'
-                    : 'hover:scale-105 hover:ring-2 hover:ring-white/30'
+                  ? 'ring-2 ring-white/50 scale-105'
+                  : 'hover:scale-105 hover:ring-2 hover:ring-white/30'
                   }`}
               >
                 <div
@@ -54,12 +54,15 @@ function ShaderGallery({ shaders, videos = [], activeShader, onShaderChange }: S
                   }}
                 >
                   {/* Live Shader Preview */}
+                  {/* Live Shader Preview - Disabled to prevent Mobile WebGL Context Crash (Too many active contexts) */}
+                  {/* 
                   <div className="absolute inset-0">
-                    <ShaderPreview
+                    <ShaderPreview 
                       fragmentShader={shader.fragmentShader}
                       className="opacity-80 group-hover:opacity-95 transition-opacity duration-300"
                     />
                   </div>
+                  */}
 
                   {/* Overlay for better text readability */}
                   <div className='absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent' />
@@ -109,8 +112,8 @@ function ShaderGallery({ shaders, videos = [], activeShader, onShaderChange }: S
                   key={video.id}
                   onClick={() => onShaderChange(video.id)}
                   className={`group cursor-pointer transition-all duration-300 ${activeShader === video.id
-                      ? 'ring-2 ring-white/50 scale-105'
-                      : 'hover:scale-105 hover:ring-2 hover:ring-white/30'
+                    ? 'ring-2 ring-white/50 scale-105'
+                    : 'hover:scale-105 hover:ring-2 hover:ring-white/30'
                     }`}
                 >
                   <div className='relative h-64 rounded-2xl overflow-hidden border border-white/10 bg-black'>
