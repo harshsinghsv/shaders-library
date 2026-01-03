@@ -1,14 +1,15 @@
 import './globals.css';
 import type { Metadata } from 'next';
-import { Poppins } from 'next/font/google';
+import localFont from 'next/font/local';
 import Script from 'next/script';
 import { ThemeProvider } from '@/components/website/theme-provider';
 import Progressbar from '@/lib/progressbar';
 import { siteConfig } from '@/lib/utils';
 
-const poppins = Poppins({
-  subsets: ['latin'],
-  weight: ['200', '300', '400', '500', '600', '700', '800'],
+const inter = localFont({
+  src: '../public/landing-page-assets/fonts/Inter-Regular.ttf',
+  variable: '--font-inter',
+  display: 'swap',
 });
 
 export const metadata: Metadata = {
@@ -78,8 +79,8 @@ export default async function RootLayout({
 }) {
   return (
     <>
-      <html lang='en' suppressHydrationWarning>
-        <body className={poppins.className}>
+      <html lang='en' className={inter.variable} suppressHydrationWarning>
+        <body className="font-sans antialiased">
           <Progressbar>
             <ThemeProvider attribute='class'>
               <div className='isolate min-h-screen' vaul-drawer-wrapper=''>
