@@ -1,3 +1,4 @@
+
 'use client';
 import { useEffect, useRef } from 'react';
 
@@ -10,7 +11,7 @@ function LiquidOrangeShader() {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    
+
     const gl = canvas.getContext('webgl');
     glRef.current = gl;
 
@@ -156,10 +157,10 @@ function LiquidOrangeShader() {
     const createShader = (gl: WebGLRenderingContext, type: number, source: string) => {
       const shader = gl.createShader(type);
       if (!shader) return null;
-      
+
       gl.shaderSource(shader, source);
       gl.compileShader(shader);
-      
+
       if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
         console.error('Shader compile error:', gl.getShaderInfoLog(shader));
         gl.deleteShader(shader);
@@ -175,7 +176,7 @@ function LiquidOrangeShader() {
 
     const program = gl.createProgram();
     if (!program) return;
-    
+
     gl.attachShader(program, vertexShader);
     gl.attachShader(program, fragmentShader);
     gl.linkProgram(program);
@@ -191,9 +192,9 @@ function LiquidOrangeShader() {
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
     const positions = new Float32Array([
       -1, -1,
-       1, -1,
-      -1,  1,
-       1,  1
+      1, -1,
+      -1, 1,
+      1, 1
     ]);
     gl.bufferData(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW);
 
