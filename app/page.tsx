@@ -163,42 +163,42 @@ const shaders: Shader[] = [
       uniform vec2 resolution;
       uniform float time;
 
-      vec3 plasma(vec2 uv, float time) {
-        float v = 0.0;
-        vec2 c = uv;
-        
-        v += sin((c.x + time) * 2.0);
-        v += sin((c.y + time) * 3.0);
-        v += sin((c.x + c.y + time) * 2.0);
-        
-        c += vec2(sin(time * 0.5) * 2.0, cos(time * 0.3) * 2.0);
-        v += sin(sqrt(c.x * c.x + c.y * c.y + 1.0) + time);
-        
-        return vec3(
-          sin(v * 3.14159),
-          sin(v * 3.14159 + 2.094),
-          sin(v * 3.14159 + 4.188)
-        ) * 0.5 + 0.5;
-      }
-
       void main() {
-        vec2 uv = (gl_FragCoord.xy - 0.5 * resolution.xy) / resolution.y;
-        uv *= 2.0;
+        vec2 uv = (gl_FragCoord.xy - 0.5 * resolution.xy) / min(resolution.x, resolution.y);
+        float t = time * 0.4;
         
-        vec3 color = plasma(uv, time * 0.8);
+        vec2 p = uv * 3.0;
         
-        float glow = 1.0 - length(uv) * 0.3;
-        color *= glow;
+        // Fluid-like wrapping
+        for(float i=1.0; i<5.0; i++){
+            p.x += 0.3/i * sin(i*3.0*p.y + t);
+            p.y += 0.3/i * cos(i*3.0*p.x + t);
+        }
         
-        vec3 purpleGradient = mix(
-          vec3(0.4, 0.1, 0.8),
-          vec3(0.8, 0.2, 0.6),
-          (uv.y + 1.0) * 0.5
+        // Rich color mixing
+        float r = 0.5 + 0.5 * sin(p.x + p.y + t);
+        float g = 0.5 + 0.5 * sin(p.x * 1.5 + t * 0.5);
+        float b = 0.5 + 0.5 * sin(p.y * 1.5 + t * 0.8);
+        
+        vec3 color = vec3(r, g, b);
+        
+        // Tint towards pleasant neon palette
+        vec3 palette = mix(
+            vec3(0.2, 0.0, 0.4), // Dark purple
+            vec3(0.0, 0.8, 0.9), // Cyan
+            length(color) * 0.5
         );
         
-        color = mix(color, purpleGradient, 0.3);
+        color = mix(palette, color, 0.4);
         
-        gl_FragColor = vec4(color, 0.9);
+        // Soft glow / vignette
+        float glow = 1.0 - length(uv * 0.8);
+        color *= smoothstep(0.0, 1.0, glow);
+        
+        // Extra vibrancy
+        color += vec3(0.4, 0.1, 0.5) * 0.3;
+        
+        gl_FragColor = vec4(color, 1.0);
       }
     `
   },
@@ -311,25 +311,60 @@ const shaders: Shader[] = [
     component: GradientWavesShader,
     thumbnail: '',
     colors: ['#1A2A50', '#2E1A60', '#50207', '#284A80'],
-    fragmentShader: `precision highp float;
+    fragmentShader: `
+      precision highp float;
       uniform vec2 resolution;
       uniform float time;
-      void main(){
-        vec2 uv=gl_FragCoord.xy/resolution.xy;
-        vec2 p=(uv-0.5)*2.0;p.x*=resolution.x/resolution.y;
-        vec3 col=vec3(0.0);
-        for(float i=0.0;i<5.0;i++){
-          float offset=(i-2.0)*0.3;
-          float wave=sin(p.x*2.0+time*0.8+i*0.8)*0.25+offset;
-          float d=smoothstep(0.12,0.0,abs(p.y-wave));
-          float hue=i/5.0;
-          vec3 c=mix(vec3(0.3,0.4,1.0),vec3(0.6,0.3,1.0),hue);
-          c=mix(c,vec3(0.5,0.1,0.7),smoothstep(0.4,0.8,hue));
-          float glow=exp(-abs(p.y-wave)*8.0)*0.3;
-          col+=c*(d+glow);
+
+      void main() {
+        vec2 uv = gl_FragCoord.xy / resolution.xy;
+        vec2 p = (uv - 0.5) * 2.0;
+        p.x *= resolution.x / resolution.y;
+        
+        float t = time * 0.5;
+        vec3 col = vec3(0.0);
+        
+        // Ethereal background gradient
+        vec3 bg = mix(
+            vec3(0.05, 0.05, 0.2), 
+            vec3(0.1, 0.0, 0.3), 
+            uv.y
+        );
+        col = bg;
+        
+        // Layered waves
+        for(float i = 0.0; i < 4.0; i++) {
+            float seed = i * 12.345;
+            float speed = 0.2 + i * 0.1;
+            float freq = 2.0 + i * 1.5;
+            float amp = 0.3 - i * 0.05;
+            
+            float wave = sin(p.x * freq + t * speed + seed) * amp;
+            wave += sin(p.x * freq * 2.1 - t * speed * 1.5) * amp * 0.5;
+            
+            float d = abs(p.y - wave);
+            
+            // Soft glowing lines
+            float glow = smoothstep(0.5, 0.0, d);
+            
+            // Dynamic gradient colors
+            vec3 waveCol = mix(
+                vec3(0.0, 0.8, 1.0), // Cyan
+                vec3(0.8, 0.2, 1.0), // Magenta
+                sin(p.x + t + i) * 0.5 + 0.5
+            );
+            
+            // Additive blending
+            col += waveCol * glow * 0.3;
         }
-        gl_FragColor=vec4(col,1.0);
-      }`
+        
+        // Vignette
+        float vig = 1.0 - length(uv - 0.5) * 0.5;
+        col *= vig;
+        
+        gl_FragColor = vec4(col, 1.0);
+      }
+    `
   },
   {
     id: 'cosmic-nebula',
@@ -473,14 +508,14 @@ export default function Home() {
         <HeroSec activeShader={activeShader} />
 
         {/* Background Gallery Section */}
-        <ShaderGallery 
+        <ShaderGallery
           shaders={shaders}
           videos={videos}
           activeShader={activeShader}
           onShaderChange={setActiveShader}
         />
       </main>
-      
+
       <footer className='border-t border-white/10 py-12 bg-black'>
         <div className='container mx-auto px-6'>
           <p className='text-balance text-center text-sm leading-loose text-gray-400'>
