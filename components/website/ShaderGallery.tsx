@@ -48,7 +48,7 @@ function ShaderGallery({ shaders, videos = [], activeShader, onShaderChange }: S
                     : 'hover:shadow-[0_20px_40px_-15px_rgba(255,255,255,0.1)]'
                   }`}
               >
-                <div className="absolute inset-0 rounded-3xl bg-white/5 border border-white/10 backdrop-blur-sm z-10 pointer-events-none" />
+                <div className="absolute inset-0 rounded-3xl bg-white/5 border border-white/10 z-10 pointer-events-none" />
 
                 <div
                   className='relative h-72 rounded-3xl overflow-hidden'
@@ -64,7 +64,7 @@ function ShaderGallery({ shaders, videos = [], activeShader, onShaderChange }: S
                   </div>
 
                   {/* Gradient Overlay */}
-                  <div className='absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-90' />
+                  <div className='absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-40' />
 
                   {/* Active indicator */}
                   {activeShader === shader.id && (
@@ -127,7 +127,7 @@ function ShaderGallery({ shaders, videos = [], activeShader, onShaderChange }: S
                       : 'hover:shadow-[0_20px_40px_-15px_rgba(255,255,255,0.1)]'
                     }`}
                 >
-                  <div className="absolute inset-0 rounded-3xl bg-white/5 border border-white/10 backdrop-blur-sm z-10 pointer-events-none" />
+                  <div className="absolute inset-0 rounded-3xl bg-white/5 border border-white/10 z-10 pointer-events-none" />
 
                   <div className='relative h-72 rounded-3xl overflow-hidden bg-black'>
                     {/* Video Preview */}
@@ -138,7 +138,7 @@ function ShaderGallery({ shaders, videos = [], activeShader, onShaderChange }: S
                     </div>
 
                     {/* Gradient Overlay */}
-                    <div className='absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-90' />
+                    <div className='absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-40' />
 
                     {/* Video badge */}
                     <div className="absolute top-4 left-4 z-20">
