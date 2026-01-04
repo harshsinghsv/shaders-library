@@ -10,6 +10,7 @@ const inter = localFont({
   src: '../public/landing-page-assets/fonts/Inter-Regular.ttf',
   variable: '--font-inter',
   display: 'swap',
+  weight: '400',
 });
 
 export const metadata: Metadata = {
@@ -38,7 +39,7 @@ export const metadata: Metadata = {
   authors: [
     {
       name: 'harsh and shubham',
-      url: 'https://github.com',
+      url: 'https://github.com/harshsinghsv/shaders-library',
     },
   ],
   creator: 'harsh and shubham',
