@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useRef } from 'react';
 
-function PlasmaShader() {
+function Plasmav2Shader() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const glRef = useRef<WebGLRenderingContext | null>(null);
   const programRef = useRef<WebGLProgram | null>(null);
@@ -169,4 +169,4 @@ function PlasmaShader() {
   );
 }
 
-export default PlasmaShader;
+export default Plasmav2Shader;
