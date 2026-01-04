@@ -13,6 +13,8 @@ import CosmicNebulaShader from '@/components/website/CosmicNebulaShader';
 import GlossyRibbonShader from '@/components/website/GlossyRibbonShader';
 import SilkFlowShader from '@/components/website/SilkFlowShader';
 import GlassTwistShader from '@/components/website/GlassTwistShader';
+import Plasmav2Shader from '@/components/website/Plasmav2';
+import LiquidMotionShader from '@/components/website/LiquidMotionShader';
 
 // Video backgrounds
 const videos: VideoBackground[] = [
@@ -495,6 +497,116 @@ const shaders: Shader[] = [
         }
         gl_FragColor=vec4(col,1.0);
       }`
+  },
+  {
+    id: 'plasma-v2',
+    name: 'Plasma V2',
+    description: 'Enhanced plasma effect with vivid neon colors and fluid motion',
+    component: Plasmav2Shader,
+    thumbnail: '',
+    colors: ['#6B46C1', '#00CED1', '#9333EA', '#C084FC'],
+    fragmentShader: `
+      precision highp float;
+      uniform vec2 resolution;
+      uniform float time;
+
+      void main() {
+        vec2 uv = (gl_FragCoord.xy - 0.5 * resolution.xy) / min(resolution.x, resolution.y);
+        float t = time * 0.4;
+        
+        vec2 p = uv * 3.0;
+        
+        // Fluid-like wrapping
+        for(float i=1.0; i<5.0; i++){
+            p.x += 0.3/i * sin(i*3.0*p.y + t);
+            p.y += 0.3/i * cos(i*3.0*p.x + t);
+        }
+        
+        // Rich color mixing
+        float r = 0.5 + 0.5 * sin(p.x + p.y + t);
+        float g = 0.5 + 0.5 * sin(p.x * 1.5 + t * 0.5);
+        float b = 0.5 + 0.5 * sin(p.y * 1.5 + t * 0.8);
+        
+        vec3 color = vec3(r, g, b);
+        
+        // Tint towards pleasant neon palette
+        vec3 palette = mix(
+            vec3(0.2, 0.0, 0.4), // Dark purple
+            vec3(0.0, 0.8, 0.9), // Cyan
+            length(color) * 0.5
+        );
+        
+        color = mix(palette, color, 0.4);
+        
+        // Soft glow / vignette
+        float glow = 1.0 - length(uv * 0.8);
+        color *= smoothstep(0.0, 1.0, glow);
+        
+        // Extra vibrancy
+        color += vec3(0.4, 0.1, 0.5) * 0.3;
+        
+        gl_FragColor = vec4(color, 1.0);
+      }
+    `
+  },
+  {
+    id: 'liquid-motion',
+    name: 'Liquid Motion',
+    description: 'Interactive fluid simulation with vibrant flowing colors',
+    component: LiquidMotionShader,
+    thumbnail: '',
+    colors: ['#5227FF', '#FF9FFC', '#B19EEF'],
+    fragmentShader: `
+      precision highp float;
+      uniform vec2 resolution;
+      uniform float time;
+
+      float noise(vec2 p) {
+        return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453);
+      }
+
+      float smoothNoise(vec2 p) {
+        vec2 i = floor(p);
+        vec2 f = fract(p);
+        f = f * f * (3.0 - 2.0 * f);
+        float a = noise(i);
+        float b = noise(i + vec2(1.0, 0.0));
+        float c = noise(i + vec2(0.0, 1.0));
+        float d = noise(i + vec2(1.0, 1.0));
+        return mix(mix(a, b, f.x), mix(c, d, f.x), f.y);
+      }
+
+      float fbm(vec2 p) {
+        float value = 0.0;
+        float amplitude = 0.5;
+        for (int i = 0; i < 5; i++) {
+          value += amplitude * smoothNoise(p);
+          p *= 2.0;
+          amplitude *= 0.5;
+        }
+        return value;
+      }
+
+      void main() {
+        vec2 uv = gl_FragCoord.xy / resolution.xy;
+        vec2 p = uv * 3.0;
+        
+        float flow = fbm(p + vec2(time * 0.2, time * 0.1));
+        flow += fbm(p * 2.0 - vec2(time * 0.15, time * 0.25)) * 0.5;
+        
+        vec3 col1 = vec3(0.32, 0.15, 1.0);
+        vec3 col2 = vec3(1.0, 0.62, 0.99);
+        vec3 col3 = vec3(0.69, 0.62, 0.94);
+        
+        vec3 color = mix(col1, col2, flow);
+        color = mix(color, col3, flow * flow);
+        
+        float shimmer = pow(flow, 2.0) * 0.5;
+        color += shimmer;
+        
+        gl_FragColor = vec4(color, 1.0);
+      }
+    `
   }
 ];
 
