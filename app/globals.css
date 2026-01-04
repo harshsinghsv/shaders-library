@@ -7,6 +7,14 @@
 
 
 @font-face {
+  font-family: 'Inter';
+  src: url(/landing-page-assets/fonts/Inter-Regular.ttf) format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
   font-family: Instrumental;
   src: url(/landing-page-assets/fonts/InstrumentSerif-Italic.ttf);
 }
