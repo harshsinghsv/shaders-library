@@ -43,12 +43,22 @@ function HeroSec({ activeShader }: HeroSecProps) {
     <section className="relative min-h-screen flex flex-col items-center justify-between px-6 pt-32 pb-20 overflow-hidden font-sans">
       {/* Dynamic Background - Shader or Video */}
       <div className="absolute inset-0 z-[-30] bg-black">
-        {isVideo && videoSrc ? (
-          <VideoBackground key={videoSrc} src={videoSrc} />
-        ) : (
-          <ShaderComponent />
-        )}
+        <div
+          className="absolute inset-0"
+          style={{
+            maskImage: 'linear-gradient(to bottom, black 0%, black 75%, rgba(0,0,0,0.95) 80%, rgba(0,0,0,0.85) 85%, rgba(0,0,0,0.6) 90%, rgba(0,0,0,0.3) 95%, transparent 100%)',
+            WebkitMaskImage: 'linear-gradient(to bottom, black 0%, black 75%, rgba(0,0,0,0.95) 80%, rgba(0,0,0,0.85) 85%, rgba(0,0,0,0.6) 90%, rgba(0,0,0,0.3) 95%, transparent 100%)'
+          }}
+        >
+          {isVideo && videoSrc ? (
+            <VideoBackground key={videoSrc} src={videoSrc} />
+          ) : (
+            <ShaderComponent />
+          )}
+        </div>
       </div>
+
+
       {/* Content container */}
       <div className="flex flex-col items-center justify-center flex-1 relative z-[30]">
         {/* Main heading */}
