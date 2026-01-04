@@ -12,6 +12,8 @@ import GlossyRibbonShader from './GlossyRibbonShader';
 import SilkFlowShader from './SilkFlowShader';
 import GlassTwistShader from './GlassTwistShader';
 import VideoBackground from './VideoBackground';
+import Plasmav2Shader from './Plasmav2';
+import LiquidMotionShader from './LiquidMotionShader';
 
 const shaderComponents = {
   'liquid-orange': LiquidOrangeShader,
@@ -23,6 +25,8 @@ const shaderComponents = {
   'glossy-ribbon': GlossyRibbonShader,
   'silk-flow': SilkFlowShader,
   'glass-twist': GlassTwistShader,
+  'plasma-v2': Plasmav2Shader,
+  'liquid-motion': LiquidMotionShader,
 };
 
 // Videos are identified by having a 'video-' prefix
@@ -38,6 +42,9 @@ function HeroSec({ activeShader }: HeroSecProps) {
   const isVideo = activeShader.startsWith('video-');
   const ShaderComponent = shaderComponents[activeShader as keyof typeof shaderComponents] || LiquidOrangeShader;
   const videoSrc = videoSources[activeShader];
+
+  // Debug logging
+  console.log('HeroSec activeShader:', activeShader, 'isVideo:', isVideo, 'videoSrc:', videoSrc);
 
   return (
     <section className="relative min-h-screen flex flex-col items-center justify-between px-6 pt-32 pb-20 overflow-hidden font-sans">
