@@ -42,52 +42,65 @@ function ShaderGallery({ shaders, videos = [], activeShader, onShaderChange }: S
               <button
                 key={shader.id}
                 onClick={() => onShaderChange(shader.id)}
-                className={`group cursor-pointer transition-all duration-300 ${activeShader === shader.id
-                  ? 'ring-2 ring-white/50 scale-105'
-                  : 'hover:scale-105 hover:ring-2 hover:ring-white/30'
+                className={`group relative text-left w-full h-full rounded-3xl transition-all duration-500 hover:-translate-y-2
+                  ${activeShader === shader.id
+                    ? 'ring-2 ring-white/40 shadow-[0_0_40px_-10px_rgba(255,255,255,0.3)]'
+                    : 'hover:shadow-[0_20px_40px_-15px_rgba(255,255,255,0.1)]'
                   }`}
               >
+                <div className="absolute inset-0 rounded-3xl bg-white/5 border border-white/10 backdrop-blur-sm z-10 pointer-events-none" />
+
                 <div
-                  className='relative h-64 rounded-2xl overflow-hidden border border-white/10'
+                  className='relative h-72 rounded-3xl overflow-hidden'
                   style={{
                     background: `linear-gradient(135deg, ${shader.colors[0]}, ${shader.colors[1]})`
                   }}
                 >
-                  {/* Live Shader Preview - Lazy Loaded to prevent crash */}
-                  <div className="absolute inset-0">
+                  {/* Live Shader Preview */}
+                  <div className="absolute inset-0 opacity-80 group-hover:opacity-100 transition-opacity duration-500">
                     <ShaderPreview
                       fragmentShader={shader.fragmentShader}
-                      className="opacity-80 group-hover:opacity-95 transition-opacity duration-300"
                     />
                   </div>
 
-                  {/* Overlay for better text readability */}
-                  <div className='absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent' />
+                  {/* Gradient Overlay */}
+                  <div className='absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-90' />
 
                   {/* Active indicator */}
                   {activeShader === shader.id && (
-                    <div className="absolute top-4 right-4 flex items-center gap-2">
-                      <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse" />
-                      <span className="text-white text-sm font-medium bg-black/70 px-2 py-1 rounded-full backdrop-blur-sm">
+                    <div className="absolute top-4 right-4 z-20 flex items-center gap-2">
+                      <span className="relative flex h-3 w-3">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+                      </span>
+                      <span className="text-white text-xs font-semibold bg-white/10 border border-white/10 px-3 py-1 rounded-full backdrop-blur-md">
                         Active
                       </span>
                     </div>
                   )}
 
-                  <div className='absolute bottom-4 left-4 right-4'>
-                    <h3 className='text-white font-bold text-xl mb-2 drop-shadow-lg'>{shader.name}</h3>
-                    <p className='text-gray-200 text-sm mb-3 drop-shadow-md'>{shader.description}</p>
-                    <div className="flex items-center justify-between">
-                      <span className='text-gray-300 text-xs drop-shadow-md'>Click to preview</span>
-                      <div className="flex gap-1">
-                        {shader.colors.slice(0, 3).map((color, index) => (
-                          <div
-                            key={index}
-                            className="w-4 h-4 rounded-full border border-white/30 shadow-lg"
-                            style={{ backgroundColor: color }}
-                          />
-                        ))}
-                      </div>
+                  {/* Content */}
+                  <div className='absolute bottom-0 left-0 right-0 p-6 z-20'>
+                    <div className="flex items-center gap-2 mb-3">
+                      {shader.colors.slice(0, 3).map((color, index) => (
+                        <div
+                          key={index}
+                          className="w-2 h-2 rounded-full ring-1 ring-white/30"
+                          style={{ backgroundColor: color }}
+                        />
+                      ))}
+                    </div>
+                    <h3 className='text-white font-bold text-2xl mb-2 tracking-tight group-hover:text-purple-300 transition-colors'>
+                      {shader.name}
+                    </h3>
+                    <p className='text-gray-400 text-sm leading-relaxed line-clamp-2 mb-4 group-hover:text-gray-300 transition-colors'>
+                      {shader.description}
+                    </p>
+                    <div className="flex items-center text-xs font-medium text-white/50 group-hover:text-white transition-colors">
+                      <span className="border-b border-transparent group-hover:border-white/50 pb-0.5">Click to preview</span>
+                      <svg className="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                      </svg>
                     </div>
                   </div>
                 </div>
@@ -108,28 +121,30 @@ function ShaderGallery({ shaders, videos = [], activeShader, onShaderChange }: S
                 <button
                   key={video.id}
                   onClick={() => onShaderChange(video.id)}
-                  className={`group cursor-pointer transition-all duration-300 ${activeShader === video.id
-                    ? 'ring-2 ring-white/50 scale-105'
-                    : 'hover:scale-105 hover:ring-2 hover:ring-white/30'
+                  className={`group relative text-left w-full h-full rounded-3xl transition-all duration-500 hover:-translate-y-2
+                    ${activeShader === video.id
+                      ? 'ring-2 ring-white/40 shadow-[0_0_40px_-10px_rgba(255,255,255,0.3)]'
+                      : 'hover:shadow-[0_20px_40px_-15px_rgba(255,255,255,0.1)]'
                     }`}
                 >
-                  <div className='relative h-64 rounded-2xl overflow-hidden border border-white/10 bg-black'>
+                  <div className="absolute inset-0 rounded-3xl bg-white/5 border border-white/10 backdrop-blur-sm z-10 pointer-events-none" />
+
+                  <div className='relative h-72 rounded-3xl overflow-hidden bg-black'>
                     {/* Video Preview */}
-                    <div className="absolute inset-0">
+                    <div className="absolute inset-0 opacity-80 group-hover:opacity-100 transition-opacity duration-500">
                       <VideoPreview
                         src={video.src}
-                        className="opacity-80 group-hover:opacity-95 transition-opacity duration-300"
                       />
                     </div>
 
-                    {/* Overlay for better text readability */}
-                    <div className='absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent' />
+                    {/* Gradient Overlay */}
+                    <div className='absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-90' />
 
                     {/* Video badge */}
-                    <div className="absolute top-4 left-4">
-                      <span className="text-white text-xs font-medium bg-blue-600/80 px-2 py-1 rounded-full backdrop-blur-sm flex items-center gap-1">
-                        <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
+                    <div className="absolute top-4 left-4 z-20">
+                      <span className="text-white text-[10px] uppercase tracking-wider font-bold bg-blue-600/90 border border-blue-400/30 px-3 py-1 rounded-full backdrop-blur-md flex items-center gap-1.5 shadow-lg shadow-blue-900/20">
+                        <svg className="w-3 h-3 fill-current" viewBox="0 0 24 24">
+                          <path d="M8 5v14l11-7z" />
                         </svg>
                         Video
                       </span>
@@ -137,28 +152,39 @@ function ShaderGallery({ shaders, videos = [], activeShader, onShaderChange }: S
 
                     {/* Active indicator */}
                     {activeShader === video.id && (
-                      <div className="absolute top-4 right-4 flex items-center gap-2">
-                        <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse" />
-                        <span className="text-white text-sm font-medium bg-black/70 px-2 py-1 rounded-full backdrop-blur-sm">
+                      <div className="absolute top-4 right-4 z-20 flex items-center gap-2">
+                        <span className="relative flex h-3 w-3">
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                          <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+                        </span>
+                        <span className="text-white text-xs font-semibold bg-white/10 border border-white/10 px-3 py-1 rounded-full backdrop-blur-md">
                           Active
                         </span>
                       </div>
                     )}
 
-                    <div className='absolute bottom-4 left-4 right-4'>
-                      <h3 className='text-white font-bold text-xl mb-2 drop-shadow-lg'>{video.name}</h3>
-                      <p className='text-gray-200 text-sm mb-3 drop-shadow-md'>{video.description}</p>
-                      <div className="flex items-center justify-between">
-                        <span className='text-gray-300 text-xs drop-shadow-md'>Click to preview</span>
-                        <div className="flex gap-1">
-                          {video.colors.slice(0, 3).map((color, index) => (
-                            <div
-                              key={index}
-                              className="w-4 h-4 rounded-full border border-white/30 shadow-lg"
-                              style={{ backgroundColor: color }}
-                            />
-                          ))}
-                        </div>
+                    {/* Content */}
+                    <div className='absolute bottom-0 left-0 right-0 p-6 z-20'>
+                      <div className="flex items-center gap-2 mb-3">
+                        {video.colors.slice(0, 3).map((color, index) => (
+                          <div
+                            key={index}
+                            className="w-2 h-2 rounded-full ring-1 ring-white/30"
+                            style={{ backgroundColor: color }}
+                          />
+                        ))}
+                      </div>
+                      <h3 className='text-white font-bold text-2xl mb-2 tracking-tight group-hover:text-blue-300 transition-colors'>
+                        {video.name}
+                      </h3>
+                      <p className='text-gray-400 text-sm leading-relaxed line-clamp-2 mb-4 group-hover:text-gray-300 transition-colors'>
+                        {video.description}
+                      </p>
+                      <div className="flex items-center text-xs font-medium text-white/50 group-hover:text-white transition-colors">
+                        <span className="border-b border-transparent group-hover:border-white/50 pb-0.5">Click to preview</span>
+                        <svg className="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                        </svg>
                       </div>
                     </div>
                   </div>
