@@ -70,7 +70,10 @@ function HeroSec({ activeShader }: HeroSecProps) {
       <div className="flex flex-col items-center justify-center flex-1 relative z-[30]">
         {/* Main heading */}
         <div className="max-w-5xl mx-auto text-center">
-          <h1 className="text-5xl text-white md:text-7xl font-bold tracking-tighter text-white leading-[1.1] mb-6">
+          <h1
+            className="text-5xl text-white md:text-7xl font-normal tracking-tighter leading-[1.1] mb-6"
+            style={{ fontFamily: "'Inter', var(--font-inter), sans-serif" }}
+          >
             Illuminate Your Website with
             <br />
             Dynamic <span className="italic font-instrumental text-white/90">Shaders</span>
