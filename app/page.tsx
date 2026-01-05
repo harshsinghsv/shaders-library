@@ -711,7 +711,7 @@ export default function Home() {
             </a>{' '}
             . The source code is available on{' '}
             <a
-              href='https://github.com/harsh-and-shubham/shaderz'
+              href='https://github.com/harshsinghsv/shaders-library'
               target='_blank'
               rel='noreferrer'
               className='font-medium text-white underline underline-offset-4 hover:text-gray-300 transition-colors'
