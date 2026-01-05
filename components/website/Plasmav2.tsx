@@ -42,38 +42,54 @@ function Plasmav2Shader() {
 
       void main() {
         vec2 uv = (gl_FragCoord.xy - 0.5 * resolution.xy) / min(resolution.x, resolution.y);
-        float t = time * 0.4;
+        float t = time * 1.0; // Faster animation
         
-        vec2 p = uv * 3.0;
+        vec2 p = uv * 4.0;
         
-        // Fluid-like wrapping
-        for(float i=1.0; i<5.0; i++){
-            p.x += 0.3/i * sin(i*3.0*p.y + t);
-            p.y += 0.3/i * cos(i*3.0*p.x + t);
+        // More dynamic fluid-like wrapping
+        for(float i=1.0; i<6.0; i++){
+            p.x += 0.4/i * sin(i*2.5*p.y + t * (1.0 + i*0.15));
+            p.y += 0.4/i * cos(i*2.5*p.x + t * (0.9 + i*0.1));
         }
         
-        // Rich color mixing
-        float r = 0.5 + 0.5 * sin(p.x + p.y + t);
-        float g = 0.5 + 0.5 * sin(p.x * 1.5 + t * 0.5);
-        float b = 0.5 + 0.5 * sin(p.y * 1.5 + t * 0.8);
+        // Rich, deep color mixing
+        float r = 0.5 + 0.5 * sin(p.x + p.y + t * 1.2);
+        float g = 0.5 + 0.5 * sin(p.x * 2.0 - p.y * 0.5 + t * 0.8);
+        float b = 0.5 + 0.5 * sin(p.y * 2.0 + t * 1.0 + 1.0);
         
         vec3 color = vec3(r, g, b);
         
-        // Tint towards pleasant neon palette
+        // Deep, rich dark palette
+        vec3 deepPurple = vec3(0.15, 0.0, 0.3);
+        vec3 midnightBlue = vec3(0.0, 0.1, 0.4);
+        vec3 darkMagenta = vec3(0.4, 0.0, 0.5);
+        vec3 electricViolet = vec3(0.5, 0.1, 0.9);
+        
+        // Dynamic palette mixing
+        float mixer = sin(t * 0.6) * 0.5 + 0.5;
         vec3 palette = mix(
-            vec3(0.2, 0.0, 0.4), // Dark purple
-            vec3(0.0, 0.8, 0.9), // Cyan
-            length(color) * 0.5
+            mix(deepPurple, midnightBlue, color.b),
+            mix(darkMagenta, electricViolet, color.r),
+            mixer
         );
         
-        color = mix(palette, color, 0.4);
+        color = mix(palette, color * 0.8, 0.3);
+        
+        // Boost saturation for vibrancy
+        float gray = dot(color, vec3(0.299, 0.587, 0.114));
+        color = mix(vec3(gray), color, 1.8);
         
         // Soft glow / vignette
-        float glow = 1.0 - length(uv * 0.8);
-        color *= smoothstep(0.0, 1.0, glow);
+        float glow = 1.0 - length(uv * 0.65);
+        color *= smoothstep(-0.1, 1.0, glow);
         
-        // Extra vibrancy
-        color += vec3(0.4, 0.1, 0.5) * 0.3;
+        // Add subtle pulsing highlights
+        float pulse = sin(t * 2.5) * 0.1 + 0.9;
+        color *= pulse;
+        
+        // Boost deep colors
+        color = pow(color, vec3(0.9));
+        color *= 1.3;
         
         gl_FragColor = vec4(color, 1.0);
       }
