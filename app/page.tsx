@@ -127,12 +127,8 @@ const shaders: Shader[] = [
         }
         liquid += tendrils;
         
-        float edgeDetail = fbm(distorted * 5.0 + totalFlow * 2.0 + time * 0.1, 3);
-        liquid += edgeDetail * 0.08 * smoothstep(0.3, 0.8, liquid);
-        
-        float grain1 = random(uv * 800.0 + time * 15.0) * 0.08;
-        float grain2 = random(uv * 400.0 + sin(time * 8.0)) * 0.05;
-        liquid += grain1 + grain2;
+        float edgeDetail = fbm(distorted * 3.0 + totalFlow * 1.5 + time * 0.08, 2);
+        liquid += edgeDetail * 0.03 * smoothstep(0.3, 0.8, liquid);
         
         vec3 dark = vec3(0.8, 0.2, 0.0);
         vec3 mid = vec3(1.0, 0.4, 0.05);
@@ -149,7 +145,9 @@ const shaders: Shader[] = [
         alpha = smoothstep(0.15, 0.7, alpha);
         alpha *= 1.0 - smoothstep(0.9, 1.2, liquid) * 0.5;
         
-        gl_FragColor = vec4(color * alpha, alpha);
+        // Blend with black background (to match the actual component which has bg-black)
+        vec3 finalColor = mix(vec3(0.0), color, alpha);
+        gl_FragColor = vec4(finalColor, 1.0);
       }
     `
   },
@@ -165,42 +163,44 @@ const shaders: Shader[] = [
       uniform vec2 resolution;
       uniform float time;
 
+      vec3 plasma(vec2 uv, float time) {
+        float v = 0.0;
+        vec2 c = uv;
+        
+        v += sin((c.x + time) * 2.0);
+        v += sin((c.y + time) * 3.0);
+        v += sin((c.x + c.y + time) * 2.0);
+        
+        c += vec2(sin(time * 0.5) * 2.0, cos(time * 0.3) * 2.0);
+        v += sin(sqrt(c.x * c.x + c.y * c.y + 1.0) + time);
+        
+        return vec3(
+          sin(v * 3.14159),
+          sin(v * 3.14159 + 2.094),
+          sin(v * 3.14159 + 4.188)
+        ) * 0.5 + 0.5;
+      }
+
       void main() {
-        vec2 uv = (gl_FragCoord.xy - 0.5 * resolution.xy) / min(resolution.x, resolution.y);
-        float t = time * 0.4;
+        vec2 uv = (gl_FragCoord.xy - 0.5 * resolution.xy) / resolution.y;
+        uv *= 2.0;
         
-        vec2 p = uv * 3.0;
+        vec3 color = plasma(uv, time * 0.8);
         
-        // Fluid-like wrapping
-        for(float i=1.0; i<5.0; i++){
-            p.x += 0.3/i * sin(i*3.0*p.y + t);
-            p.y += 0.3/i * cos(i*3.0*p.x + t);
-        }
+        // Add some glow effect
+        float glow = 1.0 - length(uv) * 0.3;
+        color *= glow;
         
-        // Rich color mixing
-        float r = 0.5 + 0.5 * sin(p.x + p.y + t);
-        float g = 0.5 + 0.5 * sin(p.x * 1.5 + t * 0.5);
-        float b = 0.5 + 0.5 * sin(p.y * 1.5 + t * 0.8);
-        
-        vec3 color = vec3(r, g, b);
-        
-        // Tint towards pleasant neon palette
-        vec3 palette = mix(
-            vec3(0.2, 0.0, 0.4), // Dark purple
-            vec3(0.0, 0.8, 0.9), // Cyan
-            length(color) * 0.5
+        // Purple-pink gradient overlay
+        vec3 purpleGradient = mix(
+          vec3(0.4, 0.1, 0.8),
+          vec3(0.8, 0.2, 0.6),
+          (uv.y + 1.0) * 0.5
         );
         
-        color = mix(palette, color, 0.4);
+        color = mix(color, purpleGradient, 0.3);
         
-        // Soft glow / vignette
-        float glow = 1.0 - length(uv * 0.8);
-        color *= smoothstep(0.0, 1.0, glow);
-        
-        // Extra vibrancy
-        color += vec3(0.4, 0.1, 0.5) * 0.3;
-        
-        gl_FragColor = vec4(color, 1.0);
+        gl_FragColor = vec4(color, 0.9);
       }
     `
   },
@@ -290,20 +290,80 @@ const shaders: Shader[] = [
     fragmentShader: `precision highp float;
       uniform vec2 resolution;
       uniform float time;
-      float hash(vec2 p){return fract(sin(dot(p,vec2(12.9,78.2)))*43758.5);}
-      float noise(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.0-2.0*f);return mix(mix(hash(i),hash(i+vec2(1,0)),f.x),mix(hash(i+vec2(0,1)),hash(i+vec2(1,1)),f.x),f.y);}
-      float fbm(vec2 p){float v=0.0,a=0.5;for(int i=0;i<4;i++){v+=a*noise(p);p*=2.0;a*=0.5;}return v;}
-      void main(){
-        vec2 uv=gl_FragCoord.xy/resolution.xy;
-        vec2 p=uv*3.0;p.y-=time*0.8;
-        float n=fbm(p)*fbm(p+vec2(time*0.5,0));
-        float fire=n*pow(1.0-uv.y,2.0);
-        vec3 col=vec3(0.1,0.0,0.0);
-        col=mix(col,vec3(0.8,0.0,0.0),smoothstep(0.2,0.5,fire));
-        col=mix(col,vec3(1.0,0.3,0.0),smoothstep(0.4,0.7,fire));
-        col=mix(col,vec3(1.0,0.7,0.2),smoothstep(0.6,0.9,fire));
-        col+=vec3(1.0,0.9,0.7)*pow(fire,3.0);
-        gl_FragColor=vec4(col,1.0);
+      
+      float hash(vec2 p) {
+        p = fract(p * vec2(123.34, 456.21));
+        p += dot(p, p + 45.32);
+        return fract(p.x * p.y);
+      }
+      
+      float noise(vec2 p) {
+        vec2 i = floor(p);
+        vec2 f = fract(p);
+        f = f * f * (3.0 - 2.0 * f);
+        float a = hash(i);
+        float b = hash(i + vec2(1.0, 0.0));
+        float c = hash(i + vec2(0.0, 1.0));
+        float d = hash(i + vec2(1.0, 1.0));
+        return mix(mix(a, b, f.x), mix(c, d, f.x), f.y);
+      }
+      
+      float fbm(vec2 p) {
+        float value = 0.0;
+        float amplitude = 0.5;
+        for(int i = 0; i < 5; i++) {
+          value += amplitude * noise(p);
+          p *= 2.0;
+          amplitude *= 0.5;
+        }
+        return value;
+      }
+      
+      float turbulence(vec2 p) {
+        float value = 0.0;
+        float amplitude = 1.0;
+        for(int i = 0; i < 4; i++) {
+          value += amplitude * abs(noise(p) * 2.0 - 1.0);
+          p *= 2.0;
+          amplitude *= 0.5;
+        }
+        return value;
+      }
+      
+      void main() {
+        vec2 uv = gl_FragCoord.xy / resolution.xy;
+        vec2 p = (uv - 0.5) * 2.0;
+        p.x *= resolution.x / resolution.y;
+        
+        float t = time * 0.3;
+        vec2 flowPos = p + vec2(0.0, -1.0) * t;
+        
+        float turbulent = turbulence(flowPos * 1.5 + vec2(t * 0.2, 0.0));
+        float displacement = fbm(flowPos * 2.0 + vec2(t * 0.3, -t * 0.5)) * 2.0 - 1.0;
+        
+        vec2 distorted = p;
+        distorted.x += displacement * 0.4;
+        distorted.y += turbulent * 0.3;
+        
+        float flameShape = 1.0 - abs(distorted.x) * (1.0 + distorted.y * 0.8);
+        flameShape = smoothstep(0.0, 0.8, flameShape);
+        
+        float flame1 = fbm(distorted * 2.0 + vec2(t * 0.4, -t * 0.8));
+        float flame2 = fbm(distorted * 3.0 + vec2(-t * 0.3, -t * 0.6));
+        float flames = flame1 * 0.6 + flame2 * 0.4;
+        flames = pow(flames, 1.5);
+        
+        float intensity = flames * flameShape;
+        
+        vec3 col = vec3(0.1, 0.0, 0.0);
+        col = mix(col, vec3(0.8, 0.1, 0.0), smoothstep(0.0, 0.2, intensity));
+        col = mix(col, vec3(1.0, 0.3, 0.0), smoothstep(0.2, 0.4, intensity));
+        col = mix(col, vec3(1.0, 0.6, 0.0), smoothstep(0.4, 0.6, intensity));
+        col = mix(col, vec3(1.0, 0.9, 0.2), smoothstep(0.6, 0.8, intensity));
+        col += vec3(1.0, 1.0, 0.5) * pow(flames, 3.0) * flameShape * 0.5;
+        col *= 1.2;
+        
+        gl_FragColor = vec4(col, 1.0);
       }`
   },
   {
