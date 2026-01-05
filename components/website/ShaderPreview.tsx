@@ -56,7 +56,7 @@ function ShaderPreview({ fragmentShader, className = "" }: ShaderPreviewProps) {
 
     const resizeCanvas = () => {
       const rect = canvas.getBoundingClientRect();
-      // Use lower resolution for previews to save performance on mobile
+      // Reverting to 1.5 as higher values seem to cause crashes on some devices
       const dpr = Math.min(window.devicePixelRatio, 1.5);
       canvas.width = rect.width * dpr;
       canvas.height = rect.height * dpr;
@@ -155,9 +155,13 @@ function ShaderPreview({ fragmentShader, className = "" }: ShaderPreviewProps) {
         cancelAnimationFrame(animationRef.current);
       }
 
-      // Aggressively lose context to free up resources
-      const ext = gl.getExtension('WEBGL_lose_context');
-      if (ext) ext.loseContext();
+      // Clean up WebGL resources to prevent memory leaks
+      if (gl) {
+        gl.deleteProgram(program);
+        gl.deleteShader(vertexShader);
+        gl.deleteShader(fragmentShaderObj);
+        gl.deleteBuffer(positionBuffer);
+      }
     };
   }, [fragmentShader, isVisible]); // Re-run when visibility changes
 
