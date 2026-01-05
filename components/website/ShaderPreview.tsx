@@ -12,7 +12,7 @@ function ShaderPreview({ fragmentShader, className = "" }: ShaderPreviewProps) {
   const glRef = useRef<WebGLRenderingContext | null>(null);
   const programRef = useRef<WebGLProgram | null>(null);
   const animationRef = useRef<number | null>(null);
-  const [isVisible, setIsVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
 
   // Intersection Observer to handle visibility
   useEffect(() => {
@@ -165,11 +165,11 @@ function ShaderPreview({ fragmentShader, className = "" }: ShaderPreviewProps) {
   }, [fragmentShader, isVisible]); // Re-run when visibility changes
 
   return (
-    <div ref={containerRef} className={`w-full h-full ${className}`}>
+    <div ref={containerRef} className={`w-full h-full relative ${className}`}>
       {isVisible && (
         <canvas
           ref={canvasRef}
-          className="w-full h-full"
+          className="absolute inset-0 w-full h-full"
         />
       )}
     </div>

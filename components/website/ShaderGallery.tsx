@@ -57,14 +57,14 @@ function ShaderGallery({ shaders, videos = [], activeShader, onShaderChange }: S
                   }}
                 >
                   {/* Live Shader Preview */}
-                  <div className="absolute inset-0 opacity-100">
+                  <div className="absolute inset-0 z-0">
                     <ShaderPreview
                       fragmentShader={shader.fragmentShader}
                     />
                   </div>
 
                   {/* Gradient Overlay */}
-                  <div className='absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-40' />
+                  <div className='absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-40 z-5' />
 
                   {/* Active indicator */}
                   {activeShader === shader.id && (
@@ -131,14 +131,14 @@ function ShaderGallery({ shaders, videos = [], activeShader, onShaderChange }: S
 
                   <div className='relative h-72 rounded-3xl overflow-hidden bg-black'>
                     {/* Video Preview */}
-                    <div className="absolute inset-0 opacity-100">
+                    <div className="absolute inset-0 z-0">
                       <VideoPreview
                         src={video.src}
                       />
                     </div>
 
                     {/* Gradient Overlay */}
-                    <div className='absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-40' />
+                    <div className='absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-40 z-5' />
 
                     {/* Video badge */}
                     <div className="absolute top-4 left-4 z-20">
