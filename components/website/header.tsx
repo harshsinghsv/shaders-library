@@ -144,7 +144,7 @@ export default function Header() {
         <div className="flex gap-2">
           <a
             target="_blank"
-            href="https://github.com"
+            href="https://github.com/harshsinghsv/shaders-library"
             className="flex-shrink-0 w-10 h-10 grid place-content-center rounded-lg hover:bg-white/10 transition-colors"
           >
             <Image
