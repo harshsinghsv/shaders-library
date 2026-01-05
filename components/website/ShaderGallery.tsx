@@ -57,7 +57,7 @@ function ShaderGallery({ shaders, videos = [], activeShader, onShaderChange }: S
                   }}
                 >
                   {/* Live Shader Preview */}
-                  <div className="absolute inset-0 opacity-80 group-hover:opacity-100 transition-opacity duration-500">
+                  <div className="absolute inset-0 opacity-100">
                     <ShaderPreview
                       fragmentShader={shader.fragmentShader}
                     />
@@ -131,7 +131,7 @@ function ShaderGallery({ shaders, videos = [], activeShader, onShaderChange }: S
 
                   <div className='relative h-72 rounded-3xl overflow-hidden bg-black'>
                     {/* Video Preview */}
-                    <div className="absolute inset-0 opacity-80 group-hover:opacity-100 transition-opacity duration-500">
+                    <div className="absolute inset-0 opacity-100">
                       <VideoPreview
                         src={video.src}
                       />
