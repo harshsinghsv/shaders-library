@@ -12,8 +12,10 @@ function VideoPreview({ src, className = '' }: VideoPreviewProps) {
   useEffect(() => {
     const video = videoRef.current;
     if (video) {
+      video.muted = true;
+      video.load(); // Force reload when src changes
       video.play().catch((error) => {
-        console.log('Video autoplay prevented:', error);
+        console.error('Video preview autoplay failed:', error);
       });
     }
   }, [src]);
