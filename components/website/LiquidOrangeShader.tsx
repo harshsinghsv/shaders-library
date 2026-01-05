@@ -128,12 +128,10 @@ function LiquidOrangeShader() {
         }
         liquid += tendrils;
         
-        float edgeDetail = fbm(distorted * 5.0 + totalFlow * 2.0 + time * 0.1, 3);
-        liquid += edgeDetail * 0.08 * smoothstep(0.3, 0.8, liquid);
+        float edgeDetail = fbm(distorted * 3.0 + totalFlow * 1.5 + time * 0.08, 2);
+        liquid += edgeDetail * 0.03 * smoothstep(0.3, 0.8, liquid);
         
-        float grain1 = random(uv * 800.0 + time * 15.0) * 0.08;
-        float grain2 = random(uv * 400.0 + sin(time * 8.0)) * 0.05;
-        liquid += grain1 + grain2;
+        // Removed grain for smoother effect
         
         vec3 dark = vec3(0.8, 0.2, 0.0);
         vec3 mid = vec3(1.0, 0.4, 0.05);
