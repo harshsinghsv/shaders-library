@@ -44,7 +44,6 @@ function ShaderPreview({ fragmentShader, className = "" }: ShaderPreviewProps) {
     // Try to get context
     const gl = canvas.getContext('webgl', {
       preserveDrawingBuffer: false,
-      failIfMajorPerformanceCaveat: true,
       powerPreference: "low-power" // Optimize for mobile battery/perf
     });
     glRef.current = gl;
