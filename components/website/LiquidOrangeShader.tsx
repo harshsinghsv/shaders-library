@@ -1,34 +1,34 @@
 
 'use client';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useCallback } from 'react';
 
 function LiquidOrangeShader() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const glRef = useRef<WebGLRenderingContext | null>(null);
   const programRef = useRef<WebGLProgram | null>(null);
   const animationRef = useRef<number | null>(null);
+  const isContextLostRef = useRef(false);
 
-  useEffect(() => {
+  const initWebGL = useCallback(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    if (!canvas) return null;
 
-    const gl = canvas.getContext('webgl');
-    glRef.current = gl;
+    // Try to get WebGL context with preserveDrawingBuffer to prevent black screen
+    const gl = canvas.getContext('webgl', {
+      preserveDrawingBuffer: true,
+      powerPreference: 'high-performance',
+      failIfMajorPerformanceCaveat: false,
+    });
 
     if (!gl) {
       console.error('WebGL not supported');
-      return;
+      return null;
     }
 
-    const resizeCanvas = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-      gl.viewport(0, 0, canvas.width, canvas.height);
-    };
+    return gl;
+  }, []);
 
-    resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
-
+  const setupShaders = useCallback((gl: WebGLRenderingContext) => {
     const vertexShaderSource = `
       attribute vec2 position;
       void main() {
@@ -131,8 +131,6 @@ function LiquidOrangeShader() {
         float edgeDetail = fbm(distorted * 3.0 + totalFlow * 1.5 + time * 0.08, 2);
         liquid += edgeDetail * 0.03 * smoothstep(0.3, 0.8, liquid);
         
-        // Removed grain for smoother effect
-        
         vec3 dark = vec3(0.8, 0.2, 0.0);
         vec3 mid = vec3(1.0, 0.4, 0.05);
         vec3 bright = vec3(1.0, 0.6, 0.15);
@@ -170,10 +168,10 @@ function LiquidOrangeShader() {
     const vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
     const fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);
 
-    if (!vertexShader || !fragmentShader) return;
+    if (!vertexShader || !fragmentShader) return null;
 
     const program = gl.createProgram();
-    if (!program) return;
+    if (!program) return null;
 
     gl.attachShader(program, vertexShader);
     gl.attachShader(program, fragmentShader);
@@ -181,8 +179,33 @@ function LiquidOrangeShader() {
 
     if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
       console.error('Program link error:', gl.getProgramInfoLog(program));
-      return;
+      return null;
     }
+
+    return program;
+  }, []);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    let gl = initWebGL();
+    if (!gl) return;
+
+    glRef.current = gl;
+
+    const resizeCanvas = () => {
+      if (!canvas || !gl || isContextLostRef.current) return;
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      gl.viewport(0, 0, canvas.width, canvas.height);
+    };
+
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    let program = setupShaders(gl);
+    if (!program) return;
 
     programRef.current = program;
 
@@ -196,14 +219,19 @@ function LiquidOrangeShader() {
     ]);
     gl.bufferData(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW);
 
-    const positionLocation = gl.getAttribLocation(program, 'position');
-    const resolutionLocation = gl.getUniformLocation(program, 'resolution');
-    const timeLocation = gl.getUniformLocation(program, 'time');
+    let positionLocation = gl.getAttribLocation(program, 'position');
+    let resolutionLocation = gl.getUniformLocation(program, 'resolution');
+    let timeLocation = gl.getUniformLocation(program, 'time');
 
     gl.enable(gl.BLEND);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
     const render = (time: number) => {
+      if (isContextLostRef.current || !gl || !program) {
+        animationRef.current = requestAnimationFrame(render);
+        return;
+      }
+
       time *= 0.001;
 
       gl.clearColor(0, 0, 0, 0);
@@ -222,15 +250,67 @@ function LiquidOrangeShader() {
       animationRef.current = requestAnimationFrame(render);
     };
 
+    // Handle WebGL context loss
+    const handleContextLost = (event: Event) => {
+      event.preventDefault();
+      isContextLostRef.current = true;
+      console.log('WebGL context lost');
+    };
+
+    // Handle WebGL context restoration
+    const handleContextRestored = () => {
+      console.log('WebGL context restored');
+      isContextLostRef.current = false;
+
+      // Re-initialize WebGL
+      gl = initWebGL();
+      if (!gl) return;
+
+      glRef.current = gl;
+      resizeCanvas();
+
+      program = setupShaders(gl);
+      if (!program) return;
+
+      programRef.current = program;
+
+      // Re-create buffer
+      const newBuffer = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, newBuffer);
+      gl.bufferData(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW);
+
+      positionLocation = gl.getAttribLocation(program, 'position');
+      resolutionLocation = gl.getUniformLocation(program, 'resolution');
+      timeLocation = gl.getUniformLocation(program, 'time');
+
+      gl.enable(gl.BLEND);
+      gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+    };
+
+    // Handle visibility change to ensure shader keeps running
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible' && !isContextLostRef.current) {
+        // Force a resize to ensure canvas is properly sized
+        resizeCanvas();
+      }
+    };
+
+    canvas.addEventListener('webglcontextlost', handleContextLost);
+    canvas.addEventListener('webglcontextrestored', handleContextRestored);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
     animationRef.current = requestAnimationFrame(render);
 
     return () => {
       window.removeEventListener('resize', resizeCanvas);
+      canvas.removeEventListener('webglcontextlost', handleContextLost);
+      canvas.removeEventListener('webglcontextrestored', handleContextRestored);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, []);
+  }, [initWebGL, setupShaders]);
 
   return (
     <div className="absolute inset-0 w-full h-full bg-black overflow-hidden">
