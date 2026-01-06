@@ -11,13 +11,48 @@ function VideoPreview({ src, className = '' }: VideoPreviewProps) {
 
   useEffect(() => {
     const video = videoRef.current;
-    if (video) {
-      video.muted = true;
-      video.load(); // Force reload when src changes
-      video.play().catch((error) => {
-        console.error('Video preview autoplay failed:', error);
-      });
-    }
+    if (!video) return;
+
+    video.muted = true;
+
+    const playVideo = () => {
+      if (video.paused) {
+        video.play().catch(() => {
+          // Silently handle autoplay failures
+        });
+      }
+    };
+
+    // Initial play
+    video.load();
+    playVideo();
+
+    // Re-play when video becomes visible again
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        playVideo();
+      }
+    };
+
+    // Handle intersection for lazy loading videos
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            playVideo();
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    observer.observe(video);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      observer.disconnect();
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
   }, [src]);
 
   return (
