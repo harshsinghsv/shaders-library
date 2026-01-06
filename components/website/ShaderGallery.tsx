@@ -81,27 +81,9 @@ function ShaderGallery({ shaders, videos = [], activeShader, onShaderChange }: S
 
                   {/* Content */}
                   <div className='absolute bottom-0 left-0 right-0 p-6 z-20'>
-                    <div className="flex items-center gap-2 mb-3">
-                      {shader.colors.slice(0, 3).map((color, index) => (
-                        <div
-                          key={index}
-                          className="w-2 h-2 rounded-full ring-1 ring-white/30"
-                          style={{ backgroundColor: color }}
-                        />
-                      ))}
-                    </div>
-                    <h3 className='text-white font-bold text-2xl mb-2 tracking-tight group-hover:text-purple-300 transition-colors'>
+                    <h3 className='text-white font-bold text-2xl tracking-tight group-hover:text-purple-300 transition-colors'>
                       {shader.name}
                     </h3>
-                    <p className='text-gray-400 text-sm leading-relaxed line-clamp-2 mb-4 group-hover:text-gray-300 transition-colors'>
-                      {shader.description}
-                    </p>
-                    <div className="flex items-center text-xs font-medium text-white/50 group-hover:text-white transition-colors">
-                      <span className="border-b border-transparent group-hover:border-white/50 pb-0.5">Click to preview</span>
-                      <svg className="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                      </svg>
-                    </div>
                   </div>
                 </div>
               </button>
@@ -165,27 +147,9 @@ function ShaderGallery({ shaders, videos = [], activeShader, onShaderChange }: S
 
                     {/* Content */}
                     <div className='absolute bottom-0 left-0 right-0 p-6 z-20'>
-                      <div className="flex items-center gap-2 mb-3">
-                        {video.colors.slice(0, 3).map((color, index) => (
-                          <div
-                            key={index}
-                            className="w-2 h-2 rounded-full ring-1 ring-white/30"
-                            style={{ backgroundColor: color }}
-                          />
-                        ))}
-                      </div>
-                      <h3 className='text-white font-bold text-2xl mb-2 tracking-tight group-hover:text-blue-300 transition-colors'>
+                      <h3 className='text-white font-bold text-2xl tracking-tight group-hover:text-blue-300 transition-colors'>
                         {video.name}
                       </h3>
-                      <p className='text-gray-400 text-sm leading-relaxed line-clamp-2 mb-4 group-hover:text-gray-300 transition-colors'>
-                        {video.description}
-                      </p>
-                      <div className="flex items-center text-xs font-medium text-white/50 group-hover:text-white transition-colors">
-                        <span className="border-b border-transparent group-hover:border-white/50 pb-0.5">Click to preview</span>
-                        <svg className="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                        </svg>
-                      </div>
                     </div>
                   </div>
                 </button>
