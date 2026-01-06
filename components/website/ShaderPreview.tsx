@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useCallback } from 'react';
 
 interface ShaderPreviewProps {
   fragmentShader: string;
@@ -9,61 +9,21 @@ interface ShaderPreviewProps {
 function ShaderPreview({ fragmentShader, className = "" }: ShaderPreviewProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const glRef = useRef<WebGLRenderingContext | null>(null);
-  const programRef = useRef<WebGLProgram | null>(null);
   const animationRef = useRef<number | null>(null);
-  const [isVisible, setIsVisible] = useState(true);
+  const isContextLostRef = useRef(false);
 
-  // Intersection Observer to handle visibility
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          setIsVisible(entry.isIntersecting);
-        });
-      },
-      { threshold: 0.1, rootMargin: '100px' } // Load slightly before view, unload when out
-    );
-
-    if (containerRef.current) {
-      observer.observe(containerRef.current);
-    }
-
-    return () => {
-      observer.disconnect();
-    };
-  }, []);
-
-  // WebGL Logic - Only runs when isVisible is true
-  useEffect(() => {
-    if (!isVisible) return; // Clean up or don't start if not visible
-
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    // Try to get context
+  const setupWebGL = useCallback((canvas: HTMLCanvasElement) => {
+    // Get WebGL context with preserveDrawingBuffer to prevent black screen
     const gl = canvas.getContext('webgl', {
-      preserveDrawingBuffer: false,
-      powerPreference: "low-power" // Optimize for mobile battery/perf
+      preserveDrawingBuffer: true,
+      powerPreference: 'default',
+      failIfMajorPerformanceCaveat: false,
     });
-    glRef.current = gl;
 
     if (!gl) {
-      console.warn('WebGL not supported or context limit reached');
-      return;
+      console.warn('WebGL not supported');
+      return null;
     }
-
-    const resizeCanvas = () => {
-      const rect = canvas.getBoundingClientRect();
-      // Reverting to 1.5 as higher values seem to cause crashes on some devices
-      const dpr = Math.min(window.devicePixelRatio, 1.5);
-      canvas.width = rect.width * dpr;
-      canvas.height = rect.height * dpr;
-      gl.viewport(0, 0, canvas.width, canvas.height);
-    };
-
-    resizeCanvas();
-    // window.addEventListener('resize', resizeCanvas); // Verify if needed, ResizeObserver might be better but skipping for simplicity
 
     const vertexShaderSource = `
       attribute vec2 position;
@@ -80,7 +40,6 @@ function ShaderPreview({ fragmentShader, className = "" }: ShaderPreviewProps) {
       gl.compileShader(shader);
 
       if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-        // console.error('Shader compile error:', gl.getShaderInfoLog(shader));
         gl.deleteShader(shader);
         return null;
       }
@@ -90,21 +49,18 @@ function ShaderPreview({ fragmentShader, className = "" }: ShaderPreviewProps) {
     const vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
     const fragmentShaderObj = createShader(gl, gl.FRAGMENT_SHADER, fragmentShader);
 
-    if (!vertexShader || !fragmentShaderObj) return;
+    if (!vertexShader || !fragmentShaderObj) return null;
 
     const program = gl.createProgram();
-    if (!program) return;
+    if (!program) return null;
 
     gl.attachShader(program, vertexShader);
     gl.attachShader(program, fragmentShaderObj);
     gl.linkProgram(program);
 
     if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-      // console.error('Program link error:', gl.getProgramInfoLog(program));
-      return;
+      return null;
     }
-
-    programRef.current = program;
 
     const positionBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
@@ -123,9 +79,50 @@ function ShaderPreview({ fragmentShader, className = "" }: ShaderPreviewProps) {
     gl.enable(gl.BLEND);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
+    return {
+      gl,
+      program,
+      positionBuffer,
+      positionLocation,
+      resolutionLocation,
+      timeLocation,
+      vertexShader,
+      fragmentShaderObj,
+    };
+  }, [fragmentShader]);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    let webglResources = setupWebGL(canvas);
+    if (!webglResources) return;
+
+    let { gl, program, positionBuffer, positionLocation, resolutionLocation, timeLocation, vertexShader, fragmentShaderObj } = webglResources;
+
+    const resizeCanvas = () => {
+      if (!canvas || !gl || isContextLostRef.current) return;
+      const rect = canvas.getBoundingClientRect();
+      const dpr = Math.min(window.devicePixelRatio, 1.5);
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      gl.viewport(0, 0, canvas.width, canvas.height);
+    };
+
+    resizeCanvas();
+
+    const resizeObserver = new ResizeObserver(() => {
+      resizeCanvas();
+    });
+    resizeObserver.observe(canvas);
+
     let startTime = performance.now();
+
     const render = (now: number) => {
-      if (!gl) return;
+      if (isContextLostRef.current || !gl || !program) {
+        animationRef.current = requestAnimationFrame(render);
+        return;
+      }
 
       const time = (now - startTime) * 0.001;
 
@@ -145,33 +142,64 @@ function ShaderPreview({ fragmentShader, className = "" }: ShaderPreviewProps) {
       animationRef.current = requestAnimationFrame(render);
     };
 
+    // Handle WebGL context loss
+    const handleContextLost = (event: Event) => {
+      event.preventDefault();
+      isContextLostRef.current = true;
+    };
+
+    // Handle WebGL context restoration
+    const handleContextRestored = () => {
+      isContextLostRef.current = false;
+
+      // Re-initialize WebGL
+      webglResources = setupWebGL(canvas);
+      if (!webglResources) return;
+
+      gl = webglResources.gl;
+      program = webglResources.program;
+      positionBuffer = webglResources.positionBuffer;
+      positionLocation = webglResources.positionLocation;
+      resolutionLocation = webglResources.resolutionLocation;
+      timeLocation = webglResources.timeLocation;
+      vertexShader = webglResources.vertexShader;
+      fragmentShaderObj = webglResources.fragmentShaderObj;
+
+      resizeCanvas();
+      startTime = performance.now();
+    };
+
+    canvas.addEventListener('webglcontextlost', handleContextLost);
+    canvas.addEventListener('webglcontextrestored', handleContextRestored);
+
     animationRef.current = requestAnimationFrame(render);
 
-    // cleanup function
+    // Cleanup function
     return () => {
-      //   window.removeEventListener('resize', resizeCanvas);
+      resizeObserver.disconnect();
+      canvas.removeEventListener('webglcontextlost', handleContextLost);
+      canvas.removeEventListener('webglcontextrestored', handleContextRestored);
+
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
       }
 
-      // Clean up WebGL resources to prevent memory leaks
-      if (gl) {
+      // Clean up WebGL resources
+      if (gl && !isContextLostRef.current) {
         gl.deleteProgram(program);
         gl.deleteShader(vertexShader);
         gl.deleteShader(fragmentShaderObj);
         gl.deleteBuffer(positionBuffer);
       }
     };
-  }, [fragmentShader, isVisible]); // Re-run when visibility changes
+  }, [fragmentShader, setupWebGL]);
 
   return (
     <div ref={containerRef} className={`w-full h-full relative ${className}`}>
-      {isVisible && (
-        <canvas
-          ref={canvasRef}
-          className="absolute inset-0 w-full h-full"
-        />
-      )}
+      <canvas
+        ref={canvasRef}
+        className="absolute inset-0 w-full h-full"
+      />
     </div>
   );
 }
