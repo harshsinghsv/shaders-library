@@ -32,6 +32,7 @@ const shaderComponents = {
 // Videos are identified by having a 'video-' prefix
 const videoSources: Record<string, string> = {
   'video-glossy-film': '/videos/glossy-film.mp4',
+  'video-nova-silk': '/videos/nova-silk.mp4',
 };
 
 interface HeroSecProps {
