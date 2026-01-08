@@ -25,6 +25,13 @@ const videos: VideoBackground[] = [
     src: '/videos/glossy-film.mp4',
     colors: ['#1a1a2e', '#16213e', '#0f3460', '#e94560'],
   },
+  {
+    id: 'video-nova-silk',
+    name: 'Nova Silk',
+    description: 'Elegant flowing silk with nova-inspired colors',
+    src: '/videos/nova-silk.mp4',
+    colors: ['#ff6b35', '#f7931e', '#ffd700', '#ffb347'],
+  },
 ];
 
 const shaders: Shader[] = [
