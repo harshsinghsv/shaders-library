@@ -41,7 +41,10 @@ function ShaderGallery({ shaders, videos = [], activeShader, onShaderChange }: S
             {shaders.map((shader) => (
               <button
                 key={shader.id}
-                onClick={() => onShaderChange(shader.id)}
+                onClick={() => {
+                  onShaderChange(shader.id);
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
                 className={`group relative text-left w-full rounded-2xl bg-[#1a1a1a] p-3 transition-all duration-300 hover:-translate-y-1 hover:bg-[#222]
                   ${activeShader === shader.id
                     ? 'ring-2 ring-purple-500/50 shadow-[0_0_30px_-5px_rgba(168,85,247,0.4)]'
@@ -111,7 +114,10 @@ function ShaderGallery({ shaders, videos = [], activeShader, onShaderChange }: S
               {videos.map((video) => (
                 <button
                   key={video.id}
-                  onClick={() => onShaderChange(video.id)}
+                  onClick={() => {
+                    onShaderChange(video.id);
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
                   className={`group relative text-left w-full rounded-2xl bg-[#1a1a1a] p-3 transition-all duration-300 hover:-translate-y-1 hover:bg-[#222]
                     ${activeShader === video.id
                       ? 'ring-2 ring-blue-500/50 shadow-[0_0_30px_-5px_rgba(59,130,246,0.4)]'
