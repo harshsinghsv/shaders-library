@@ -15,6 +15,7 @@ import SilkFlowShader from '@/components/website/SilkFlowShader';
 import GlassTwistShader from '@/components/website/GlassTwistShader';
 import Plasmav2Shader from '@/components/website/Plasmav2';
 import LiquidMotionShader from '@/components/website/LiquidMotionShader';
+import Wavy, { fragment as WavyFragment } from '@/components/website/Wavy';
 
 // Video backgrounds
 const videos: VideoBackground[] = [
@@ -672,6 +673,80 @@ const shaders: Shader[] = [
         color += shimmer;
         
         gl_FragColor = vec4(color, 1.0);
+      }
+    `
+  },
+  {
+    id: 'wavy',
+    name: 'Dark Veil',
+    description: 'Mysterious dark veil with scanlines and distortion',
+    component: Wavy,
+    thumbnail: '',
+    colors: ['#000000', '#222222', '#444444', '#666666'],
+    fragmentShader: `
+      precision highp float;
+      uniform vec2 resolution;
+      uniform float time;
+
+      float random(vec2 c) {
+        return fract(sin(dot(c, vec2(12.9898, 78.233))) * 43758.5453);
+      }
+
+      vec4 sigmoid(vec4 x) {
+        return 1.0 / (1.0 + exp(-x));
+      }
+
+      vec3 palette(float t, vec3 a, vec3 b, vec3 c, vec3 d) {
+        return a + b * cos(6.28318 * (c * t + d));
+      }
+
+      void main() {
+        vec2 uv = gl_FragCoord.xy / resolution.xy;
+        vec2 p = uv * 2.0 - 1.0;
+        p.x *= resolution.x / resolution.y;
+
+        float t = time * 0.2;
+        
+        // Distortion
+        vec2 distort = vec2(
+          sin(p.y * 4.0 + t) * 0.1 + sin(p.x * 3.0 + t * 0.5) * 0.05,
+          cos(p.x * 4.0 + t) * 0.1 + cos(p.y * 3.0 + t * 0.5) * 0.05
+        );
+        vec2 finalUV = p + distort * 1.2;
+
+        // Simplified pattern
+        float pattern = sin(finalUV.x * 3.0 + t) * cos(finalUV.y * 2.0 - t * 0.5);
+        pattern += sin(length(finalUV) * 4.0 - t) * 0.5;
+        pattern = pattern * 0.5 + 0.5;
+
+        // Color palette - cool blues and cyans
+        vec3 col = palette(
+          pattern * 1.5 + t * 0.05,
+          vec3(0.1, 0.15, 0.2),
+          vec3(0.3, 0.4, 0.5),
+          vec3(0.8, 1.0, 1.2),
+          vec3(0.55, 0.65, 0.75)
+        );
+
+        // Cool chromatic aberration - more blue/cyan, less red
+        float aberration = length(p) * 0.015;
+        col.r -= aberration * 0.5;
+        col.g += aberration * 0.2;
+        col.b += aberration;
+
+        // Vignette
+        float vignette = 1.0 - smoothstep(0.5, 1.5, length(uv - 0.5) * 1.5);
+        col *= vignette;
+
+        // Scanlines
+        float scanline = sin(uv.y * resolution.y * 0.05) * 0.5 + 0.5;
+        col *= 1.0 - scanline * 0.05;
+
+        // Noise
+        float noise = (random(uv + time) - 0.5) * 0.08;
+        col += noise;
+
+        gl_FragColor = vec4(col, 1.0);
       }
     `
   }
