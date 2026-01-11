@@ -14,6 +14,7 @@ import GlassTwistShader from './GlassTwistShader';
 import VideoBackground from './VideoBackground';
 import Plasmav2Shader from './Plasmav2';
 import LiquidMotionShader from './LiquidMotionShader';
+import Wavy from './Wavy';
 
 const shaderComponents = {
   'liquid-orange': LiquidOrangeShader,
@@ -27,6 +28,7 @@ const shaderComponents = {
   'glass-twist': GlassTwistShader,
   'plasma-v2': Plasmav2Shader,
   'liquid-motion': LiquidMotionShader,
+  'wavy': Wavy,
 };
 
 // Videos are identified by having a 'video-' prefix
