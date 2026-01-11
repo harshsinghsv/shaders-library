@@ -112,13 +112,22 @@ function ShaderGallery({ shaders, videos = [], activeShader, onShaderChange }: S
             </h3>
             <div className='grid md:grid-cols-2 lg:grid-cols-3 gap-6'>
               {videos.map((video) => (
-                <button
+                <div
                   key={video.id}
+                  role="button"
+                  tabIndex={0}
                   onClick={() => {
                     onShaderChange(video.id);
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                   }}
-                  className={`group relative text-left w-full rounded-2xl bg-[#1a1a1a] p-3 transition-all duration-300 hover:-translate-y-1 hover:bg-[#222]
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      onShaderChange(video.id);
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }
+                  }}
+                  className={`group relative text-left w-full rounded-2xl bg-[#1a1a1a] p-3 transition-all duration-300 hover:-translate-y-1 hover:bg-[#222] cursor-pointer
                     ${activeShader === video.id
                       ? 'ring-2 ring-blue-500/50 shadow-[0_0_30px_-5px_rgba(59,130,246,0.4)]'
                       : 'hover:shadow-[0_10px_30px_-10px_rgba(0,0,0,0.5)]'
@@ -163,7 +172,7 @@ function ShaderGallery({ shaders, videos = [], activeShader, onShaderChange }: S
                       </div>
                     )}
                   </div>
-                </button>
+                </div>
               ))}
             </div>
           </div>
