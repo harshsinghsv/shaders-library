@@ -1,129 +1,97 @@
 'use client';
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect, useState, memo } from 'react';
 
 interface VideoPreviewProps {
   src: string;
   className?: string;
 }
 
-function VideoPreview({ src, className = '' }: VideoPreviewProps) {
+const VideoPreview = memo(function VideoPreview({ src, className = '' }: VideoPreviewProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [hasError, setHasError] = useState(false);
-  const [retryCount, setRetryCount] = useState(0);
-
-  useEffect(() => {
-    // Reset error state when src changes
-    setHasError(false);
-    setRetryCount(0);
-  }, [src]);
+  const [showPlayButton, setShowPlayButton] = useState(true);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
 
-    // Ensure video is muted for autoplay
+    // Force muted for autoplay to work
     video.muted = true;
-    video.playsInline = true;
 
-    const playVideo = async () => {
+    const tryPlay = async () => {
       try {
-        if (video.paused) {
-          await video.play();
-          setHasError(false);
-        }
-      } catch (error) {
-        console.log('Autoplay prevented, user interaction required');
+        await video.play();
+        setShowPlayButton(false);
+      } catch (e) {
+        setShowPlayButton(true);
       }
     };
 
-    const handleCanPlay = () => {
-      setHasError(false);
-      playVideo();
+    const handleLoaded = () => {
+      setIsLoaded(true);
+      tryPlay();
     };
 
-    const handleLoadedData = () => {
-      setHasError(false);
-      playVideo();
-    };
+    video.addEventListener('loadeddata', handleLoaded);
+    video.addEventListener('canplaythrough', tryPlay);
 
-    const handleError = () => {
-      console.error('Video failed to load:', src);
-      if (retryCount < 2) {
-        setTimeout(() => {
-          if (video) {
-            setRetryCount(prev => prev + 1);
-            video.load();
-          }
-        }, 1000);
-      } else {
-        setHasError(true);
-      }
-    };
-
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === 'visible') {
-        playVideo();
-      }
-    };
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            playVideo();
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-
-    video.addEventListener('canplay', handleCanPlay);
-    video.addEventListener('loadeddata', handleLoadedData);
-    video.addEventListener('error', handleError);
-    observer.observe(video);
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-
-    video.load();
-
-    if (video.readyState >= 3) {
-      playVideo();
+    // Also try immediately if already loaded
+    if (video.readyState >= 2) {
+      setIsLoaded(true);
+      tryPlay();
     }
 
     return () => {
-      video.removeEventListener('canplay', handleCanPlay);
-      video.removeEventListener('loadeddata', handleLoadedData);
-      video.removeEventListener('error', handleError);
-      observer.disconnect();
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      video.removeEventListener('loadeddata', handleLoaded);
+      video.removeEventListener('canplaythrough', tryPlay);
     };
-  }, [src, retryCount]);
+  }, [src]);
 
-  const handleRetry = () => {
-    setHasError(false);
-    setRetryCount(0);
-    if (videoRef.current) {
-      videoRef.current.load();
+  const handleVideoClick = async (e: React.MouseEvent) => {
+    // Stop propagation so parent card click doesn't trigger
+    e.stopPropagation();
+
+    const video = videoRef.current;
+    if (video) {
+      video.muted = true;
+      try {
+        if (video.paused) {
+          await video.play();
+          setShowPlayButton(false);
+        } else {
+          video.pause();
+          setShowPlayButton(true);
+        }
+      } catch (e) {
+        console.log('Click play failed');
+      }
     }
   };
 
   return (
-    <div className={`relative w-full h-full overflow-hidden ${className}`}>
-      {hasError ? (
-        <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/80">
-          <svg className="w-12 h-12 text-red-500 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-          </svg>
-          <p className="text-white/70 text-sm mb-2">Video failed to load</p>
-          <button
-            onClick={handleRetry}
-            className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white text-sm rounded-lg transition-colors"
-          >
-            Retry
-          </button>
+    <div
+      className={`relative w-full h-full bg-gradient-to-br from-gray-900 to-black ${className}`}
+      onClick={handleVideoClick}
+    >
+      {/* Loading state */}
+      {!isLoaded && (
+        <div className="absolute inset-0 flex items-center justify-center z-10">
+          <div className="w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
         </div>
-      ) : null}
+      )}
+
+      {/* Play button overlay */}
+      {showPlayButton && isLoaded && (
+        <div className="absolute inset-0 flex items-center justify-center bg-black/40 z-10">
+          <div className="w-14 h-14 rounded-full bg-blue-500/80 flex items-center justify-center hover:bg-blue-500 transition-colors shadow-lg">
+            <svg className="w-7 h-7 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M8 5v14l11-7z" />
+            </svg>
+          </div>
+        </div>
+      )}
+
       <video
-        key={src}
         ref={videoRef}
         src={src}
         autoPlay
@@ -131,11 +99,12 @@ function VideoPreview({ src, className = '' }: VideoPreviewProps) {
         muted
         playsInline
         preload="auto"
-        className={`absolute inset-0 w-full h-full object-cover ${hasError ? 'hidden' : ''}`}
+        onPlay={() => setShowPlayButton(false)}
+        onPause={() => setShowPlayButton(true)}
+        className="absolute inset-0 w-full h-full object-cover"
       />
     </div>
   );
-}
+});
 
 export default VideoPreview;
-
