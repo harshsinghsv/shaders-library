@@ -688,63 +688,100 @@ const shaders: Shader[] = [
       uniform vec2 resolution;
       uniform float time;
 
-      float random(vec2 c) {
-        return fract(sin(dot(c, vec2(12.9898, 78.233))) * 43758.5453);
+      float random(vec2 c){return fract(sin(dot(c,vec2(12.9898,78.233)))*43758.5453);}
+      vec4 sigmoid(vec4 x){return 1./(1.+exp(-x));}
+
+      // Palette: Luminous, Bright, Electric (White/Cyan/Blue)
+      vec3 palette(float t) {
+          vec3 a = vec3(0.5, 0.5, 0.5);
+          vec3 b = vec3(0.5, 0.5, 0.5);
+          vec3 c = vec3(1.0, 1.0, 1.0);
+          vec3 d = vec3(0.0, 0.33, 0.67); // Bright Blue/Cyan phase
+          return a + b * cos(6.28318 * (c * t + d));
       }
 
-      vec4 sigmoid(vec4 x) {
-        return 1.0 / (1.0 + exp(-x));
-      }
+      vec4 buf[8];
 
-      vec3 palette(float t, vec3 a, vec3 b, vec3 c, vec3 d) {
-        return a + b * cos(6.28318 * (c * t + d));
+      vec4 cppn_fn(vec2 coordinate, float in0, float in1, float in2) {
+        buf[6] = vec4(coordinate.x, coordinate.y, 0.3948 + in0, 0.36 + in1);
+        buf[7] = vec4(0.14 + in2, length(coordinate), 0., 0.);
+
+        buf[0] = mat4(vec4(6.54, -3.61, 0.75, -1.13), vec4(2.45, 3.16, 1.22, 0.06), vec4(-5.47, -6.15, 1.87, -4.77), vec4(6.03, -5.54, -0.90, 3.25)) * buf[6] 
+               + mat4(vec4(0.84, -5.72, 3.97, 1.65), vec4(-0.24, 0.58, -1.76, -5.35), vec4(0.), vec4(0.)) * buf[7] 
+               + vec4(0.21, 1.12, -1.79, 5.02);
+               
+        buf[1] = mat4(vec4(-3.35, -6.06, 0.55, -4.47), vec4(0.86, 1.74, 5.64, 1.61), vec4(2.49, -3.50, 1.71, 6.35), vec4(3.31, 8.20, 1.13, -1.16)) * buf[6] 
+               + mat4(vec4(5.24, -13.03, 0.009, 15.87), vec4(2.98, 3.12, -0.89, -1.68), vec4(0.), vec4(0.)) * buf[7] 
+               + vec4(-5.94, -6.57, -0.88, 1.54);
+        
+        buf[0] = sigmoid(buf[0]); 
+        buf[1] = sigmoid(buf[1]);
+
+        buf[2] = mat4(vec4(-15.21, 8.09, -2.42, -1.93), vec4(-5.95, 4.31, 2.63, 1.27), vec4(-7.31, 6.72, 5.24, 5.94), vec4(5.07, 8.97, -1.72, -1.15)) * buf[6] 
+               + mat4(vec4(-11.96, -11.60, 6.14, 11.23), vec4(2.12, -6.26, -1.70, -0.70), vec4(0.), vec4(0.)) * buf[7] 
+               + vec4(-4.17, -3.22, -4.57, -3.64);
+               
+        buf[3] = mat4(vec4(3.18, -13.73, 1.87, 3.23), vec4(0.64, 12.76, 1.91, 0.50), vec4(-0.04, 4.48, 1.47, 1.80), vec4(5.00, 13.00, 3.39, -4.55)) * buf[6] 
+               + mat4(vec4(-0.12, 7.72, -3.14, 4.74), vec4(0.63, 3.71, -0.81, -0.39), vec4(0.), vec4(0.)) * buf[7] 
+               + vec4(-1.18, -21.62, 0.78, 1.23);
+
+        buf[2] = sigmoid(buf[2]); 
+        buf[3] = sigmoid(buf[3]);
+
+        buf[4] = mat4(vec4(5.21, -7.18, 2.72, 2.65), vec4(-5.60, -25.35, 4.06, 0.46), vec4(-10.57, 24.28, 21.10, 37.54), vec4(4.30, -1.96, 2.34, -1.37)) * buf[0] 
+               + mat4(vec4(-17.65, -10.50, 2.25, 12.46), vec4(6.26, -502.75, -12.64, 0.91), vec4(-10.98, 20.74, -9.70, -0.76), vec4(5.38, 1.48, -4.19, -4.84)) * buf[1] 
+               + mat4(vec4(12.78, -16.34, -0.39, 1.79), vec4(-30.48, -1.83, 1.45, -1.11), vec4(19.87, -7.33, -42.94, -98.52), vec4(8.33, -2.73, -2.29, -36.14)) * buf[2] 
+               + mat4(vec4(-16.29, 3.54, -0.44, -9.44), vec4(57.50, -35.60, 16.16, -4.15), vec4(-0.07, -3.86, -7.09, 3.15), vec4(-12.55, -7.07, 1.49, -0.82)) * buf[3] 
+               + vec4(-7.67, 15.92, 1.32, -1.66);
+        
+        buf[4] = sigmoid(buf[4]);
+
+        buf[0] = mat4(vec4(1.67, 1.38, 2.96, 0.), vec4(-1.88, -1.48, -3.59, 0.), vec4(-1.32, -1.09, -2.31, 0.), vec4(0.26, 0.23, 0.44, 0.)) * buf[0] 
+               + mat4(vec4(-0.62, -0.59, -0.91, 0.), vec4(0.17, 0.18, 0.18, 0.), vec4(-2.96, -2.58, -4.90, 0.), vec4(1.41, 1.18, 2.51, 0.)) * buf[1] 
+               + mat4(vec4(-1.25, -1.05, -2.16, 0.), vec4(-0.72, -0.52, -1.43, 0.), vec4(0.15, 0.15, 0.27, 0.), vec4(0.94, 0.88, 1.27, 0.)) * buf[2] 
+               + mat4(vec4(-2.42, -1.96, -4.35, 0.), vec4(-22.68, -18.05, -41.95, 0.), vec4(0.63, 0.54, 1.10, 0.), vec4(-1.54, -1.30, -2.64, 0.)) * buf[3] 
+               + mat4(vec4(-0.49, -0.39, -0.91, 0.), vec4(0.95, 0.79, 1.64, 0.), vec4(0.30, 0.15, 0.86, 0.), vec4(1.18, 0.94, 2.17, 0.)) * buf[4] 
+               + vec4(-1.54, -3.61, 0.24, 0.);
+
+        buf[0] = sigmoid(buf[0]);
+        return buf[0];
       }
 
       void main() {
         vec2 uv = gl_FragCoord.xy / resolution.xy;
         vec2 p = uv * 2.0 - 1.0;
         p.x *= resolution.x / resolution.y;
-
-        float t = time * 0.2;
         
-        // Distortion
-        vec2 distort = vec2(
-          sin(p.y * 4.0 + t) * 0.1 + sin(p.x * 3.0 + t * 0.5) * 0.05,
-          cos(p.x * 4.0 + t) * 0.1 + cos(p.y * 3.0 + t * 0.5) * 0.05
-        );
-        vec2 finalUV = p + distort * 1.2;
+        // Subtle warp
+        p += vec2(sin(p.y * 6.283 + time * 0.5), cos(p.x * 6.28 + time * 0.5)) * 0.02;
 
-        // Simplified pattern
-        float pattern = sin(finalUV.x * 3.0 + t) * cos(finalUV.y * 2.0 - t * 0.5);
-        pattern += sin(length(finalUV) * 4.0 - t) * 0.5;
-        pattern = pattern * 0.5 + 0.5;
+        // Core CPPN
+        vec4 pattern = cppn_fn(p, 0.1*sin(0.3*time), 0.1*sin(0.4*time), 0.1*cos(0.3*time));
+        
+        // Map to BRIGHT cool color palette
+        float t = pattern.x * 0.5 + pattern.y * 0.5 + time * 0.1;
+        vec3 col = palette(t);
+        
+        // Force bright output (no darks)
+        col = smoothstep(0.0, 0.9, col); // Crush blacks, keep brights
+        col = pow(col, vec3(0.55));      // Gamma correct to BRIGHTEN 
+        col += vec3(0.1, 0.2, 0.3);      // Add base glow
+        
+        // Strong Vignette
+        vec2 vUV = gl_FragCoord.xy / resolution.xy;
+        float vign = 1.0 - smoothstep(0.4, 2.0, length(vUV - 0.5) * 1.5);
+        col *= vign;
 
-        // Color palette - cool blues and cyans
-        vec3 col = palette(
-          pattern * 1.5 + t * 0.05,
-          vec3(0.1, 0.15, 0.2),
-          vec3(0.3, 0.4, 0.5),
-          vec3(0.8, 1.0, 1.2),
-          vec3(0.55, 0.65, 0.75)
-        );
+        // Subtle Scanlines
+        float scanline = sin(uv.y * resolution.y * 0.5 * 0.1) * 0.5 + 0.5;
+        col *= 1.0 - scanline * 0.05; // hardcoded intensity
 
-        // Cool chromatic aberration - more blue/cyan, less red
-        float aberration = length(p) * 0.015;
-        col.r -= aberration * 0.5;
-        col.g += aberration * 0.2;
-        col.b += aberration;
-
-        // Vignette
-        float vignette = 1.0 - smoothstep(0.5, 1.5, length(uv - 0.5) * 1.5);
-        col *= vignette;
-
-        // Scanlines
-        float scanline = sin(uv.y * resolution.y * 0.05) * 0.5 + 0.5;
-        col *= 1.0 - scanline * 0.05;
-
-        // Noise
-        float noise = (random(uv + time) - 0.5) * 0.08;
-        col += noise;
+        // Mono Noise
+        float noise = (random(uv + time) - 0.5) * 0.02; 
+        col += noise * 0.3;
+        
+        // Ensure strictly black background by clipping very low values
+        if (length(col) < 0.1) col = vec3(0.0);
 
         gl_FragColor = vec4(col, 1.0);
       }
