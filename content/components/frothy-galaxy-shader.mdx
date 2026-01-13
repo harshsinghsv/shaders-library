@@ -1,14 +1,14 @@
-import GlossyRibbonShader from '@/components/website/GlossyRibbonShader';
+import FrothyGalaxyShader from '@/components/website/FrothyGalaxyShader';
 
 export const metadata = {
-  title: 'Glossy Ribbon Shader',
-  description: '3D twisted ribbons with glossy magenta and purple gradients',
+  title: 'Frothy Galaxy Shader',
+  description: 'Smooth flowing waves with beautiful blue gradients and shimmer effects',
 };
 
 ## Preview
 
 <div className="relative w-full h-96 rounded-lg overflow-hidden border border-gray-200 dark:border-gray-800 mb-8">
-  <GlossyRibbonShader />
+  <FrothyGalaxyShader />
 </div>
 
 ## Installation
@@ -21,7 +21,7 @@ Install this shader directly using the CLI:
 npx shaderz add
 ```
 
-Select "Glossy Ribbon" from the list. The component will be added to `/components/shaderz/GlossyRibbonShader.tsx`.
+Select "Frothy Galaxy" from the list. The component will be added to `/components/shaderz/FrothyGalaxyShader.tsx`.
 
 **Option 2: Manual Installation**
 
@@ -37,19 +37,19 @@ npm install three @types/three framer-motion
 
 **Basic Usage:**
 
-<ComponentCodePreview name="glossy-ribbon-shader" isTab={false} />
+<ComponentCodePreview name="frothy-galaxy-shader" isTab={false} />
 
 **Hero Section Background Example:**
 
 ```tsx app/page.tsx
-import GlossyRibbonShader from '@/components/shaderz/GlossyRibbonShader';
+import FrothyGalaxyShader from '@/components/shaderz/FrothyGalaxyShader';
 
 export default function Home() {
   return (
     <section className="relative min-h-screen">
       {/* Shader background */}
       <div className="absolute inset-0 -z-10">
-        <GlossyRibbonShader />
+        <FrothyGalaxyShader />
       </div>
       
       {/* Your hero content */}
@@ -65,8 +65,9 @@ export default function Home() {
 
 ## Features
 
-- **Twisted Ribbons**: Multiple flowing ribbon layers
-- **Glossy Finish**: Specular highlights for shiny appearance
-- **Rich Colors**: Magenta to purple to blue gradients
-- **Edge Lighting**: Subtle edge glow effects
+- **Flowing Waves**: Smooth, organic wave patterns that create a fluid appearance
+- **Blue Gradient**: Beautiful deep blue to light blue color transitions
+- **Shimmer Effects**: Subtle sparkle and shimmer for added depth
+- **Depth Fade**: Gradient fading creates a sense of depth
 - **Performance Optimized**: Efficient WebGL implementation
+- **Calming Aesthetic**: Perfect for peaceful, serene designs

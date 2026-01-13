@@ -9,10 +9,11 @@ import OceanWavesShader from '@/components/website/OceanWavesShader';
 import NeonFluidShader from '@/components/website/NeonFluidShader';
 import GradientWavesShader from '@/components/website/GradientWavesShader';
 import CosmicNebulaShader from '@/components/website/CosmicNebulaShader';
-import GlossyRibbonShader from '@/components/website/GlossyRibbonShader';
 import SilkFlowShader from '@/components/website/SilkFlowShader';
-import GlassTwistShader from '@/components/website/GlassTwistShader';
-import GlossyFilm from '@/components/website/GlossyFilm';
+import Plasmav2Shader from '@/components/website/Plasmav2';
+import LiquidMotionShader from '@/components/website/LiquidMotionShader';
+import Wavy from '@/components/website/Wavy';
+import FrothyGalaxyShader from '@/components/website/FrothyGalaxyShader';
 
 const shaderComponents = [
   {
@@ -64,14 +65,6 @@ const shaderComponents = [
     isNew: true,
   },
   {
-    id: 'glossy-ribbon',
-    name: 'Glossy Ribbon Shader',
-    url: '/components/glossy-ribbon-shader',
-    description: '3D twisted ribbons with glossy magenta and purple',
-    component: GlossyRibbonShader,
-    isNew: true,
-  },
-  {
     id: 'silk-flow',
     name: 'Silk Flow Shader',
     url: '/components/silk-flow-shader',
@@ -80,19 +73,52 @@ const shaderComponents = [
     isNew: true,
   },
   {
-    id: 'glass-twist',
-    name: 'Glass Twist Shader',
-    url: '/components/glass-twist-shader',
-    description: 'Transparent cyan glass ribbons with refraction',
-    component: GlassTwistShader,
+    id: 'plasma-v2',
+    name: 'Plasma V2 Shader',
+    url: '/components/plasma-v2-shader',
+    description: 'Enhanced plasma effect with vivid neon colors and fluid motion',
+    component: Plasmav2Shader,
     isNew: true,
   },
   {
-    id: 'glossy-film',
+    id: 'liquid-motion',
+    name: 'Liquid Motion Shader',
+    url: '/components/liquid-motion-shader',
+    description: 'Interactive fluid simulation with vibrant flowing colors',
+    component: LiquidMotionShader,
+    isNew: true,
+  },
+  {
+    id: 'dark-veil',
+    name: 'Dark Veil Shader',
+    url: '/components/dark-veil-shader',
+    description: 'Mysterious dark veil with smooth blue-purple-magenta gradients',
+    component: Wavy,
+    isNew: true,
+  },
+  {
+    id: 'frothy-galaxy',
+    name: 'Frothy Galaxy Shader',
+    url: '/components/frothy-galaxy-shader',
+    description: 'Smooth flowing waves with beautiful blue gradients and shimmer',
+    component: FrothyGalaxyShader,
+    isNew: true,
+  },
+  {
+    id: 'video-glossy-film',
     name: 'Glossy Film',
     url: '/components/glossy-film',
-    description: 'Video-based glossy film effect with iridescent animations',
-    component: GlossyFilm,
+    description: 'Smooth glossy film with reflective surface',
+    videoSrc: '/videos/glossy-film.mp4',
+    isVideo: true,
+    isNew: true,
+  },
+  {
+    id: 'video-nova-silk',
+    name: 'Nova Silk',
+    url: '/components/nova-silk',
+    description: 'Elegant flowing silk with nova-inspired colors',
+    videoSrc: '/videos/nova-silk.mp4',
     isVideo: true,
     isNew: true,
   },
@@ -107,15 +133,14 @@ export default function Home() {
           Shaders
         </h1>
         <p className='text-lg text-neutral-400 max-w-2xl'>
-          Beautiful WebGL shaders that you can copy and paste into your apps. 
+          Beautiful WebGL shaders that you can copy and paste into your apps.
           Interactive, customizable, and open source.
         </p>
       </div>
 
-      {/* Shaders Grid */}
+      {/* Components Grid */}
       <div className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8'>
         {shaderComponents.map((shader, index) => {
-          const ShaderComponent = shader.component;
           return (
             <motion.div
               key={shader.id}
@@ -129,15 +154,26 @@ export default function Home() {
               >
                 {/* Card Container */}
                 <div className='relative rounded-xl overflow-hidden bg-neutral-900/50 border border-neutral-800 hover:border-neutral-700 transition-all duration-300'>
-                  {/* Shader Preview */}
+                  {/* Shader/Video Preview */}
                   <AspectRatio.Root ratio={16 / 10}>
                     <div className="relative w-full h-full bg-black">
-                      <ShaderComponent />
+                      {shader.isVideo ? (
+                        <video
+                          src={shader.videoSrc}
+                          autoPlay
+                          loop
+                          muted
+                          playsInline
+                          className="w-full h-full object-cover"
+                        />
+                      ) : shader.component ? (
+                        <shader.component />
+                      ) : null}
                       {/* Hover Overlay */}
                       <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300" />
                     </div>
                   </AspectRatio.Root>
-                  
+
                   {/* Card Content */}
                   <div className='p-4 bg-neutral-900/80'>
                     <div className='flex items-center gap-2 mb-2'>

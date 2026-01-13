@@ -85,20 +85,6 @@
       "new": true
     },
     {
-      "name": "Glossy Ribbon Shader",
-      "componentArray": [
-        {
-          "componentName": "glossy-ribbon-shader",
-          "filesrc": "components/shaders/glossy-ribbon-shader.tsx",
-          "iframeSrc": "live-components/glossy-ribbon-shader",
-          "parentlink": "glossy-ribbon-shader",
-          "parentName": "Glossy Ribbon Shader"
-        }
-      ],
-      "type": "shaders",
-      "new": true
-    },
-    {
       "name": "Silk Flow Shader",
       "componentArray": [
         {
@@ -113,14 +99,56 @@
       "new": true
     },
     {
-      "name": "Glass Twist Shader",
+      "name": "Plasma V2 Shader",
       "componentArray": [
         {
-          "componentName": "glass-twist-shader",
-          "filesrc": "components/shaders/glass-twist-shader.tsx",
-          "iframeSrc": "live-components/glass-twist-shader",
-          "parentlink": "glass-twist-shader",
-          "parentName": "Glass Twist Shader"
+          "componentName": "plasma-v2-shader",
+          "filesrc": "components/shaders/plasma-v2-shader.tsx",
+          "iframeSrc": "live-components/plasma-v2-shader",
+          "parentlink": "plasma-v2-shader",
+          "parentName": "Plasma V2 Shader"
+        }
+      ],
+      "type": "shaders",
+      "new": true
+    },
+    {
+      "name": "Liquid Motion Shader",
+      "componentArray": [
+        {
+          "componentName": "liquid-motion-shader",
+          "filesrc": "components/shaders/liquid-motion-shader.tsx",
+          "iframeSrc": "live-components/liquid-motion-shader",
+          "parentlink": "liquid-motion-shader",
+          "parentName": "Liquid Motion Shader"
+        }
+      ],
+      "type": "shaders",
+      "new": true
+    },
+    {
+      "name": "Dark Veil Shader",
+      "componentArray": [
+        {
+          "componentName": "dark-veil-shader",
+          "filesrc": "components/shaders/dark-veil-shader.tsx",
+          "iframeSrc": "live-components/dark-veil-shader",
+          "parentlink": "dark-veil-shader",
+          "parentName": "Dark Veil Shader"
+        }
+      ],
+      "type": "shaders",
+      "new": true
+    },
+    {
+      "name": "Frothy Galaxy Shader",
+      "componentArray": [
+        {
+          "componentName": "frothy-galaxy-shader",
+          "filesrc": "components/shaders/frothy-galaxy-shader.tsx",
+          "iframeSrc": "live-components/frothy-galaxy-shader",
+          "parentlink": "frothy-galaxy-shader",
+          "parentName": "Frothy Galaxy Shader"
         }
       ],
       "type": "shaders",
@@ -131,14 +159,29 @@
       "componentArray": [
         {
           "componentName": "glossy-film",
-          "filesrc": "components/shaders/glossy-film.tsx",
+          "filesrc": "components/videos/glossy-film.tsx",
           "iframeSrc": "live-components/glossy-film",
           "parentlink": "glossy-film",
           "parentName": "Glossy Film",
           "isVideo": true
         }
       ],
-      "type": "shaders",
+      "type": "videos",
+      "new": true
+    },
+    {
+      "name": "Nova Silk",
+      "componentArray": [
+        {
+          "componentName": "nova-silk",
+          "filesrc": "components/videos/nova-silk.tsx",
+          "iframeSrc": "live-components/nova-silk",
+          "parentlink": "nova-silk",
+          "parentName": "Nova Silk",
+          "isVideo": true
+        }
+      ],
+      "type": "videos",
       "new": true
     }
   ]

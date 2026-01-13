@@ -267,12 +267,14 @@ const OceanWavesShader: React.FC = () => {
       uniform vec2 resolution;
       uniform float time;
 
+      // Hash function for pseudo-random values
       float hash(vec2 p) {
         p = fract(p * vec2(123.34, 456.21));
         p += dot(p, p + 45.32);
         return fract(p.x * p.y);
       }
 
+      // 2D noise function
       float noise(vec2 p) {
         vec2 i = floor(p);
         vec2 f = fract(p);
@@ -286,14 +288,14 @@ const OceanWavesShader: React.FC = () => {
         return mix(mix(a, b, f.x), mix(c, d, f.x), f.y);
       }
 
+      // Fractal Brownian Motion
       float fbm(vec2 p) {
         float value = 0.0;
         float amplitude = 0.5;
-        float frequency = 1.0;
         
         for(int i = 0; i < 5; i++) {
-          value += amplitude * noise(p * frequency);
-          frequency *= 2.0;
+          value += amplitude * noise(p);
+          p *= 2.0;
           amplitude *= 0.5;
         }
         return value;
@@ -304,45 +306,26 @@ const OceanWavesShader: React.FC = () => {
         vec2 p = (uv - 0.5) * 2.0;
         p.x *= resolution.x / resolution.y;
         
-        // Smooth flowing waves
-        float wave1 = sin(p.x * 2.0 + time * 0.5) * 0.3;
-        float wave2 = sin(p.x * 1.5 - p.y * 0.8 + time * 0.4) * 0.2;
-        float wave3 = sin(p.x * 3.0 + p.y * 1.5 + time * 0.6) * 0.15;
-        float waves = wave1 + wave2 + wave3;
+        // Wave motion
+        float wave = sin(p.x * 0.5 + time * 0.3) * 0.3;
+        wave += sin(p.x * 1.5 - p.y * 0.8 + time * 0.4) * 0.15;
+        wave += fbm(p * 2.0 + vec2(time * 0.1, time * 0.05)) * 0.1;
         
-        // Add noise detail
-        waves += fbm(p * 2.0 + vec2(time * 0.1, 0.0)) * 0.2;
+        // Foam
+        float foam = fbm(p * 4.0 + vec2(time * 0.2, wave * 2.0));
+        foam = smoothstep(0.5, 0.7, foam);
         
-        // Normalized wave height
-        float h = waves * 0.5 + 0.5;
+        // Colors
+        vec3 deepWater = vec3(0.0, 0.2, 0.4);
+        vec3 shallowWater = vec3(0.0, 0.4, 0.6);
+        vec3 foamColor = vec3(0.7, 0.9, 1.0);
         
-        // Beautiful gradient colors
-        vec3 color1 = vec3(0.1, 0.3, 0.6);   // Deep blue
-        vec3 color2 = vec3(0.2, 0.5, 0.8);   // Medium blue
-        vec3 color3 = vec3(0.4, 0.7, 0.9);   // Light blue
-        vec3 color4 = vec3(0.6, 0.85, 0.95); // Pale blue
+        float waveHeight = wave * 0.5 + 0.5;
+        vec3 color = mix(deepWater, shallowWater, waveHeight);
+        color = mix(color, foamColor, foam * 0.4);
         
-        // Smooth color transitions
-        vec3 color;
-        if (h < 0.33) {
-          color = mix(color1, color2, h * 3.0);
-        } else if (h < 0.66) {
-          color = mix(color2, color3, (h - 0.33) * 3.0);
-        } else {
-          color = mix(color3, color4, (h - 0.66) * 3.0);
-        }
-        
-        // Add shimmer
-        float shimmer = fbm(p * 6.0 + vec2(time * 0.3, time * 0.2));
-        shimmer = pow(shimmer, 2.0) * 0.3;
-        color += vec3(shimmer);
-        
-        // Depth fade
-        color = mix(color, color1 * 0.8, (1.0 - uv.y) * 0.4);
-        
-        // Subtle vignette
-        float dist = length(uv - 0.5);
-        color *= 1.0 - dist * 0.3;
+        float depth = smoothstep(0.0, 1.0, 1.0 - uv.y);
+        color = mix(color, deepWater, depth * 0.3);
         
         gl_FragColor = vec4(color, 1.0);
       }

@@ -31,10 +31,10 @@ export interface ComponentItem {
 
 // Typed array for special shaders
 export const SpecialComponents: ComponentItem[] = [
-  { 
-    href: '/components/liquid-orange-shader', 
+  {
+    href: '/components/liquid-orange-shader',
     name: 'Liquid Orange Shader',
-    new: true 
+    new: true
   },
   {
     href: '/components/plasma-shader',
@@ -62,18 +62,38 @@ export const SpecialComponents: ComponentItem[] = [
     new: true,
   },
   {
-    href: '/components/glossy-ribbon-shader',
-    name: 'Glossy Ribbon Shader',
-    new: true,
-  },
-  {
     href: '/components/silk-flow-shader',
     name: 'Silk Flow Shader',
     new: true,
   },
   {
-    href: '/components/glass-twist-shader',
-    name: 'Glass Twist Shader',
+    href: '/components/plasma-v2-shader',
+    name: 'Plasma V2 Shader',
+    new: true,
+  },
+  {
+    href: '/components/liquid-motion-shader',
+    name: 'Liquid Motion Shader',
+    new: true,
+  },
+  {
+    href: '/components/dark-veil-shader',
+    name: 'Dark Veil Shader',
+    new: true,
+  },
+  {
+    href: '/components/frothy-galaxy-shader',
+    name: 'Frothy Galaxy Shader',
+    new: true,
+  },
+  {
+    href: '/components/glossy-film',
+    name: 'Glossy Film',
+    new: true,
+  },
+  {
+    href: '/components/nova-silk',
+    name: 'Nova Silk',
     new: true,
   },
 ];

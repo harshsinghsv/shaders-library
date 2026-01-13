@@ -10,67 +10,88 @@ import path from 'path';
 const program = new Command();
 
 const SHADERS = [
-  { 
+  {
     name: 'liquid-orange',
     title: 'Liquid Orange',
     description: 'Flowing liquid shader with warm orange tones',
     file: 'LiquidOrangeShader'
   },
-  { 
+  {
     name: 'ocean-waves',
     title: 'Ocean Waves',
     description: 'Dynamic ocean waves shader',
     file: 'OceanWavesShader'
   },
-  { 
+  {
     name: 'neon-fluid',
     title: 'Neon Fluid',
     description: 'Vibrant neon fluid shader',
     file: 'NeonFluidShader'
   },
-  { 
+  {
     name: 'gradient-waves',
     title: 'Gradient Waves',
     description: 'Smooth gradient waves shader',
     file: 'GradientWavesShader'
   },
-  { 
+  {
     name: 'cosmic-nebula',
     title: 'Cosmic Nebula',
     description: 'Space-themed nebula shader',
     file: 'CosmicNebulaShader'
   },
-  { 
-    name: 'glossy-ribbon',
-    title: 'Glossy Ribbon',
-    description: 'Glossy ribbon flow shader',
-    file: 'GlossyRibbonShader'
-  },
-  { 
+  {
     name: 'silk-flow',
     title: 'Silk Flow',
     description: 'Smooth silk flow shader',
     file: 'SilkFlowShader'
   },
-  { 
-    name: 'glass-twist',
-    title: 'Glass Twist',
-    description: 'Glass twist effect shader',
-    file: 'GlassTwistShader'
-  },
-  { 
+  {
     name: 'plasma',
     title: 'Plasma',
     description: 'Classic plasma shader',
     file: 'PlasmaShader'
   },
-  { 
+  {
+    name: 'plasma-v2',
+    title: 'Plasma V2',
+    description: 'Enhanced plasma shader with more colors',
+    file: 'PlasmaV2Shader'
+  },
+  {
+    name: 'dark-veil',
+    title: 'Dark Veil',
+    description: 'Mysterious dark veil with blue/purple gradient',
+    file: 'DarkVeilShader'
+  },
+  {
+    name: 'liquid-motion',
+    title: 'Liquid Motion',
+    description: 'Advanced fluid simulation with Three.js',
+    file: 'LiquidMotionShader',
+    hasCss: true
+  },
+  {
+    name: 'frothy-galaxy',
+    title: 'Frothy Galaxy',
+    description: 'Galactic frothy effect shader',
+    file: 'FrothyGalaxyShader'
+  },
+  {
     name: 'glossy-film',
     title: 'Glossy Film (Video)',
     description: 'MP4 video background shader',
     file: 'VideoBackground',
     isVideo: true,
     videoFile: 'glossy-film.mp4'
+  },
+  {
+    name: 'nova-silk',
+    title: 'Nova Silk (Video)',
+    description: 'Elegant flowing silk video background',
+    file: 'VideoBackground',
+    isVideo: true,
+    videoFile: 'nova-silk.mp4'
   }
 ];
 
@@ -95,11 +116,11 @@ async function addShaders() {
   }
 
   const targetDir = process.cwd();
-  
+
   // Detect project structure and file extension
   const possiblePaths = [
     'src/components',
-    'app/components', 
+    'app/components',
     'components',
   ];
 
@@ -156,21 +177,32 @@ async function addShaders() {
       if (shader.isVideo && shader.videoFile) {
         // Create public/videos directory
         await fs.ensureDir(publicVideosDir);
-        
+
         // Copy video file
         const sourceVideo = path.join(__dirname, '..', 'videos', shader.videoFile);
         const targetVideo = path.join(publicVideosDir, shader.videoFile);
         await fs.copy(sourceVideo, targetVideo);
-        
+
         spinner.succeed(`Added ${chalk.green(shader.title)} (video copied to public/videos/)`);
         spinner.start();
       }
 
+      // Copy shader file
       const sourceFile = path.join(__dirname, '..', 'shaders', `${shader.file}.tsx`);
       const targetFile = path.join(componentsDir, `${shader.file}${fileExtension}`);
 
       await fs.copy(sourceFile, targetFile);
-      spinner.succeed(`Added ${chalk.green(shader.title)}`);
+
+      // Handle CSS files for shaders that need them
+      if (shader.hasCss) {
+        const sourceCss = path.join(__dirname, '..', 'shaders', 'LiqMotion.css');
+        const targetCss = path.join(componentsDir, 'LiqMotion.css');
+        await fs.copy(sourceCss, targetCss);
+        spinner.succeed(`Added ${chalk.green(shader.title)} (with CSS file)`);
+      } else {
+        spinner.succeed(`Added ${chalk.green(shader.title)}`);
+      }
+
       spinner.start();
     }
 

@@ -83,9 +83,13 @@ function ShaderGallery({ shaders, videos = [], activeShader, onShaderChange }: S
                 >
                   {/* Live Shader Preview */}
                   <div className="absolute inset-0">
-                    <ShaderPreview
-                      fragmentShader={shader.fragmentShader}
-                    />
+                    {shader.id === 'liquid-motion' ? (
+                      <shader.component />
+                    ) : (
+                      <ShaderPreview
+                        fragmentShader={shader.fragmentShader}
+                      />
+                    )}
                   </div>
 
                   {/* Active indicator badge */}

@@ -47,31 +47,9 @@ const VideoPreview = memo(function VideoPreview({ src, className = '' }: VideoPr
     };
   }, [src]);
 
-  const handleVideoClick = async (e: React.MouseEvent) => {
-    // Stop propagation so parent card click doesn't trigger
-    e.stopPropagation();
-
-    const video = videoRef.current;
-    if (video) {
-      video.muted = true;
-      try {
-        if (video.paused) {
-          await video.play();
-          setShowPlayButton(false);
-        } else {
-          video.pause();
-          setShowPlayButton(true);
-        }
-      } catch (e) {
-        console.log('Click play failed');
-      }
-    }
-  };
-
   return (
     <div
       className={`relative w-full h-full bg-gradient-to-br from-gray-900 to-black ${className}`}
-      onClick={handleVideoClick}
     >
       {/* Loading state */}
       {!isLoaded && (
@@ -82,7 +60,7 @@ const VideoPreview = memo(function VideoPreview({ src, className = '' }: VideoPr
 
       {/* Play button overlay */}
       {showPlayButton && isLoaded && (
-        <div className="absolute inset-0 flex items-center justify-center bg-black/40 z-10">
+        <div className="absolute inset-0 flex items-center justify-center bg-black/40 z-10 pointer-events-none">
           <div className="w-14 h-14 rounded-full bg-blue-500/80 flex items-center justify-center hover:bg-blue-500 transition-colors shadow-lg">
             <svg className="w-7 h-7 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
               <path d="M8 5v14l11-7z" />
@@ -101,7 +79,7 @@ const VideoPreview = memo(function VideoPreview({ src, className = '' }: VideoPr
         preload="auto"
         onPlay={() => setShowPlayButton(false)}
         onPause={() => setShowPlayButton(true)}
-        className="absolute inset-0 w-full h-full object-cover"
+        className="absolute inset-0 w-full h-full object-cover pointer-events-none"
       />
     </div>
   );

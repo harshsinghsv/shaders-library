@@ -8,13 +8,12 @@ import OceanWavesShader from './OceanWavesShader';
 import NeonFluidShader from './NeonFluidShader';
 import GradientWavesShader from './GradientWavesShader';
 import CosmicNebulaShader from './CosmicNebulaShader';
-import GlossyRibbonShader from './GlossyRibbonShader';
 import SilkFlowShader from './SilkFlowShader';
-import GlassTwistShader from './GlassTwistShader';
 import VideoBackground from './VideoBackground';
 import Plasmav2Shader from './Plasmav2';
 import LiquidMotionShader from './LiquidMotionShader';
 import Wavy from './Wavy';
+import FrothyGalaxyShader from './FrothyGalaxyShader';
 
 const shaderComponents = {
   'liquid-orange': LiquidOrangeShader,
@@ -23,12 +22,11 @@ const shaderComponents = {
   'neon-fluid': NeonFluidShader,
   'gradient-waves': GradientWavesShader,
   'cosmic-nebula': CosmicNebulaShader,
-  'glossy-ribbon': GlossyRibbonShader,
   'silk-flow': SilkFlowShader,
-  'glass-twist': GlassTwistShader,
   'plasma-v2': Plasmav2Shader,
   'liquid-motion': LiquidMotionShader,
   'wavy': Wavy,
+  'frothy-galaxy': FrothyGalaxyShader,
 };
 
 // Videos are identified by having a 'video-' prefix

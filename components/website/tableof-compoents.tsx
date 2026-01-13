@@ -73,8 +73,8 @@ export default function TableOfContents({ toc }: TableOfContentsProps) {
                   // console.log(item);
 
                   return (
-                    <>
-                      <li key={item.url}>
+                    <React.Fragment key={item.url}>
+                      <li>
                         <a
                           href={item.url}
                           className={`${activeId === item.url.slice(1) ? 'font-semibold text-orange-500 py-1' : ''} no-underline rounded-sm px-1 hover:text-orange-400 text-neutral-400`}
@@ -96,7 +96,7 @@ export default function TableOfContents({ toc }: TableOfContentsProps) {
                           </ul>
                         )}
                       </li>
-                    </>
+                    </React.Fragment>
                   );
                 })}
               </ul>

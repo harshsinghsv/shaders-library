@@ -1,14 +1,14 @@
-import GlassTwistShader from '@/components/website/GlassTwistShader';
+import Wavy from '@/components/website/Wavy';
 
 export const metadata = {
-  title: 'Glass Twist Shader',
-  description: 'Transparent cyan glass ribbons with refraction and caustic effects',
+  title: 'Dark Veil Shader',
+  description: 'A mysterious dark veil shader with smooth blue-to-purple-to-magenta gradients and organic floating movement',
 };
 
 ## Preview
 
 <div className="relative w-full h-96 rounded-lg overflow-hidden border border-gray-200 dark:border-gray-800 mb-8">
-  <GlassTwistShader />
+  <Wavy />
 </div>
 
 ## Installation
@@ -21,7 +21,7 @@ Install this shader directly using the CLI:
 npx shaderz add
 ```
 
-Select "Glass Twist" from the list. The component will be added to `/components/shaderz/GlassTwistShader.tsx`.
+Select "Dark Veil" from the list. The component will be added to `/components/shaderz/Wavy.tsx`.
 
 **Option 2: Manual Installation**
 
@@ -37,19 +37,19 @@ npm install three @types/three framer-motion
 
 **Basic Usage:**
 
-<ComponentCodePreview name="glass-twist-shader" isTab={false} />
+<ComponentCodePreview name="dark-veil-shader" isTab={false} />
 
 **Hero Section Background Example:**
 
 ```tsx app/page.tsx
-import GlassTwistShader from '@/components/shaderz/GlassTwistShader';
+import Wavy from '@/components/shaderz/Wavy';
 
 export default function Home() {
   return (
     <section className="relative min-h-screen">
       {/* Shader background */}
       <div className="absolute inset-0 -z-10">
-        <GlassTwistShader />
+        <Wavy />
       </div>
       
       {/* Your hero content */}
@@ -65,8 +65,8 @@ export default function Home() {
 
 ## Features
 
-- **Glass Effect**: Transparent ribbons with refraction
-- **Fresnel Lighting**: Edge reflections like real glass
-- **Caustic Patterns**: Light patterns through glass
-- **Light Background**: Soft gray-white gradient
+- **Smooth Gradients**: Beautiful blue-to-purple-to-magenta color transitions
+- **Organic Motion**: Floating, noise-based movement creates a mysterious atmosphere
+- **Soft Glow**: Radial gradient with subtle outer glow
 - **Performance Optimized**: Efficient WebGL implementation
+- **Dark Aesthetic**: Perfect for modern, elegant designs

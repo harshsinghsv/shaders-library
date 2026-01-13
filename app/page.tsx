@@ -10,12 +10,11 @@ import OceanWavesShader from '@/components/website/OceanWavesShader';
 import NeonFluidShader from '@/components/website/NeonFluidShader';
 import GradientWavesShader from '@/components/website/GradientWavesShader';
 import CosmicNebulaShader from '@/components/website/CosmicNebulaShader';
-import GlossyRibbonShader from '@/components/website/GlossyRibbonShader';
 import SilkFlowShader from '@/components/website/SilkFlowShader';
-import GlassTwistShader from '@/components/website/GlassTwistShader';
 import Plasmav2Shader from '@/components/website/Plasmav2';
 import LiquidMotionShader from '@/components/website/LiquidMotionShader';
 import Wavy, { fragment as WavyFragment } from '@/components/website/Wavy';
+import FrothyGalaxyShader from '@/components/website/FrothyGalaxyShader';
 
 // Video backgrounds
 const videos: VideoBackground[] = [
@@ -466,39 +465,6 @@ const shaders: Shader[] = [
       }`
   },
   {
-    id: 'glossy-ribbon',
-    name: 'Glossy Ribbon',
-    description: '3D twisted ribbons with glossy magenta and purple',
-    component: GlossyRibbonShader,
-    thumbnail: '',
-    colors: ['#CC1A99', '#9933CC', '#6633FF', '#3366CC'],
-    fragmentShader: `precision highp float;
-      uniform vec2 resolution;
-      uniform float time;
-      void main(){
-        vec2 uv=gl_FragCoord.xy/resolution.xy;
-        vec2 p=(uv-0.5)*2.0;p.x*=resolution.x/resolution.y;
-        vec3 col=vec3(0.0);
-        for(float i=0.0;i<3.0;i++){
-          float offset=(i-1.0)*0.4;
-          float twist=sin(p.x*1.8+time*0.6+i)*0.6;
-          float ribbonY=twist+offset;
-          float dist=abs(p.y-ribbonY);
-          float ribbon=smoothstep(0.25,0.05,dist);
-          float depth=sin(p.x*2.5+time+i)*0.5+0.5;
-          vec3 c1=vec3(1.0,0.1,0.7);
-          vec3 c2=vec3(0.7,0.2,1.0);
-          vec3 c3=vec3(0.4,0.3,0.9);
-          vec3 c=mix(c1,c2,depth);
-          c=mix(c,c3,smoothstep(0.3,0.7,sin(p.x*3.0)*0.5+0.5));
-          float spec=pow(1.0-smoothstep(0.0,0.2,dist),3.0)*0.6;
-          float edge=smoothstep(0.2,0.25,dist)*smoothstep(0.3,0.25,dist);
-          col+=(c*ribbon+vec3(spec)+c*edge*0.4)*(1.0-i*0.15);
-        }
-        gl_FragColor=vec4(col,1.0);
-      }`
-  },
-  {
     id: 'silk-flow',
     name: 'Silk Flow',
     description: 'Vertical flowing silk ribbons in blue and magenta',
@@ -530,42 +496,7 @@ const shaders: Shader[] = [
         gl_FragColor=vec4(col,1.0);
       }`
   },
-  {
-    id: 'glass-twist',
-    name: 'Glass Twist',
-    description: 'Transparent cyan glass ribbons with refraction',
-    component: GlassTwistShader,
-    thumbnail: '',
-    colors: ['#00CCCC', '#33DDDD', '#66EEFF', '#FFFFFF'],
-    fragmentShader: `precision highp float;
-      uniform vec2 resolution;
-      uniform float time;
-      void main(){
-        vec2 uv=gl_FragCoord.xy/resolution.xy;
-        vec2 p=(uv-0.5)*2.0;p.x*=resolution.x/resolution.y;
-        vec3 bg=mix(vec3(0.85,0.88,0.92),vec3(0.92,0.94,0.96),uv.y);
-        vec3 col=bg;
-        for(float i=0.0;i<4.0;i++){
-          float offset=(i-1.5)*0.35;
-          float twist=sin(p.x*1.5+time*0.5+i*0.5)*0.5;
-          float ribbonY=twist+offset;
-          float dist=abs(p.y-ribbonY);
-          float ribbon=smoothstep(0.2,0.08,dist);
-          float depth=1.0-smoothstep(0.0,0.15,dist);
-          vec3 glass=vec3(0.0,0.75,0.85);
-          vec3 light=vec3(0.5,0.95,1.0);
-          vec3 c=mix(glass*0.4,light,pow(depth,1.5));
-          float fresnel=pow(1.0-depth,2.0);
-          c=mix(c,vec3(0.9,0.98,1.0),fresnel*0.7);
-          float caustic=sin(p.x*15.0+time+i)*sin(p.y*15.0-time)*0.5+0.5;
-          caustic=pow(caustic,4.0)*ribbon*0.3;
-          c+=glass*caustic;
-          float alpha=ribbon*0.7;
-          col=mix(col,c,alpha);
-        }
-        gl_FragColor=vec4(col,1.0);
-      }`
-  },
+
   {
     id: 'plasma-v2',
     name: 'Plasma V2',
@@ -629,48 +560,27 @@ const shaders: Shader[] = [
       uniform vec2 resolution;
       uniform float time;
 
-      float noise(vec2 p) {
-        return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453);
-      }
-
-      float smoothNoise(vec2 p) {
-        vec2 i = floor(p);
-        vec2 f = fract(p);
-        f = f * f * (3.0 - 2.0 * f);
-        float a = noise(i);
-        float b = noise(i + vec2(1.0, 0.0));
-        float c = noise(i + vec2(0.0, 1.0));
-        float d = noise(i + vec2(1.0, 1.0));
-        return mix(mix(a, b, f.x), mix(c, d, f.x), f.y);
-      }
-
-      float fbm(vec2 p) {
-        float value = 0.0;
-        float amplitude = 0.5;
-        for (int i = 0; i < 5; i++) {
-          value += amplitude * smoothNoise(p);
-          p *= 2.0;
-          amplitude *= 0.5;
-        }
-        return value;
-      }
-
       void main() {
         vec2 uv = gl_FragCoord.xy / resolution.xy;
-        vec2 p = uv * 3.0;
+        vec2 p = uv - 0.5;
+        p.x *= resolution.x / resolution.y;
         
-        float flow = fbm(p + vec2(time * 0.2, time * 0.1));
-        flow += fbm(p * 2.0 - vec2(time * 0.15, time * 0.25)) * 0.5;
+        // Create subtle flowing waves
+        float dist = length(p);
+        float wave = sin(dist * 6.0 - time * 0.8) * 0.5 + 0.5;
+        wave += sin(dist * 4.0 + time * 0.6 + p.x * 3.0) * 0.3;
+        wave *= 0.5;
         
-        vec3 col1 = vec3(0.32, 0.15, 1.0);
-        vec3 col2 = vec3(1.0, 0.62, 0.99);
-        vec3 col3 = vec3(0.69, 0.62, 0.94);
+        // Very subtle blush/pink color that almost merges with black
+        vec3 blush = vec3(0.15, 0.05, 0.12); // Very dark pinkish
+        vec3 black = vec3(0.0, 0.0, 0.0);
         
-        vec3 color = mix(col1, col2, flow);
-        color = mix(color, col3, flow * flow);
+        // Mix with wave intensity - mostly black
+        vec3 color = mix(black, blush, wave * 0.3);
         
-        float shimmer = pow(flow, 2.0) * 0.5;
-        color += shimmer;
+        // Add very subtle glow in center
+        float glow = 1.0 - smoothstep(0.0, 0.6, dist);
+        color += blush * glow * 0.15;
         
         gl_FragColor = vec4(color, 1.0);
       }
@@ -682,108 +592,160 @@ const shaders: Shader[] = [
     description: 'Mysterious dark veil with scanlines and distortion',
     component: Wavy,
     thumbnail: '',
-    colors: ['#000000', '#222222', '#444444', '#666666'],
+    colors: ['#3366E6', '#9933CC', '#CC1A99', '#E6194D'],
     fragmentShader: `
       precision highp float;
       uniform vec2 resolution;
       uniform float time;
 
-      float random(vec2 c){return fract(sin(dot(c,vec2(12.9898,78.233)))*43758.5453);}
-      vec4 sigmoid(vec4 x){return 1./(1.+exp(-x));}
-
-      // Palette: Luminous, Bright, Electric (White/Cyan/Blue)
-      vec3 palette(float t) {
-          vec3 a = vec3(0.5, 0.5, 0.5);
-          vec3 b = vec3(0.5, 0.5, 0.5);
-          vec3 c = vec3(1.0, 1.0, 1.0);
-          vec3 d = vec3(0.0, 0.33, 0.67); // Bright Blue/Cyan phase
-          return a + b * cos(6.28318 * (c * t + d));
+      float hash(vec2 p) {
+        return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
       }
-
-      vec4 buf[8];
-
-      vec4 cppn_fn(vec2 coordinate, float in0, float in1, float in2) {
-        buf[6] = vec4(coordinate.x, coordinate.y, 0.3948 + in0, 0.36 + in1);
-        buf[7] = vec4(0.14 + in2, length(coordinate), 0., 0.);
-
-        buf[0] = mat4(vec4(6.54, -3.61, 0.75, -1.13), vec4(2.45, 3.16, 1.22, 0.06), vec4(-5.47, -6.15, 1.87, -4.77), vec4(6.03, -5.54, -0.90, 3.25)) * buf[6] 
-               + mat4(vec4(0.84, -5.72, 3.97, 1.65), vec4(-0.24, 0.58, -1.76, -5.35), vec4(0.), vec4(0.)) * buf[7] 
-               + vec4(0.21, 1.12, -1.79, 5.02);
-               
-        buf[1] = mat4(vec4(-3.35, -6.06, 0.55, -4.47), vec4(0.86, 1.74, 5.64, 1.61), vec4(2.49, -3.50, 1.71, 6.35), vec4(3.31, 8.20, 1.13, -1.16)) * buf[6] 
-               + mat4(vec4(5.24, -13.03, 0.009, 15.87), vec4(2.98, 3.12, -0.89, -1.68), vec4(0.), vec4(0.)) * buf[7] 
-               + vec4(-5.94, -6.57, -0.88, 1.54);
+      
+      float noise(vec2 p) {
+        vec2 i = floor(p);
+        vec2 f = fract(p);
+        f = f * f * (3.0 - 2.0 * f);
         
-        buf[0] = sigmoid(buf[0]); 
-        buf[1] = sigmoid(buf[1]);
-
-        buf[2] = mat4(vec4(-15.21, 8.09, -2.42, -1.93), vec4(-5.95, 4.31, 2.63, 1.27), vec4(-7.31, 6.72, 5.24, 5.94), vec4(5.07, 8.97, -1.72, -1.15)) * buf[6] 
-               + mat4(vec4(-11.96, -11.60, 6.14, 11.23), vec4(2.12, -6.26, -1.70, -0.70), vec4(0.), vec4(0.)) * buf[7] 
-               + vec4(-4.17, -3.22, -4.57, -3.64);
-               
-        buf[3] = mat4(vec4(3.18, -13.73, 1.87, 3.23), vec4(0.64, 12.76, 1.91, 0.50), vec4(-0.04, 4.48, 1.47, 1.80), vec4(5.00, 13.00, 3.39, -4.55)) * buf[6] 
-               + mat4(vec4(-0.12, 7.72, -3.14, 4.74), vec4(0.63, 3.71, -0.81, -0.39), vec4(0.), vec4(0.)) * buf[7] 
-               + vec4(-1.18, -21.62, 0.78, 1.23);
-
-        buf[2] = sigmoid(buf[2]); 
-        buf[3] = sigmoid(buf[3]);
-
-        buf[4] = mat4(vec4(5.21, -7.18, 2.72, 2.65), vec4(-5.60, -25.35, 4.06, 0.46), vec4(-10.57, 24.28, 21.10, 37.54), vec4(4.30, -1.96, 2.34, -1.37)) * buf[0] 
-               + mat4(vec4(-17.65, -10.50, 2.25, 12.46), vec4(6.26, -502.75, -12.64, 0.91), vec4(-10.98, 20.74, -9.70, -0.76), vec4(5.38, 1.48, -4.19, -4.84)) * buf[1] 
-               + mat4(vec4(12.78, -16.34, -0.39, 1.79), vec4(-30.48, -1.83, 1.45, -1.11), vec4(19.87, -7.33, -42.94, -98.52), vec4(8.33, -2.73, -2.29, -36.14)) * buf[2] 
-               + mat4(vec4(-16.29, 3.54, -0.44, -9.44), vec4(57.50, -35.60, 16.16, -4.15), vec4(-0.07, -3.86, -7.09, 3.15), vec4(-12.55, -7.07, 1.49, -0.82)) * buf[3] 
-               + vec4(-7.67, 15.92, 1.32, -1.66);
+        float a = hash(i);
+        float b = hash(i + vec2(1.0, 0.0));
+        float c = hash(i + vec2(0.0, 1.0));
+        float d = hash(i + vec2(1.0, 1.0));
         
-        buf[4] = sigmoid(buf[4]);
-
-        buf[0] = mat4(vec4(1.67, 1.38, 2.96, 0.), vec4(-1.88, -1.48, -3.59, 0.), vec4(-1.32, -1.09, -2.31, 0.), vec4(0.26, 0.23, 0.44, 0.)) * buf[0] 
-               + mat4(vec4(-0.62, -0.59, -0.91, 0.), vec4(0.17, 0.18, 0.18, 0.), vec4(-2.96, -2.58, -4.90, 0.), vec4(1.41, 1.18, 2.51, 0.)) * buf[1] 
-               + mat4(vec4(-1.25, -1.05, -2.16, 0.), vec4(-0.72, -0.52, -1.43, 0.), vec4(0.15, 0.15, 0.27, 0.), vec4(0.94, 0.88, 1.27, 0.)) * buf[2] 
-               + mat4(vec4(-2.42, -1.96, -4.35, 0.), vec4(-22.68, -18.05, -41.95, 0.), vec4(0.63, 0.54, 1.10, 0.), vec4(-1.54, -1.30, -2.64, 0.)) * buf[3] 
-               + mat4(vec4(-0.49, -0.39, -0.91, 0.), vec4(0.95, 0.79, 1.64, 0.), vec4(0.30, 0.15, 0.86, 0.), vec4(1.18, 0.94, 2.17, 0.)) * buf[4] 
-               + vec4(-1.54, -3.61, 0.24, 0.);
-
-        buf[0] = sigmoid(buf[0]);
-        return buf[0];
+        return mix(mix(a, b, f.x), mix(c, d, f.x), f.y);
       }
 
       void main() {
         vec2 uv = gl_FragCoord.xy / resolution.xy;
-        vec2 p = uv * 2.0 - 1.0;
+        vec2 center = uv - 0.5;
+        center.x *= resolution.x / resolution.y;
+        
+        float floatX = sin(time * 0.3) * 0.15 + cos(time * 0.2) * 0.1;
+        float floatY = cos(time * 0.25) * 0.12 + sin(time * 0.35) * 0.08;
+        center -= vec2(floatX, floatY);
+        
+        float dist = length(center);
+        
+        float n1 = noise(center * 3.0 + time * 0.2) * 0.1;
+        float n2 = noise(center * 5.0 - time * 0.15) * 0.05;
+        dist += n1 + n2;
+        
+        float gradient = 1.0 - smoothstep(0.0, 0.8, dist);
+        gradient = pow(gradient, 0.8);
+        
+        float centerBlur = smoothstep(0.0, 0.15, dist);
+        gradient *= centerBlur * 0.5 + 0.5;
+        
+        vec3 blue = vec3(0.2, 0.4, 0.9);
+        vec3 purple = vec3(0.6, 0.2, 0.8);
+        vec3 magenta = vec3(0.8, 0.1, 0.6);
+        
+        float colorNoise = noise(center * 2.0 + time * 0.1);
+        float colorNoise2 = noise(center * 1.5 - time * 0.08);
+        
+        vec3 gradientColor = mix(blue, purple, colorNoise);
+        gradientColor = mix(gradientColor, magenta, colorNoise2 * 0.4);
+        
+        vec3 col = gradientColor * gradient;
+        
+        float glow = 1.0 - smoothstep(0.0, 1.2, dist);
+        glow = pow(glow, 2.5) * 0.2;
+        col += gradientColor * glow;
+        
+        gl_FragColor = vec4(col, 1.0);
+      }
+    `
+  },
+  {
+    id: 'frothy-galaxy',
+    name: 'Frothy Galaxy',
+    description: 'Smooth flowing waves with beautiful blue gradients and shimmer',
+    component: FrothyGalaxyShader,
+    thumbnail: '',
+    colors: ['#1A4D7A', '#2E6BA8', '#4A90E2', '#87CEEB'],
+    fragmentShader: `
+      precision highp float;
+      uniform vec2 resolution;
+      uniform float time;
+
+      float hash(vec2 p) {
+        p = fract(p * vec2(123.34, 456.21));
+        p += dot(p, p + 45.32);
+        return fract(p.x * p.y);
+      }
+
+      float noise(vec2 p) {
+        vec2 i = floor(p);
+        vec2 f = fract(p);
+        f = f * f * (3.0 - 2.0 * f);
+        
+        float a = hash(i);
+        float b = hash(i + vec2(1.0, 0.0));
+        float c = hash(i + vec2(0.0, 1.0));
+        float d = hash(i + vec2(1.0, 1.0));
+        
+        return mix(mix(a, b, f.x), mix(c, d, f.x), f.y);
+      }
+
+      float fbm(vec2 p) {
+        float value = 0.0;
+        float amplitude = 0.5;
+        float frequency = 1.0;
+        
+        for(int i = 0; i < 5; i++) {
+          value += amplitude * noise(p * frequency);
+          frequency *= 2.0;
+          amplitude *= 0.5;
+        }
+        return value;
+      }
+
+      void main() {
+        vec2 uv = gl_FragCoord.xy / resolution.xy;
+        vec2 p = (uv - 0.5) * 2.0;
         p.x *= resolution.x / resolution.y;
         
-        // Subtle warp
-        p += vec2(sin(p.y * 6.283 + time * 0.5), cos(p.x * 6.28 + time * 0.5)) * 0.02;
-
-        // Core CPPN
-        vec4 pattern = cppn_fn(p, 0.1*sin(0.3*time), 0.1*sin(0.4*time), 0.1*cos(0.3*time));
+        // Smooth flowing waves
+        float wave1 = sin(p.x * 2.0 + time * 0.5) * 0.3;
+        float wave2 = sin(p.x * 1.5 - p.y * 0.8 + time * 0.4) * 0.2;
+        float wave3 = sin(p.x * 3.0 + p.y * 1.5 + time * 0.6) * 0.15;
+        float waves = wave1 + wave2 + wave3;
         
-        // Map to BRIGHT cool color palette
-        float t = pattern.x * 0.5 + pattern.y * 0.5 + time * 0.1;
-        vec3 col = palette(t);
+        // Add noise detail
+        waves += fbm(p * 2.0 + vec2(time * 0.1, 0.0)) * 0.2;
         
-        // Force bright output (no darks)
-        col = smoothstep(0.0, 0.9, col); // Crush blacks, keep brights
-        col = pow(col, vec3(0.55));      // Gamma correct to BRIGHTEN 
-        col += vec3(0.1, 0.2, 0.3);      // Add base glow
+        // Normalized wave height
+        float h = waves * 0.5 + 0.5;
         
-        // Strong Vignette
-        vec2 vUV = gl_FragCoord.xy / resolution.xy;
-        float vign = 1.0 - smoothstep(0.4, 2.0, length(vUV - 0.5) * 1.5);
-        col *= vign;
-
-        // Subtle Scanlines
-        float scanline = sin(uv.y * resolution.y * 0.5 * 0.1) * 0.5 + 0.5;
-        col *= 1.0 - scanline * 0.05; // hardcoded intensity
-
-        // Mono Noise
-        float noise = (random(uv + time) - 0.5) * 0.02; 
-        col += noise * 0.3;
+        // Beautiful gradient colors
+        vec3 color1 = vec3(0.1, 0.3, 0.6);   // Deep blue
+        vec3 color2 = vec3(0.2, 0.5, 0.8);   // Medium blue
+        vec3 color3 = vec3(0.4, 0.7, 0.9);   // Light blue
+        vec3 color4 = vec3(0.6, 0.85, 0.95); // Pale blue
         
-        // Ensure strictly black background by clipping very low values
-        if (length(col) < 0.1) col = vec3(0.0);
-
-        gl_FragColor = vec4(col, 1.0);
+        // Smooth color transitions
+        vec3 color;
+        if (h < 0.33) {
+          color = mix(color1, color2, h * 3.0);
+        } else if (h < 0.66) {
+          color = mix(color2, color3, (h - 0.33) * 3.0);
+        } else {
+          color = mix(color3, color4, (h - 0.66) * 3.0);
+        }
+        
+        // Add shimmer
+        float shimmer = fbm(p * 6.0 + vec2(time * 0.3, time * 0.2));
+        shimmer = pow(shimmer, 2.0) * 0.3;
+        color += vec3(shimmer);
+        
+        // Depth fade
+        color = mix(color, color1 * 0.8, (1.0 - uv.y) * 0.4);
+        
+        // Subtle vignette
+        float dist = length(uv - 0.5);
+        color *= 1.0 - dist * 0.3;
+        
+        gl_FragColor = vec4(color, 1.0);
       }
     `
   }
