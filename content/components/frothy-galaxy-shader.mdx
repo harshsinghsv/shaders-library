@@ -1,73 +1,8 @@
-import FrothyGalaxyShader from '@/components/website/FrothyGalaxyShader';
+import { ShaderDocTemplate } from '@/components/website/ShaderDocTemplate';
 
 export const metadata = {
   title: 'Frothy Galaxy Shader',
-  description: 'Smooth flowing waves with beautiful blue gradients and shimmer effects',
+  description: 'Cosmic frothy galaxy with swirling patterns and ethereal colors.',
 };
 
-## Preview
-
-<div className="relative w-full h-96 rounded-lg overflow-hidden border border-gray-200 dark:border-gray-800 mb-8">
-  <FrothyGalaxyShader />
-</div>
-
-## Installation
-
-**Option 1: Using CLI (Recommended)**
-
-Install this shader directly using the CLI:
-
-```bash
-npx shaderz add
-```
-
-Select "Frothy Galaxy" from the list. The component will be added to `/components/shaderz/FrothyGalaxyShader.tsx`.
-
-**Option 2: Manual Installation**
-
-Copy the component code from the Usage section below.
-
-## Required Dependencies
-
-```bash
-npm install three @types/three framer-motion
-```
-
-## Usage
-
-**Basic Usage:**
-
-<ComponentCodePreview name="frothy-galaxy-shader" isTab={false} />
-
-**Hero Section Background Example:**
-
-```tsx app/page.tsx
-import FrothyGalaxyShader from '@/components/shaderz/FrothyGalaxyShader';
-
-export default function Home() {
-  return (
-    <section className="relative min-h-screen">
-      {/* Shader background */}
-      <div className="absolute inset-0 -z-10">
-        <FrothyGalaxyShader />
-      </div>
-      
-      {/* Your hero content */}
-      <div className="relative z-10 flex items-center justify-center min-h-screen">
-        <h1 className="text-6xl font-bold text-white">
-          Welcome to Your Site
-        </h1>
-      </div>
-    </section>
-  );
-}
-```
-
-## Features
-
-- **Flowing Waves**: Smooth, organic wave patterns that create a fluid appearance
-- **Blue Gradient**: Beautiful deep blue to light blue color transitions
-- **Shimmer Effects**: Subtle sparkle and shimmer for added depth
-- **Depth Fade**: Gradient fading creates a sense of depth
-- **Performance Optimized**: Efficient WebGL implementation
-- **Calming Aesthetic**: Perfect for peaceful, serene designs
+<ShaderDocTemplate slug="frothy-galaxy-shader" />

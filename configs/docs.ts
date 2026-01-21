@@ -1,26 +1,3 @@
-// export const SpecialComponents = [
-//   { 
-//     href: '/components/liquid-orange-shader', 
-//     name: 'Liquid Orange Shader',
-//     new: true 
-//   },
-//   {
-//     href: '/components/plasma-shader',
-//     name: 'Plasma Shader',
-//     new: true,
-//   },
-//   {
-//     href: '/components/aurora-borealis-shader',
-//     name: 'Aurora Borealis Shader',
-//     new: true,
-//   },
-// ];
-
-// export const MainComponents = [
-//   // Shaders are now in SpecialComponents
-//   // This can be used for future component categories
-// ];
-
 // Define a shared interface for consistency
 export interface ComponentItem {
   href: string;
@@ -29,7 +6,7 @@ export interface ComponentItem {
   component?: string; // optional for future grouping logic
 }
 
-// Typed array for special shaders
+// Typed array for special shaders - ordered as per reference
 export const SpecialComponents: ComponentItem[] = [
   {
     href: '/components/liquid-orange-shader',
@@ -98,5 +75,5 @@ export const SpecialComponents: ComponentItem[] = [
   },
 ];
 
-// Even if empty, declare its type explicitly 👇
+// Even if empty, declare its type explicitly
 export const MainComponents: ComponentItem[] = [];

@@ -1,20 +1,13 @@
 import type { MDXComponents } from 'mdx/types';
 import Image, { ImageProps } from 'next/image';
 import { cn } from './lib/utils';
-import { PreCode } from '@/components/website/code-components/pre-code';
-import ComponentCodePreview from '@/components/website/code-components/component-code-preview';
-import DrawerCodePreview from '@/components/website/code-components/drawer-code-preview';
-import TabCodePreview from '@/components/website/code-components/tab-codepreview';
-import IframeComponentPrieview from '@/components/website/code-components/iframe-component-preview';
-import CodeBlock from '@/components/website/code-components/code-block';
-
 import {
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
 } from '@/components/website/ui/tabs';
-import IframeTabCodePreview from './components/website/code-components/iframe-tab-codepreview';
+
 export function useMDXComponents(components: MDXComponents): MDXComponents {
   return {
     Tabs: ({ className, ...props }: React.ComponentProps<typeof Tabs>) => (
@@ -38,12 +31,11 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     }: React.ComponentProps<typeof TabsContent>) => (
       <TabsContent className={cn('', className)} {...props} />
     ),
-    IframeTabCodePreview: IframeTabCodePreview,
-    TabCodePreview: TabCodePreview,
-    DrawerCodePreview: DrawerCodePreview,
-    ComponentCodePreview: ComponentCodePreview,
-    IframeComponentPrieview: IframeComponentPrieview,
-    CodeBlock: CodeBlock,
+
+    // Removed deleted code components
+    // IframeTabCodePreview, TabCodePreview, DrawerCodePreview, 
+    // ComponentCodePreview, IframeComponentPrieview, CodeBlock, PreCode
+
     img: (props) => (
       <Image
         sizes='100vw'
@@ -51,7 +43,6 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
         {...(props as ImageProps)}
       />
     ),
-    PreCode: PreCode,
     table: ({
       className,
       ...props

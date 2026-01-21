@@ -1,8 +1,17 @@
 import { Element } from 'hast';
-import { toString } from 'hast-util-to-string';
 import { visit } from 'unist-util-visit';
 import { Root } from 'mdast';
 import { unified } from 'unified';
+
+// Simple replacement for hast-util-to-string
+function toString(node: any): string {
+  if (!node) return '';
+  if (typeof node.value === 'string') return node.value;
+  if (Array.isArray(node.children)) {
+    return node.children.map(toString).join('');
+  }
+  return '';
+}
 
 export interface TableOfContents {
   items: Array<{

@@ -4,7 +4,7 @@ import { getDocBySlug, getAllDocs } from '@/lib/docs';
 import { cn } from '@/lib/utils';
 import { Component } from 'lucide-react';
 import TableOfContents from '@/components/website/tableof-compoents';
-import { ComponentPagination } from '@/components/website/code-components/pagination';
+import { ComponentPagination } from '@/components/website/ComponentPagination';
 
 export async function generateStaticParams() {
   const docs = await getAllDocs();
@@ -71,7 +71,7 @@ export default async function DocPage({
               </div>
             </article>
             <Content />
-            <ComponentPagination doc={doc} />
+            <ComponentPagination slug={doc.slug} />
           </section>
           <TableOfContents toc={doc.toc} />
         </div>

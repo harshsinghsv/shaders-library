@@ -2,50 +2,15 @@
 
 import Link from "next/link";
 import { Button } from '@/components/website/ui/button';
-import LiquidOrangeShader from './LiquidOrangeShader';
-import PlasmaShader from './PlasmaShader';
-import OceanWavesShader from './OceanWavesShader';
-import NeonFluidShader from './NeonFluidShader';
-import GradientWavesShader from './GradientWavesShader';
-import CosmicNebulaShader from './CosmicNebulaShader';
-import SilkFlowShader from './SilkFlowShader';
-import VideoBackground from './VideoBackground';
-import Plasmav2Shader from './Plasmav2';
-import LiquidMotionShader from './LiquidMotionShader';
-import Wavy from './Wavy';
-import FrothyGalaxyShader from './FrothyGalaxyShader';
-
-const shaderComponents = {
-  'liquid-orange': LiquidOrangeShader,
-  'plasma': PlasmaShader,
-  'ocean-waves': OceanWavesShader,
-  'neon-fluid': NeonFluidShader,
-  'gradient-waves': GradientWavesShader,
-  'cosmic-nebula': CosmicNebulaShader,
-  'silk-flow': SilkFlowShader,
-  'plasma-v2': Plasmav2Shader,
-  'liquid-motion': LiquidMotionShader,
-  'wavy': Wavy,
-  'frothy-galaxy': FrothyGalaxyShader,
-};
-
-// Videos are identified by having a 'video-' prefix
-const videoSources: Record<string, string> = {
-  'video-glossy-film': '/videos/glossy-film.mp4',
-  'video-nova-silk': '/videos/nova-silk.mp4',
-};
+import { getShaderById } from '@/components/shaders';
 
 interface HeroSecProps {
   activeShader: string;
 }
 
 function HeroSec({ activeShader }: HeroSecProps) {
-  const isVideo = activeShader.startsWith('video-');
-  const ShaderComponent = shaderComponents[activeShader as keyof typeof shaderComponents] || LiquidOrangeShader;
-  const videoSrc = videoSources[activeShader];
-
-  // Debug logging
-  console.log('HeroSec activeShader:', activeShader, 'isVideo:', isVideo, 'videoSrc:', videoSrc);
+  const shader = getShaderById(activeShader);
+  const HeroComponent = shader?.Hero;
 
   return (
     <section className="relative min-h-screen flex flex-col items-center justify-between px-6 pt-32 pb-20 overflow-hidden font-sans">
@@ -58,14 +23,9 @@ function HeroSec({ activeShader }: HeroSecProps) {
             WebkitMaskImage: 'linear-gradient(to bottom, black 0%, black 75%, rgba(0,0,0,0.95) 80%, rgba(0,0,0,0.85) 85%, rgba(0,0,0,0.6) 90%, rgba(0,0,0,0.3) 95%, transparent 100%)'
           }}
         >
-          {isVideo && videoSrc ? (
-            <VideoBackground key={videoSrc} src={videoSrc} />
-          ) : (
-            <ShaderComponent />
-          )}
+          {HeroComponent && <HeroComponent />}
         </div>
       </div>
-
 
       {/* Content container */}
       <div className="flex flex-col items-center justify-center flex-1 relative z-[30]">

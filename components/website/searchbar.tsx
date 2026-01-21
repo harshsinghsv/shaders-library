@@ -2,7 +2,6 @@
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import { useTheme } from 'next-themes';
-import { DialogProps } from '@radix-ui/react-dialog';
 import {
   CircleIcon,
   LaptopIcon,
@@ -14,19 +13,15 @@ import { Command } from 'cmdk';
 
 import { Dialog, DialogContent } from '@/components/website/ui/dialog';
 import { ScrollArea } from '@/components/website/ui//scroll-area';
-import { generateSidebarData } from './constant';
-import docsData from '@/configs/docs.json' assert { type: 'json' };
 import { cn } from '@/lib/utils';
 import { basePath } from './sidebar';
-import { MainComponents, SpecialComponents } from '@/configs/docs';
-
-// import { componentsArr } from './sidebar';
+import { SpecialComponents } from '@/configs/docs';
 
 export function SearchDialog({ classname }: { classname?: string }) {
   const router = useRouter();
   const { setTheme } = useTheme();
-  const searchbardata = [...basePath, ...SpecialComponents, ...MainComponents];
-  console.log(searchbardata);
+  // Simply use basePath and SpecialComponents(Shaders) for search
+  const searchbardata = [...basePath, ...SpecialComponents];
 
   const [searchOpen, setSearchOpen] = React.useState(false);
   React.useEffect(() => {

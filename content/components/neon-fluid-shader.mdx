@@ -1,72 +1,8 @@
-import NeonFluidShader from '@/components/website/NeonFluidShader';
+import { ShaderDocTemplate } from '@/components/website/ShaderDocTemplate';
 
 export const metadata = {
   title: 'Neon Fluid Shader',
-  description: 'Flowing fire with realistic flame motion - orange, yellow, and red flames on black',
+  description: 'Vibrant neon fluid shader with flowing colors and dynamic motion.',
 };
 
-## Preview
-
-<div className="relative w-full h-96 rounded-lg overflow-hidden border border-gray-200 dark:border-gray-800 mb-8">
-  <NeonFluidShader />
-</div>
-
-## Installation
-
-**Option 1: Using CLI (Recommended)**
-
-Install this shader directly using the CLI:
-
-```bash
-npx shaderz add
-```
-
-Select "Neon Fluid" from the list. The component will be added to `/components/shaderz/NeonFluidShader.tsx`.
-
-**Option 2: Manual Installation**
-
-Copy the component code from the Usage section below.
-
-## Required Dependencies
-
-```bash
-npm install three @types/three framer-motion
-```
-
-## Usage
-
-**Basic Usage:**
-
-<ComponentCodePreview name="neon-fluid-shader" isTab={false} />
-
-**Hero Section Background Example:**
-
-```tsx app/page.tsx
-import NeonFluidShader from '@/components/shaderz/NeonFluidShader';
-
-export default function Home() {
-  return (
-    <section className="relative min-h-screen">
-      {/* Shader background */}
-      <div className="absolute inset-0 -z-10">
-        <NeonFluidShader />
-      </div>
-      
-      {/* Your hero content */}
-      <div className="relative z-10 flex items-center justify-center min-h-screen">
-        <h1 className="text-6xl font-bold text-white">
-          Welcome to Your Site
-        </h1>
-      </div>
-    </section>
-  );
-}
-```
-
-## Features
-
-- **Realistic Fire**: Flowing flames with natural upward motion
-- **Dynamic Colors**: Gradient from dark red to orange to yellow
-- **Turbulent Motion**: Noise-based flame turbulence
-- **Glowing Tips**: Bright white-yellow flame tips
-- **Performance Optimized**: Efficient WebGL implementation
+<ShaderDocTemplate slug="neon-fluid-shader" />

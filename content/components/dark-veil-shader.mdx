@@ -1,72 +1,8 @@
-import Wavy from '@/components/website/Wavy';
+import { ShaderDocTemplate } from '@/components/website/ShaderDocTemplate';
 
 export const metadata = {
   title: 'Dark Veil Shader',
-  description: 'A mysterious dark veil shader with smooth blue-to-purple-to-magenta gradients and organic floating movement',
+  description: 'Mysterious dark veil shader with smooth blue-purple-magenta gradients.',
 };
 
-## Preview
-
-<div className="relative w-full h-96 rounded-lg overflow-hidden border border-gray-200 dark:border-gray-800 mb-8">
-  <Wavy />
-</div>
-
-## Installation
-
-**Option 1: Using CLI (Recommended)**
-
-Install this shader directly using the CLI:
-
-```bash
-npx shaderz add
-```
-
-Select "Dark Veil" from the list. The component will be added to `/components/shaderz/Wavy.tsx`.
-
-**Option 2: Manual Installation**
-
-Copy the component code from the Usage section below.
-
-## Required Dependencies
-
-```bash
-npm install three @types/three framer-motion
-```
-
-## Usage
-
-**Basic Usage:**
-
-<ComponentCodePreview name="dark-veil-shader" isTab={false} />
-
-**Hero Section Background Example:**
-
-```tsx app/page.tsx
-import Wavy from '@/components/shaderz/Wavy';
-
-export default function Home() {
-  return (
-    <section className="relative min-h-screen">
-      {/* Shader background */}
-      <div className="absolute inset-0 -z-10">
-        <Wavy />
-      </div>
-      
-      {/* Your hero content */}
-      <div className="relative z-10 flex items-center justify-center min-h-screen">
-        <h1 className="text-6xl font-bold text-white">
-          Welcome to Your Site
-        </h1>
-      </div>
-    </section>
-  );
-}
-```
-
-## Features
-
-- **Smooth Gradients**: Beautiful blue-to-purple-to-magenta color transitions
-- **Organic Motion**: Floating, noise-based movement creates a mysterious atmosphere
-- **Soft Glow**: Radial gradient with subtle outer glow
-- **Performance Optimized**: Efficient WebGL implementation
-- **Dark Aesthetic**: Perfect for modern, elegant designs
+<ShaderDocTemplate slug="dark-veil-shader" />
