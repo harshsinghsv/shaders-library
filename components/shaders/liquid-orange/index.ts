@@ -1,5 +1,5 @@
-import Hero from './Hero';
-import Card from './Card';
+import Hero from '@/components/shaders/liquid-orange/Hero';
+import Card from '@/components/shaders/liquid-orange/Card';
 
 export const metadata = {
     id: 'liquid-orange',
