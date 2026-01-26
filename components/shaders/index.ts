@@ -14,6 +14,7 @@ import darkVeil from '@/components/shaders/dark-veil';
 import frothyGalaxy from '@/components/shaders/frothy-galaxy';
 import glossyFilm from '@/components/shaders/glossy-film';
 import novaSilk from '@/components/shaders/nova-silk';
+import lightening from '@/components/shaders/lightening';
 
 // Type definitions
 export interface ShaderMetadata {
@@ -47,6 +48,7 @@ export const SHADERS: ShaderModule[] = [
     frothyGalaxy,
     glossyFilm,
     novaSilk,
+    lightening,
 ];
 
 // Helper functions
@@ -81,4 +83,5 @@ export {
     frothyGalaxy,
     glossyFilm,
     novaSilk,
+    lightening,
 };
