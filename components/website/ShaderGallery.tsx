@@ -47,10 +47,7 @@ export default function ShaderGallery({ shaders, activeShader, onShaderChange }:
                 onShaderChange(shader.metadata.id);
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
-            className={`text-left group relative rounded-xl overflow-hidden border transition-all duration-300 ${activeShader === shader.metadata.id
-                ? 'border-orange-500 ring-2 ring-orange-500/20'
-                : 'border-neutral-800 hover:border-neutral-700'
-                }`}
+            className="text-left group relative rounded-xl overflow-hidden border transition-all duration-300 border-neutral-800 hover:border-neutral-700"
         >
             <div className='aspect-video bg-neutral-900 relative overflow-hidden'>
                 {priority ? (
@@ -109,8 +106,8 @@ export default function ShaderGallery({ shaders, activeShader, onShaderChange }:
                                 onClick={handlePrev}
                                 disabled={currentPage === 0}
                                 className={`px-6 py-2 rounded-full font-semibold transition-all duration-300 flex items-center gap-2 ${currentPage === 0
-                                        ? 'bg-neutral-800 text-neutral-500 cursor-not-allowed'
-                                        : 'bg-neutral-800 text-white hover:bg-neutral-700 hover:scale-105'
+                                    ? 'bg-neutral-800 text-neutral-500 cursor-not-allowed'
+                                    : 'bg-neutral-800 text-white hover:bg-neutral-700 hover:scale-105'
                                     }`}
                             >
                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -127,8 +124,8 @@ export default function ShaderGallery({ shaders, activeShader, onShaderChange }:
                                 onClick={handleNext}
                                 disabled={currentPage === totalPages - 1}
                                 className={`px-6 py-2 rounded-full font-semibold transition-all duration-300 flex items-center gap-2 ${currentPage === totalPages - 1
-                                        ? 'bg-neutral-800 text-neutral-500 cursor-not-allowed'
-                                        : 'bg-gradient-to-r from-orange-500 to-orange-600 text-white hover:from-orange-600 hover:to-orange-700 hover:scale-105 shadow-lg hover:shadow-orange-500/25'
+                                    ? 'bg-neutral-800 text-neutral-500 cursor-not-allowed'
+                                    : 'bg-gradient-to-r from-orange-500 to-orange-600 text-white hover:from-orange-600 hover:to-orange-700 hover:scale-105 shadow-lg hover:shadow-orange-500/25'
                                     }`}
                             >
                                 Next
