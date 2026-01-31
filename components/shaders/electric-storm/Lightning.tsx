@@ -6,16 +6,16 @@ interface ElectricStormProps {
     speed?: number;
     intensity?: number;
     branches?: number;
-    glow?: number;
+    cloudDensity?: number;
     className?: string;
 }
 
 const ElectricStorm: React.FC<ElectricStormProps> = ({
-    hue = 270,
+    hue = 260,
     speed = 1.0,
-    intensity = 1.5,
+    intensity = 1.2,
     branches = 3,
-    glow = 1.2,
+    cloudDensity = 0.5,
     className = ''
 }) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -52,9 +52,9 @@ const ElectricStorm: React.FC<ElectricStormProps> = ({
       uniform float uSpeed;
       uniform float uIntensity;
       uniform float uBranches;
-      uniform float uGlow;
+      uniform float uCloudDensity;
       
-      #define OCTAVE_COUNT 8
+      #define OCTAVE_COUNT 10
 
       vec3 hsv2rgb(vec3 c) {
           vec3 rgb = clamp(abs(mod(c.x * 6.0 + vec3(0.0,4.0,2.0), 6.0) - 3.0) - 1.0, 0.0, 1.0);
@@ -95,81 +95,109 @@ const ElectricStorm: React.FC<ElectricStormProps> = ({
       float fbm(vec2 p) {
           float value = 0.0;
           float amplitude = 0.5;
-          float frequency = 1.0;
           for (int i = 0; i < OCTAVE_COUNT; ++i) {
-              value += amplitude * noise(p * frequency);
-              p *= rotate2d(0.5);
-              frequency *= 2.0;
+              value += amplitude * noise(p);
+              p *= rotate2d(0.45);
+              p *= 2.0;
+              amplitude *= 0.5;
+          }
+          return value;
+      }
+      
+      // Cloud FBM - different pattern for clouds
+      float cloudFbm(vec2 p) {
+          float value = 0.0;
+          float amplitude = 0.5;
+          for (int i = 0; i < 6; ++i) {
+              value += amplitude * noise(p);
+              p *= 2.0;
               amplitude *= 0.5;
           }
           return value;
       }
 
-      // Lightning strike flash effect
-      float strikeEffect(float t) {
-          float strike = sin(t * 3.14159 * 0.5) * 0.5 + 0.5;
-          strike = pow(strike, 3.0);
-          float flash = smoothstep(0.8, 1.0, sin(t * 12.0)) * 0.3;
-          return strike + flash;
+      // Single lightning bolt using original technique
+      float lightningBolt(vec2 uv, float time, float seed, float size) {
+          vec2 p = uv;
+          p.x += seed * 0.5;
+          
+          // Original technique: FBM distortion
+          p += 2.0 * fbm(p * size + 0.8 * time + seed * 10.0) - 1.0;
+          
+          float dist = abs(p.x);
+          
+          // Lightning intensity with flicker
+          float flicker = mix(0.0, 0.1, hash11(time * 2.0 + seed));
+          float lightning = flicker / max(dist, 0.001);
+          
+          return lightning;
       }
 
-      void mainImage( out vec4 fragColor, in vec2 fragCoord ) {
-          vec2 uv = fragCoord / iResolution.xy;
-          uv = 2.0 * uv - 1.0;
-          uv.x *= iResolution.x / iResolution.y;
+      void main() {
+          vec2 uv = gl_FragCoord.xy / iResolution.xy;
+          vec2 p = uv * 2.0 - 1.0;
+          p.x *= iResolution.x / iResolution.y;
           
           float time = iTime * uSpeed;
           
-          // Start with BLACK background
+          // Dark sky background
           vec3 col = vec3(0.0);
+          
+          // Storm clouds - dark gray, subtle
+          float cloudTime = time * 0.1;
+          float clouds = cloudFbm(p * 1.5 + vec2(cloudTime, cloudTime * 0.5));
+          clouds = smoothstep(0.3, 0.7, clouds) * uCloudDensity;
+          
+          // Base cloud color - very dark
+          vec3 cloudColor = vec3(0.03, 0.03, 0.05);
+          col += cloudColor * clouds;
+          
+          // Calculate lightning for each bolt
+          vec3 lightningColor = hsv2rgb(vec3(uHue / 360.0, 0.7, 0.8));
+          float totalLightning = 0.0;
           
           for (float i = 0.0; i < 5.0; i++) {
               if (i >= uBranches) break;
               
-              float offset = i * 0.4 - (uBranches - 1.0) * 0.2;
-              vec2 branchUV = uv;
-              branchUV.x += offset;
+              float xOffset = (i - (uBranches - 1.0) * 0.5) * 0.6;
+              vec2 boltUV = p;
+              boltUV.x += xOffset;
               
-              // Animated distortion for organic lightning movement
-              float warp = fbm(branchUV * 1.0 + time * 0.6 + i * 1.5) * 2.0 - 1.0;
-              branchUV.x += warp * 0.5;
+              float bolt = lightningBolt(boltUV, time, i * 1.337, 1.0);
               
-              // Calculate distance from lightning bolt center
-              float dist = abs(branchUV.x);
+              // Flashing effect for each bolt
+              float flashCycle = mod(time + i * 1.5, 2.5 + i * 0.5);
+              float flash = 0.0;
+              if (flashCycle < 0.15) {
+                  flash = smoothstep(0.0, 0.05, flashCycle) * smoothstep(0.15, 0.1, flashCycle);
+              } else if (flashCycle > 0.2 && flashCycle < 0.35) {
+                  flash = smoothstep(0.2, 0.25, flashCycle) * smoothstep(0.35, 0.3, flashCycle) * 0.5;
+              }
               
-              // MEDIUM thickness lightning bolt with sharp falloff
-              float core = smoothstep(0.025, 0.0, dist);  // Thinner core
-              float glow = smoothstep(0.12, 0.0, dist) * 0.4 * uGlow;  // Smaller, softer glow
-              
-              float lightning = core + glow;
-              
-              // Secondary branching - thinner
-              float secondaryBranch = sin(branchUV.y * 6.0 + time * 2.0 + i * 3.0) * 0.06;
-              float secondary = smoothstep(0.02, 0.0, abs(branchUV.x + secondaryBranch)) * 0.3;
-              lightning += secondary;
-              
-              // Lightning color - purple/violet
-              vec3 lightningColor = hsv2rgb(vec3(uHue / 360.0, 0.7, 1.0));
-              
-              // White hot core - less intense
-              vec3 finalColor = mix(lightningColor, vec3(1.0), core * 0.6);
-              
-              col += finalColor * lightning * (1.0 - i * 0.2) * uIntensity * 0.7;
+              float boltIntensity = bolt * flash * uIntensity;
+              col += lightningColor * boltIntensity;
+              totalLightning += boltIntensity;
           }
           
-          // Lightning strike flash effect
-          float strikeTime = mod(time, 3.0) / 3.0;
-          float strike = pow(sin(strikeTime * 3.14159), 4.0) * 0.3;
-          col *= 1.0 + strike;
+          // Clouds glow when lightning strikes
+          vec3 glowColor = hsv2rgb(vec3(uHue / 360.0, 0.4, 0.5));
+          col += glowColor * clouds * totalLightning * 0.5;
           
-          // Keep colors under control - pure black background
-          col = min(col, vec3(1.5));
+          // Atmospheric flash
+          float atmosphereFlash = 0.0;
+          for (float i = 0.0; i < 5.0; i++) {
+              if (i >= uBranches) break;
+              float flashCycle = mod(time + i * 1.5, 2.5 + i * 0.5);
+              if (flashCycle < 0.15) {
+                  atmosphereFlash += smoothstep(0.0, 0.05, flashCycle) * smoothstep(0.15, 0.1, flashCycle) * 0.05;
+              }
+          }
+          col += vec3(0.05, 0.04, 0.08) * atmosphereFlash;
           
-          fragColor = vec4(col, 1.0);
-      }
-
-      void main() {
-          mainImage(gl_FragColor, gl_FragCoord.xy);
+          // Clamp and output
+          col = clamp(col, 0.0, 1.0);
+          
+          gl_FragColor = vec4(col, 1.0);
       }
     `;
 
@@ -216,9 +244,11 @@ const ElectricStorm: React.FC<ElectricStormProps> = ({
         const uSpeedLocation = gl.getUniformLocation(program, 'uSpeed');
         const uIntensityLocation = gl.getUniformLocation(program, 'uIntensity');
         const uBranchesLocation = gl.getUniformLocation(program, 'uBranches');
-        const uGlowLocation = gl.getUniformLocation(program, 'uGlow');
+        const uCloudDensityLocation = gl.getUniformLocation(program, 'uCloudDensity');
 
         const startTime = performance.now();
+        let animationId: number;
+
         const render = () => {
             resizeCanvas();
             gl.viewport(0, 0, canvas.width, canvas.height);
@@ -229,16 +259,17 @@ const ElectricStorm: React.FC<ElectricStormProps> = ({
             gl.uniform1f(uSpeedLocation, speed);
             gl.uniform1f(uIntensityLocation, intensity);
             gl.uniform1f(uBranchesLocation, branches);
-            gl.uniform1f(uGlowLocation, glow);
+            gl.uniform1f(uCloudDensityLocation, cloudDensity);
             gl.drawArrays(gl.TRIANGLES, 0, 6);
-            requestAnimationFrame(render);
+            animationId = requestAnimationFrame(render);
         };
-        requestAnimationFrame(render);
+        animationId = requestAnimationFrame(render);
 
         return () => {
             window.removeEventListener('resize', resizeCanvas);
+            cancelAnimationFrame(animationId);
         };
-    }, [hue, speed, intensity, branches, glow]);
+    }, [hue, speed, intensity, branches, cloudDensity]);
 
     return <canvas ref={canvasRef} className={`w-full h-full ${className}`} />;
 };
