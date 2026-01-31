@@ -15,9 +15,9 @@ function HeroSec({ activeShader }: HeroSecProps) {
   return (
     <section className="relative min-h-screen flex flex-col items-center justify-between px-6 pt-32 pb-20 overflow-hidden font-sans">
       {/* Dynamic Background - Shader or Video */}
-      <div className="absolute inset-0 z-[-30] bg-black">
+      <div className="absolute inset-0 z-0 bg-black pointer-events-auto">
         <div
-          className="absolute inset-0"
+          className="absolute inset-0 pointer-events-auto"
           style={{
             maskImage: 'linear-gradient(to bottom, black 0%, black 75%, rgba(0,0,0,0.95) 80%, rgba(0,0,0,0.85) 85%, rgba(0,0,0,0.6) 90%, rgba(0,0,0,0.3) 95%, transparent 100%)',
             WebkitMaskImage: 'linear-gradient(to bottom, black 0%, black 75%, rgba(0,0,0,0.95) 80%, rgba(0,0,0,0.85) 85%, rgba(0,0,0,0.6) 90%, rgba(0,0,0,0.3) 95%, transparent 100%)'
@@ -28,7 +28,7 @@ function HeroSec({ activeShader }: HeroSecProps) {
       </div>
 
       {/* Content container */}
-      <div className="flex flex-col items-center justify-center flex-1 relative z-[30]">
+      <div className="flex flex-col items-center justify-center flex-1 relative z-[30] pointer-events-none">
         {/* Main heading */}
         <div className="max-w-5xl mx-auto text-center">
           <h1
@@ -45,7 +45,7 @@ function HeroSec({ activeShader }: HeroSecProps) {
             <span className="text-white font-normal">Click the shader previews below to change the background!</span>
           </p>
           {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pointer-events-auto">
             <Button className="h-14 px-10 text-xl rounded-full bg-white/10 backdrop-blur-lg border border-white/20 shadow-[0_8px_32px_0_rgba(31,38,135,0.37)] hover:bg-white/20 text-white transition-all duration-300 hover:scale-105" asChild>
               <Link href="/components">Browse Shaders</Link>
             </Button>
