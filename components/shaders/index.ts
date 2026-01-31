@@ -18,6 +18,9 @@ import lightening from '@/components/shaders/lightening';
 import darkCloudy from '@/components/shaders/dark-cloudy';
 import floatingLines from '@/components/shaders/floating-lines';
 import gradientBlinds from '@/components/shaders/gradient-blinds';
+import sciFiCorridor from '@/components/shaders/sci-fi-corridor';
+import liquidColors from '@/components/shaders/liquid-colors';
+import wavyAbstract from '@/components/shaders/wavy-abstract';
 
 // Type definitions
 export interface ShaderMetadata {
@@ -55,6 +58,9 @@ export const SHADERS: ShaderModule[] = [
     darkCloudy,
     floatingLines,
     gradientBlinds,
+    sciFiCorridor,
+    liquidColors,
+    wavyAbstract,
 ];
 
 // Helper functions
@@ -93,4 +99,7 @@ export {
     darkCloudy,
     floatingLines,
     gradientBlinds,
+    sciFiCorridor,
+    liquidColors,
+    wavyAbstract,
 };
