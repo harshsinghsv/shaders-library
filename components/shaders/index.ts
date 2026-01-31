@@ -21,6 +21,7 @@ import gradientBlinds from '@/components/shaders/gradient-blinds';
 import sciFiCorridor from '@/components/shaders/sci-fi-corridor';
 import liquidColors from '@/components/shaders/liquid-colors';
 import wavyAbstract from '@/components/shaders/wavy-abstract';
+import electricStorm from '@/components/shaders/electric-storm';
 
 // Type definitions
 export interface ShaderMetadata {
@@ -61,6 +62,7 @@ export const SHADERS: ShaderModule[] = [
     sciFiCorridor,
     liquidColors,
     wavyAbstract,
+    electricStorm,
 ];
 
 // Helper functions
@@ -102,4 +104,5 @@ export {
     sciFiCorridor,
     liquidColors,
     wavyAbstract,
+    electricStorm,
 };
