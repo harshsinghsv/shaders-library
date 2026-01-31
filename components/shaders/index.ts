@@ -16,6 +16,8 @@ import glossyFilm from '@/components/shaders/glossy-film';
 import novaSilk from '@/components/shaders/nova-silk';
 import lightening from '@/components/shaders/lightening';
 import darkCloudy from '@/components/shaders/dark-cloudy';
+import floatingLines from '@/components/shaders/floating-lines';
+import gradientBlinds from '@/components/shaders/gradient-blinds';
 
 // Type definitions
 export interface ShaderMetadata {
@@ -51,6 +53,8 @@ export const SHADERS: ShaderModule[] = [
     novaSilk,
     lightening,
     darkCloudy,
+    floatingLines,
+    gradientBlinds,
 ];
 
 // Helper functions
@@ -87,4 +91,6 @@ export {
     novaSilk,
     lightening,
     darkCloudy,
+    floatingLines,
+    gradientBlinds,
 };
