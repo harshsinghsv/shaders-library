@@ -22,6 +22,11 @@ import sciFiCorridor from '@/components/shaders/sci-fi-corridor';
 import liquidColors from '@/components/shaders/liquid-colors';
 import wavyAbstract from '@/components/shaders/wavy-abstract';
 import electricStorm from '@/components/shaders/electric-storm';
+import abstractRender from '@/components/shaders/abstract-render';
+import neonSwirl from '@/components/shaders/neon-swirl';
+import cosmicFlow from '@/components/shaders/cosmic-flow';
+import vjSpiral from '@/components/shaders/vj-spiral';
+import tunnelCube from '@/components/shaders/tunnel-cube';
 
 // Type definitions
 export interface ShaderMetadata {
@@ -63,6 +68,11 @@ export const SHADERS: ShaderModule[] = [
     liquidColors,
     wavyAbstract,
     electricStorm,
+    abstractRender,
+    neonSwirl,
+    cosmicFlow,
+    vjSpiral,
+    tunnelCube,
 ];
 
 // Helper functions
@@ -105,4 +115,9 @@ export {
     liquidColors,
     wavyAbstract,
     electricStorm,
+    abstractRender,
+    neonSwirl,
+    cosmicFlow,
+    vjSpiral,
+    tunnelCube,
 };
