@@ -119,9 +119,8 @@ const ElectricStorm: React.FC<ElectricStormProps> = ({
       // Single lightning bolt using original technique
       float lightningBolt(vec2 uv, float time, float seed, float size) {
           vec2 p = uv;
-          p.x += seed * 0.5;
           
-          // Original technique: FBM distortion
+          // Original technique: FBM distortion (no horizontal seed offset to keep centered)
           p += 2.0 * fbm(p * size + 0.8 * time + seed * 10.0) - 1.0;
           
           float dist = abs(p.x);
@@ -159,19 +158,22 @@ const ElectricStorm: React.FC<ElectricStormProps> = ({
           for (float i = 0.0; i < 5.0; i++) {
               if (i >= uBranches) break;
               
-              float xOffset = (i - (uBranches - 1.0) * 0.5) * 0.6;
+              // Symmetric offsets: -0.15, 0.0, 0.15 for 3 bolts
+              float xOffset = (i - (uBranches - 1.0) * 0.5) * 0.15;
               vec2 boltUV = p;
               boltUV.x += xOffset;
               
               float bolt = lightningBolt(boltUV, time, i * 1.337, 1.0);
               
-              // Flashing effect for each bolt
-              float flashCycle = mod(time + i * 1.5, 2.5 + i * 0.5);
+              // Flashing effect for each bolt - more frequent
+              float flashCycle = mod(time + i * 0.4, 1.0 + i * 0.15);
               float flash = 0.0;
-              if (flashCycle < 0.15) {
-                  flash = smoothstep(0.0, 0.05, flashCycle) * smoothstep(0.15, 0.1, flashCycle);
-              } else if (flashCycle > 0.2 && flashCycle < 0.35) {
-                  flash = smoothstep(0.2, 0.25, flashCycle) * smoothstep(0.35, 0.3, flashCycle) * 0.5;
+              if (flashCycle < 0.2) {
+                  flash = smoothstep(0.0, 0.05, flashCycle) * smoothstep(0.2, 0.1, flashCycle);
+              } else if (flashCycle > 0.25 && flashCycle < 0.45) {
+                  flash = smoothstep(0.25, 0.3, flashCycle) * smoothstep(0.45, 0.4, flashCycle) * 0.6;
+              } else if (flashCycle > 0.6 && flashCycle < 0.75) {
+                  flash = smoothstep(0.6, 0.65, flashCycle) * smoothstep(0.75, 0.7, flashCycle) * 0.4;
               }
               
               float boltIntensity = bolt * flash * uIntensity;
@@ -187,7 +189,7 @@ const ElectricStorm: React.FC<ElectricStormProps> = ({
           float atmosphereFlash = 0.0;
           for (float i = 0.0; i < 5.0; i++) {
               if (i >= uBranches) break;
-              float flashCycle = mod(time + i * 1.5, 2.5 + i * 0.5);
+              float flashCycle = mod(time + i * 0.4, 1.0 + i * 0.15);
               if (flashCycle < 0.15) {
                   atmosphereFlash += smoothstep(0.0, 0.05, flashCycle) * smoothstep(0.15, 0.1, flashCycle) * 0.05;
               }

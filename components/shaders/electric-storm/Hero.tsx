@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import ElectricStorm from './Lightning';
+import ElectricStorm from './ElectricStorm';
 
 const Hero: React.FC = () => {
     return (
