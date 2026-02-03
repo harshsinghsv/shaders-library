@@ -10,6 +10,7 @@ import path from 'path';
 const program = new Command();
 
 const SHADERS = [
+  // WebGL Shaders
   {
     name: 'liquid-orange',
     title: 'Liquid Orange',
@@ -78,20 +79,115 @@ const SHADERS = [
     file: 'FrothyGalaxyShader'
   },
   {
+    name: 'dark-cloudy',
+    title: 'Dark Cloudy',
+    description: 'Atmospheric dark cloudy with deep flowing currents',
+    file: 'DarkCloudy'
+  },
+  {
+    name: 'electric-storm',
+    title: 'Electric Storm',
+    description: 'Dramatic electric lightning with multi-branch effects',
+    file: 'ElectricStorm'
+  },
+  {
+    name: 'floating-lines',
+    title: 'Floating Lines',
+    description: 'Floating geometric lines with depth',
+    file: 'FloatingLines'
+  },
+  {
+    name: 'gradient-blinds',
+    title: 'Gradient Blinds',
+    description: 'Venetian blinds effect with gradients',
+    file: 'GradientBlinds'
+  },
+  {
+    name: 'lightening',
+    title: 'Lightening',
+    description: 'Lightning bolt effects with realistic branching',
+    file: 'Lightening'
+  },
+  // Video Shaders
+  {
     name: 'glossy-film',
-    title: 'Glossy Film (Video)',
-    description: 'MP4 video background shader',
-    file: 'VideoBackground',
+    title: 'Glossy Film',
+    description: 'Smooth glossy film with reflective surface',
+    file: 'GlossyFilmShader',
     isVideo: true,
     videoFile: 'glossy-film.mp4'
   },
   {
     name: 'nova-silk',
-    title: 'Nova Silk (Video)',
-    description: 'Elegant flowing silk video background',
-    file: 'VideoBackground',
+    title: 'Nova Silk',
+    description: 'Silky smooth nova with flowing gradients',
+    file: 'NovaSilkShader',
     isVideo: true,
     videoFile: 'nova-silk.mp4'
+  },
+  {
+    name: 'abstract-render',
+    title: 'Abstract Render',
+    description: 'Stunning 3D abstract art render with dynamic shapes',
+    file: 'AbstractRenderShader',
+    isVideo: true,
+    videoFile: 'abstract-render.mp4'
+  },
+  {
+    name: 'cosmic-flow',
+    title: 'Cosmic Flow',
+    description: 'Mesmerizing cosmic flow animation',
+    file: 'CosmicFlowShader',
+    isVideo: true,
+    videoFile: 'cosmic-flow.mp4'
+  },
+  {
+    name: 'liquid-colors',
+    title: 'Liquid Colors',
+    description: 'Vibrant liquid colors flowing with smooth transitions',
+    file: 'LiquidColorsShader',
+    isVideo: true,
+    videoFile: 'liquid-colors.mp4'
+  },
+  {
+    name: 'neon-swirl',
+    title: 'Neon Swirl',
+    description: 'Vibrant neon colors swirling with hypnotic patterns',
+    file: 'NeonSwirlShader',
+    isVideo: true,
+    videoFile: 'neon-swirl.mp4'
+  },
+  {
+    name: 'sci-fi-corridor',
+    title: 'Sci-Fi Corridor',
+    description: 'Futuristic sci-fi corridor with depth',
+    file: 'SciFiCorridorShader',
+    isVideo: true,
+    videoFile: 'sci-fi-corridor.mp4'
+  },
+  {
+    name: 'tunnel-cube',
+    title: 'Tunnel Cube',
+    description: 'Hypnotic tunnel made of cubes',
+    file: 'TunnelCubeShader',
+    isVideo: true,
+    videoFile: 'tunnel-cube.mp4'
+  },
+  {
+    name: 'vj-spiral',
+    title: 'VJ Spiral',
+    description: 'VJ-style spiral animation with psychedelic colors',
+    file: 'VjSpiralShader',
+    isVideo: true,
+    videoFile: 'vj-spiral.mp4'
+  },
+  {
+    name: 'wavy-abstract',
+    title: 'Wavy Abstract',
+    description: 'Wavy abstract patterns with flowing movements',
+    file: 'WavyAbstractShader',
+    isVideo: true,
+    videoFile: 'wavy-abstract.mp4'
   }
 ];
 
