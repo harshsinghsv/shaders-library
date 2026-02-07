@@ -1,0 +1,90 @@
+import { VideoDocTemplate } from '@/components/website/VideoDocTemplate';
+
+export const metadata = {
+  title: 'Video Backgrounds',
+  description: 'High-quality, seamless looping video backgrounds for your React applications.',
+};
+
+# Video Backgrounds
+
+Create stunning visual experiences with our collection of optimized video backgrounds. These use high-quality video loops to provide premium visuals with minimal performance overhead.
+
+Each video has a **Download** button - click it to get the MP4 file directly!
+
+## Available Videos
+
+<div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-8">
+  <div>
+    <h3 className="text-lg font-bold mb-2">Abstract Render</h3>
+    <VideoDocTemplate slug="abstract-render" />
+  </div>
+  <div>
+    <h3 className="text-lg font-bold mb-2">Cosmic Flow</h3>
+    <VideoDocTemplate slug="cosmic-flow" />
+  </div>
+  <div>
+    <h3 className="text-lg font-bold mb-2">Liquid Colors</h3>
+    <VideoDocTemplate slug="liquid-colors" />
+  </div>
+  <div>
+    <h3 className="text-lg font-bold mb-2">Neon Swirl</h3>
+    <VideoDocTemplate slug="neon-swirl" />
+  </div>
+  <div>
+    <h3 className="text-lg font-bold mb-2">Sci-Fi Corridor</h3>
+    <VideoDocTemplate slug="sci-fi-corridor" />
+  </div>
+  <div>
+    <h3 className="text-lg font-bold mb-2">Tunnel Cube</h3>
+    <VideoDocTemplate slug="tunnel-cube" />
+  </div>
+  <div>
+    <h3 className="text-lg font-bold mb-2">VJ Spiral</h3>
+    <VideoDocTemplate slug="vj-spiral" />
+  </div>
+  <div>
+    <h3 className="text-lg font-bold mb-2">Wavy Abstract</h3>
+    <VideoDocTemplate slug="wavy-abstract" />
+  </div>
+</div>
+
+---
+
+## Usage
+
+After downloading the video, place it in your `/public/videos/` folder and use it like this:
+
+```tsx
+export default function HeroSection() {
+  return (
+    <section className="relative min-h-screen">
+      {/* Video background */}
+      <div className="absolute inset-0 -z-10">
+        <video
+          src="/videos/cosmic-flow.mp4"
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="w-full h-full object-cover"
+        />
+      </div>
+      
+      {/* Your hero content */}
+      <div className="relative z-10 flex items-center justify-center min-h-screen">
+        <h1 className="text-6xl font-bold text-white">
+          Welcome to Your Site
+        </h1>
+      </div>
+    </section>
+  );
+}
+```
+
+## Using CLI
+
+Or add via CLI which will copy the video to your public folder automatically:
+
+```bash
+npx shaderz add cosmic-flow
+```

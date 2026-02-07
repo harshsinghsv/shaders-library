@@ -1,0 +1,71 @@
+export const metadata = {
+  title: 'Setup & Installation',
+  description: 'How to install and use Shaderz in your Next.js project.',
+};
+
+## Installation
+
+To get started with Shaderz, install the package using your favorite package manager:
+
+<div className="not-prose bg-neutral-950 p-4 rounded-lg border border-neutral-800 mb-6 font-mono text-sm text-neutral-400">
+  npm install shaderz
+</div>
+
+## Usage
+
+Once installed, you can import and use any shader component in your application.
+
+### Basic Usage
+
+Import the shader and use it as a standard React component:
+
+```tsx
+import { LiquidOrangeShader } from 'shaderz';
+
+export default function MyPage() {
+  return (
+    <div style={{ width: '100%', height: '500px' }}>
+      <LiquidOrangeShader />
+    </div>
+  );
+}
+```
+
+### Full Screen Hero Background
+
+To use a shader as a background for a hero section, position it absolutely within a relative container, and place your content on top using z-index.
+
+```tsx
+import { LiquidOrangeShader } from 'shaderz';
+
+export default function HeroSection() {
+  return (
+    <div className="relative w-full h-screen overflow-hidden">
+      {/* Background Layer */}
+      <div className="absolute inset-0 z-0">
+        <LiquidOrangeShader />
+      </div>
+
+      {/* Content Layer */}
+      <div className="relative z-10 flex flex-col items-center justify-center h-full text-white">
+        <h1 className="text-6xl font-bold mb-4">Welcome to the Future</h1>
+        <p className="text-xl opacity-80">Experience the next generation of web visuals.</p>
+      </div>
+    </div>
+  );
+}
+```
+
+## Adding Shaders via CLI
+
+You can also adding individual shader components directly to your project using our CLI tool. This gives you full control over the code.
+
+<div className="not-prose bg-neutral-950 p-4 rounded-lg border border-neutral-800 mb-6 font-mono text-sm text-neutral-400">
+  npx shaderz add [shader-name]
+</div>
+
+Example:
+
+<div className="not-prose bg-neutral-950 p-4 rounded-lg border border-neutral-800 mb-6 font-mono text-sm text-neutral-400">
+  npx shaderz add liquid-orange
+</div>

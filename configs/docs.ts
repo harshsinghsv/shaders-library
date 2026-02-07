@@ -73,6 +73,79 @@ export const SpecialComponents: ComponentItem[] = [
     name: 'Nova Silk',
     new: true,
   },
+  // New WebGL Shaders
+  {
+    href: '/components/dark-cloudy-shader',
+    name: 'Dark Cloudy Shader',
+    new: true,
+  },
+  {
+    href: '/components/electric-storm-shader',
+    name: 'Electric Storm Shader',
+    new: true,
+  },
+  {
+    href: '/components/floating-lines-shader',
+    name: 'Floating Lines Shader',
+    new: true,
+  },
+  {
+    href: '/components/gradient-blinds-shader',
+    name: 'Gradient Blinds Shader',
+    new: true,
+  },
+  {
+    href: '/components/lightening-shader',
+    name: 'Lightening Shader',
+    new: true,
+  },
+  // Video Shaders (individual pages)
+  {
+    href: '/components/abstract-render-shader',
+    name: 'Abstract Render',
+    new: true,
+  },
+  {
+    href: '/components/cosmic-flow-shader',
+    name: 'Cosmic Flow',
+    new: true,
+  },
+  {
+    href: '/components/liquid-colors-shader',
+    name: 'Liquid Colors',
+    new: true,
+  },
+  {
+    href: '/components/neon-swirl-shader',
+    name: 'Neon Swirl',
+    new: true,
+  },
+  {
+    href: '/components/sci-fi-corridor-shader',
+    name: 'Sci-Fi Corridor',
+    new: true,
+  },
+  {
+    href: '/components/tunnel-cube-shader',
+    name: 'Tunnel Cube',
+    new: true,
+  },
+  {
+    href: '/components/vj-spiral-shader',
+    name: 'VJ Spiral',
+    new: true,
+  },
+  {
+    href: '/components/wavy-abstract-shader',
+    name: 'Wavy Abstract',
+    new: true,
+  },
+  // Video Backgrounds Overview Page
+  {
+    href: '/components/video-backgrounds',
+    name: 'Video Backgrounds (All)',
+    new: true,
+  },
 ];
 
 // Even if empty, declare its type explicitly

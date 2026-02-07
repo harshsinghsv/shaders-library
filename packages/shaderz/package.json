@@ -1,6 +1,6 @@
 {
   "name": "shaderz",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "CLI tool to add beautiful WebGL shaders to your React/Next.js project",
   "main": "dist/index.js",
   "bin": {
