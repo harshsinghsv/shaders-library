@@ -1,50 +1,86 @@
 export const metadata = {
-  title: 'Get Started',
+  title: 'Installation - Shaderz',
+  description: 'How to install and use Shaderz in your React or Next.js project.',
 };
 
 <div className='mt-20'>
-  <h4 className='text-4xl font-semibold'>Introdcution</h4>
+  <h4 className='text-4xl font-semibold'>Installation</h4>
 </div>
 
-Beautifully designed components that you can copy and paste into your apps. Accessible. Customizable. Open Source.
+Get up and running with **Shaderz** in minutes. Beautiful WebGL shader components you can drop into any React or Next.js project.
 
-Shaders UI is a collection of reusable components, each with a bunch of examples in different styles that can be used in various positions.
-**I wondered how users would enjoy the journey of scrolling through a website if they didn't feel there was something special about it.**
+---
 
-##### Installation
+##### Step 1: Install the Package
 
 <div className='space-y-6'>
 
-**Step 1: Install the shaderz package**
+Install `shaderz` via npm, yarn, or pnpm:
 
 ```bash
 npm install shaderz
 ```
 
-**Step 2: Add a shader component using CLI**
+```bash
+yarn add shaderz
+```
+
+```bash
+pnpm add shaderz
+```
+
+</div>
+
+---
+
+##### Step 2: Install Required Dependencies
+
+Most WebGL shaders require `three.js` and related packages:
+
+```bash
+npm install three @types/three @react-three/fiber framer-motion
+```
+
+> **Note:** Some shaders (like Gradient Blinds) use `ogl` instead. Check the individual shader page for exact dependencies.
+
+---
+
+##### Step 3: Add a Shader Component
+
+Use the interactive CLI to pick and add a shader to your project:
 
 ```bash
 npx shaderz add
 ```
 
-This will prompt you to select a shader component. Once selected, the component will be automatically added to your `/components/shaderz` folder.
+This will prompt you to select a shader. Once selected, the component files will be added to your `/components/shaderz` folder automatically.
 
-**Step 3: How to apply a shader on your website's hero section background?**
+You can also specify a shader directly:
 
-After adding the shader component, import and use it in your hero section:
+```bash
+npx shaderz add gradient-waves
+```
+
+---
+
+##### Step 4: Use as a Hero Background
+
+The most common use case — a full-screen shader behind your hero content.
+
+**Key idea:** Position the shader with `absolute inset-0` inside a `relative` container, and layer your content on top with `z-index`.
 
 ```tsx app/page.tsx
 import GradientWavesShader from '@/components/shaderz/GradientWavesShader';
 
 export default function Home() {
   return (
-    <section className="relative min-h-screen">
-      {/* Shader background */}
-      <div className="absolute inset-0 -z-10">
+    <section className="relative min-h-screen overflow-hidden">
+      {/* Shader background layer */}
+      <div className="absolute inset-0 z-0">
         <GradientWavesShader />
       </div>
-      
-      {/* Your hero content */}
+
+      {/* Your content layer */}
       <div className="relative z-10 flex items-center justify-center min-h-screen">
         <h1 className="text-6xl font-bold text-white">
           Welcome to Your Site
@@ -55,12 +91,28 @@ export default function Home() {
 }
 ```
 
-</div>
+> **⚠️ Common mistake:** Don't wrap the shader in a fixed-height container like `style={{ height: '500px' }}` if you want it as a full-screen background. Use `absolute inset-0` instead — this stretches it to fill its parent.
 
-##### Required Dependencies
+---
 
-You must install `tailwindcss`, `three.js` and `framer-motion`:
+##### Step 5: Use as a Contained Preview (Optional)
 
-```bash
-npm install three @types/three framer-motion
+If you just want the shader in a box (e.g., in a card or gallery), wrap it in a container with explicit dimensions:
+
+```tsx
+import GradientWavesShader from '@/components/shaderz/GradientWavesShader';
+
+export default function ShaderPreview() {
+  return (
+    <div style={{ width: '100%', height: '400px' }}>
+      <GradientWavesShader />
+    </div>
+  );
+}
 ```
+
+---
+
+##### That's it! 🚀
+
+Browse the **Components** section in the sidebar to explore all available shaders, preview them live, and copy the code.

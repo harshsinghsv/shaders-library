@@ -43,12 +43,31 @@ export function ShaderDocTemplate({ slug }: { slug: string }) {
     }
 
     const installCmd = `npx shaderz add`;
-    const usageCode = `import ${shader.metadata.name.replace(/\s/g, '')} from '@/components/shaders/${shader.metadata.id}/Hero';
+    const componentName = shader.metadata.name.replace(/\s/g, '');
+    const basicUsageCode = `import ${componentName} from '@/components/shaders/${shader.metadata.id}/Hero';
 
 export default function App() {
   return (
-    <div style={{ height: '500px', position: 'relative' }}>
-        <${shader.metadata.name.replace(/\s/g, '')} />
+    <div style={{ width: '100%', height: '500px' }}>
+      <${componentName} />
+    </div>
+  );
+}`;
+
+    const heroUsageCode = `import ${componentName} from '@/components/shaders/${shader.metadata.id}/Hero';
+
+export default function HeroSection() {
+  return (
+    <div className="relative w-full h-screen overflow-hidden">
+      {/* Shader Background */}
+      <div className="absolute inset-0 z-0">
+        <${componentName} />
+      </div>
+
+      {/* Content Layer */}
+      <div className="relative z-10 flex flex-col items-center justify-center h-full text-white">
+        <h1 className="text-6xl font-bold">Your Content Here</h1>
+      </div>
     </div>
   );
 }`;
@@ -83,14 +102,28 @@ export default function App() {
                 Select &quot;{shader.metadata.name}&quot; from the interactive list.
             </p>
 
-            {/* Usage */}
-            <h2>Usage (Hero Background)</h2>
+            {/* Basic Usage */}
+            <h2>Basic Usage</h2>
             <div className="not-prose bg-neutral-950 p-4 rounded-lg border border-neutral-800 mb-6 relative">
                 <div className="absolute top-2 right-2">
-                    <CopyButton text={usageCode} />
+                    <CopyButton text={basicUsageCode} />
                 </div>
                 <pre className="text-sm text-neutral-400 overflow-x-auto">
-                    {usageCode}
+                    {basicUsageCode}
+                </pre>
+            </div>
+
+            {/* Full Screen Hero Background */}
+            <h2>Full Screen Hero Background</h2>
+            <p className="text-neutral-400 mb-4">
+                To use the shader as a background, position it absolutely within a relative container and place your content on top using z-index.
+            </p>
+            <div className="not-prose bg-neutral-950 p-4 rounded-lg border border-neutral-800 mb-6 relative">
+                <div className="absolute top-2 right-2">
+                    <CopyButton text={heroUsageCode} />
+                </div>
+                <pre className="text-sm text-neutral-400 overflow-x-auto">
+                    {heroUsageCode}
                 </pre>
             </div>
 

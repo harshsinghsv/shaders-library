@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { ScrollArea } from '@/components/website/ui/scroll-area';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Component, Rocket } from 'lucide-react';
+import { Component, Rocket, Download } from 'lucide-react';
 import { useRecentPagesStore } from '@/hooks/useZustStore';
 import { SpecialComponents } from '@/configs/docs';
 
@@ -12,6 +12,11 @@ export const basePath = [
     href: '/',
     name: 'Home',
     icon: <Rocket />,
+  },
+  {
+    href: '/get-started',
+    name: 'Installation',
+    icon: <Download />,
   },
   {
     href: '/components',
@@ -42,14 +47,14 @@ function DocsSidebar() {
                     href={link.href}
                     onClick={() => addVisitedPage(link.href, link.name)}
                     className={`flex gap-2 group font-medium items-center py-2 px-4 transition-all ${link.href === pathname
-                        ? 'text-white'
-                        : 'text-neutral-400 hover:text-white'
+                      ? 'text-white'
+                      : 'text-neutral-400 hover:text-white'
                       }`}
                   >
                     {React.cloneElement(link?.icon, {
                       className: `${link.href === pathname
-                          ? 'bg-orange-500 text-white'
-                          : 'bg-neutral-800 text-neutral-400 group-hover:bg-orange-500 group-hover:text-white'
+                        ? 'bg-orange-500 text-white'
+                        : 'bg-neutral-800 text-neutral-400 group-hover:bg-orange-500 group-hover:text-white'
                         } h-7 w-7 border border-neutral-700 transition-all rounded-md p-1`,
                     })}
                     {link.name}
@@ -66,8 +71,8 @@ function DocsSidebar() {
                 <li
                   key={link.href}
                   className={`text-sm flex items-center gap-1 py-1.5 px-4 border-l-2 transition-all ${link.href === pathname
-                      ? 'border-orange-500 text-white font-semibold'
-                      : 'border-transparent text-neutral-400 hover:text-white hover:border-neutral-700'
+                    ? 'border-orange-500 text-white font-semibold'
+                    : 'border-transparent text-neutral-400 hover:text-white hover:border-neutral-700'
                     }`}
                 >
                   <Link
