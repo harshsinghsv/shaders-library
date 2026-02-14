@@ -1,6 +1,8 @@
-# Shaderz CLI
+# Shaderz ✨
 
-Add beautiful WebGL shaders to your React/Next.js project with a simple CLI.
+Add beautiful WebGL & video background shaders to your React/Next.js project with a simple CLI.
+
+**26 shaders** — 16 WebGL + 10 video backgrounds. Zero config.
 
 ## Installation
 
@@ -8,7 +10,7 @@ Add beautiful WebGL shaders to your React/Next.js project with a simple CLI.
 npm install shaderz
 ```
 
-Or use with npx (no installation required):
+Or use directly with npx (no installation required):
 
 ```bash
 npx shaderz add
@@ -16,75 +18,107 @@ npx shaderz add
 
 ## Usage
 
-### Interactive Installation
-
-Install shaders interactively by selecting from a list:
+### Add shaders to your project
 
 ```bash
 npx shaderz add
 ```
 
 This will:
-1. Show a checkbox list of all available shaders
-2. Let you select multiple shaders with Space
-3. Install selected shaders to `components/shaders/`
+1. Show a list of all 26 available shaders
+2. Let you select multiple shaders with **Space**
+3. Install shader components to `components/shaders/`
 4. Copy video files to `public/videos/` (for video shaders)
-5. Check and remind you to install required dependencies
-6. Show usage examples
+5. Remind you to install required dependencies
 
-## Available Shaders
-
-**WebGL Shaders:**
-- `liquid-orange` - Flowing liquid shader with warm orange tones
-- `ocean-waves` - Dynamic ocean waves shader
-- `neon-fluid` - Vibrant neon fluid shader
-- `gradient-waves` - Smooth gradient waves shader
-- `cosmic-nebula` - Space-themed nebula shader
-- `glossy-ribbon` - Glossy ribbon flow shader
-- `silk-flow` - Smooth silk flow shader
-- `glass-twist` - Glass twist effect shader
-- `plasma` - Classic plasma shader
-
-**Video Background:**
-- `glossy-film` - MP4 video background (copies video to public/videos/)
-
-## Usage in Your Project
-
-After installation:
+### Use as a full-screen background
 
 ```tsx
 import LiquidOrangeShader from '@/components/shaders/LiquidOrangeShader';
 
-function App() {
+export default function HeroSection() {
   return (
-    <div className="relative w-full h-screen">
-      <LiquidOrangeShader />
-      {/* Your content */}
+    <div className="relative w-full h-screen overflow-hidden">
+      {/* Shader background */}
+      <div className="absolute inset-0 z-0">
+        <LiquidOrangeShader />
+      </div>
+
+      {/* Your content on top */}
+      <div className="relative z-10 flex items-center justify-center h-full">
+        <h1 className="text-6xl font-bold text-white">Hello World</h1>
+      </div>
     </div>
   );
 }
 ```
 
-### Video Background
+### Use as a contained element
 
 ```tsx
-import VideoBackground from '@/components/shaders/VideoBackground';
+import PlasmaShader from '@/components/shaders/PlasmaShader';
 
 function App() {
   return (
-    <div className="relative w-full h-screen">
-      <VideoBackground src="/videos/glossy-film.mp4" />
-      {/* Your content */}
+    <div style={{ width: '100%', height: '500px' }}>
+      <PlasmaShader />
     </div>
   );
 }
 ```
+
+## Available Shaders
+
+### WebGL Shaders (16)
+
+| Shader | Description |
+|--------|-------------|
+| `liquid-orange` | Flowing liquid with warm orange tones |
+| `ocean-waves` | Dynamic ocean waves |
+| `neon-fluid` | Vibrant neon fluid |
+| `gradient-waves` | Smooth gradient waves |
+| `cosmic-nebula` | Space-themed nebula |
+| `silk-flow` | Smooth silk flow |
+| `plasma` | Classic plasma effect |
+| `plasma-v2` | Enhanced plasma with more colors |
+| `dark-veil` | Mysterious blue/purple gradient |
+| `liquid-motion` | Advanced fluid simulation |
+| `frothy-galaxy` | Galactic frothy effect |
+| `dark-cloudy` | Atmospheric dark cloudy |
+| `electric-storm` | Dramatic electric lightning |
+| `floating-lines` | Floating geometric lines |
+| `gradient-blinds` | Venetian blinds effect |
+| `lightening` | Lightning bolt effects |
+
+### Video Shaders (10)
+
+| Shader | Description |
+|--------|-------------|
+| `glossy-film` | Smooth glossy film with reflections |
+| `nova-silk` | Silky smooth nova with flowing gradients |
+| `abstract-render` | Stunning 3D abstract art render |
+| `cosmic-flow` | Mesmerizing cosmic flow animation |
+| `liquid-colors` | Vibrant liquid colors with smooth transitions |
+| `neon-swirl` | Vibrant neon swirling patterns |
+| `sci-fi-corridor` | Futuristic sci-fi corridor |
+| `tunnel-cube` | Hypnotic tunnel made of cubes |
+| `vj-spiral` | VJ-style spiral with psychedelic colors |
+| `wavy-abstract` | Wavy abstract patterns |
+
+> Video shaders automatically copy the `.mp4` file to your `public/videos/` folder.
 
 ## Requirements
 
 - React 18+ or 19+
-- No additional dependencies required (WebGL is built into modern browsers)
-- Video shader requires the video file to be in public/videos/ (automatically handled by CLI)
+- **WebGL shaders**: `npm install three @types/three @react-three/fiber`
+- **Gradient Blinds**: `npm install ogl`
+- **Video shaders**: No extra dependencies (uses native `<video>` element)
+
+## Links
+
+- 🌐 [Live Demo & Docs](https://shaderz.vercel.app)
+- 📦 [npm](https://www.npmjs.com/package/shaderz)
+- 🐙 [GitHub](https://github.com/harshsinghsv/shaders-library)
 
 ## License
 

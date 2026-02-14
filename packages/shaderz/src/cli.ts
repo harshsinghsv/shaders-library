@@ -342,7 +342,7 @@ async function addShaders() {
 program
   .name('shaderz')
   .description('CLI to add beautiful WebGL shaders to your project')
-  .version('1.0.0');
+  .version('1.2.0');
 
 program
   .command('add')
